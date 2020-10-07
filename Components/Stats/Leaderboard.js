@@ -60,13 +60,11 @@ export default class LeaderBoard extends Component {
      renderHeader() {
         return (
             <View colors={[, '#1da2c6', '#1695b7']}
-                style={{ backgroundColor: '#119abf', padding: 15, paddingTop: 20, alignItems: 'center' }}>
-                <Text style={{ fontSize: 25, color: 'white', }}>Leaderboard</Text>
+                style={{ backgroundColor: '#2A9D8F', padding: 15, paddingTop: 20, alignItems: 'center' }}>
                 <View style={{
                     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
                     marginBottom: 5, marginTop: 10
                 }}>
-
                     <Text style={{ color: 'white', fontSize: 25, flex: 1, textAlign: 'right', marginRight: 40 }}>
                         {ordinal_suffix_of(this.state.userRank)}
                     </Text>
