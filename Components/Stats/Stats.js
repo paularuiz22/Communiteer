@@ -8,7 +8,11 @@ import Analytics from "./Analytics.js";
 
 function Stats() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBarOptions={{
+                       labelStyle: { fontSize: 12 },
+                       tabStyle: { width: 100 },
+                       style: { backgroundColor: 'powderblue' },
+                     }}>
       <Tab.Screen name="Leaderboard" component={Leaderboard} />
       <Tab.Screen name="Analytics" component={Analytics} />
     </Tab.Navigator>
