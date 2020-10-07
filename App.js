@@ -2,10 +2,10 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import AssignedJobs from "./Components/AssignedJobs/AssignedJobs.js";
-import JobBoard from "./Components/JobBoard/JobBoard.js";
-import PastJobs from "./Components/PastJobs/PastJobs.js";
-import Stats from "./Components/Stats/Stats.js";
+import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
+import JobBoard from "./src/JobBoard/JobBoard.js";
+import PastJobs from "./src/PastJobs/PastJobs.js";
+import Stats from "./src/Stats/Stats.js";
 
 const Tab = createBottomTabNavigator();
 
