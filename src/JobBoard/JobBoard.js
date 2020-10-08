@@ -1,11 +1,13 @@
 import React from "react";
-import { Text, View } from 'react-native';
+import { Header } from 'react-native-elements';
 
 function JobBoard() {
   return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>here are some new jobs you can do!</Text>
-        </View>
+    <Header
+      backgroundColor="#2A9D8F"
+      centerComponent={{text: 'Job Board', style: {color: '#fff'}}}
+      rightComponent={{icon: 'home', color: '#fff'}}
+    />
   );
 }
 export default JobBoard;

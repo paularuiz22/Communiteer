@@ -1,11 +1,13 @@
 import React from "react";
-import { Text, View } from 'react-native';
+import { Header } from 'react-native-elements';
 
 function PastJobs() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Completed jobs from the past</Text>
-      </View>
+    <Header
+        backgroundColor="#2A9D8F"
+        centerComponent={{text: 'Past Jobs', style: {color: '#fff'}}}
+        rightComponent={{icon: 'home', color: '#fff'}}
+    />
   );
 }
 export default PastJobs;
