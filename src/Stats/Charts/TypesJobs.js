@@ -9,7 +9,7 @@ function MonthlyHours() {
       domainPadding={400}
       width = {900}
     >
-      <VictoryLabel x={100} y={100} style={styles.title}
+      <VictoryLabel x={100} y={100}
         text="Job Frequency"
       />
       <VictoryBar
@@ -27,14 +27,14 @@ function MonthlyHours() {
   );
 
 }
-const styles = StyleSheet.create({
-  title: {
-    textAnchor: "start",
-    verticalAnchor: "end",
-    fill: "#000000",
-    fontFamily: "inherit",
-    fontSize: "24px",
-    fontWeight: "bold"
-  },
-});
+// const styles = StyleSheet.create({
+//   title: {
+//     textAnchor: "start",
+//     verticalAnchor: "end",
+//     fill: "#000000",
+//     fontFamily: "inherit",
+//     fontSize: "24px",
+//     fontWeight: "bold"
+//   },
+// });
 export default MonthlyHours;

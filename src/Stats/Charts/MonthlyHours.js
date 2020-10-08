@@ -9,7 +9,7 @@ function MonthlyHours() {
       domainPadding={400}
       width = {900}
     >
-      <VictoryLabel style={styles.title}
+      <VictoryLabel
         text="Volunteering Hours per Month"
       />
       <VictoryLine
@@ -29,12 +29,12 @@ function MonthlyHours() {
   );
 
 }
-const styles = StyleSheet.create({
-  title: {
-    fill: "#000000",
-    fontFamily: "inherit",
-    fontSize: "24px",
-    fontWeight: "bold"
-  },
-});
+// const styles = StyleSheet.create({
+//   title: {
+//     fill: "#000000",
+//     fontFamily: "inherit",
+//     fontSize: "24px",
+//     fontWeight: "bold"
+//   },
+// });
 export default MonthlyHours;
