@@ -1,5 +1,6 @@
 import React from "react";
-import { VictoryPie, VictoryChart, VictoryTheme } from "victory";
+import { StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
+import { VictoryLabel, VictoryPie, VictoryChart, VictoryTheme } from "victory";
 
 function Points() {
   return(
@@ -8,6 +9,9 @@ function Points() {
       domainPadding={400}
       width = {900}
     >
+      <VictoryLabel x={100} y={100} style={styles.title}
+        text="Total Points"
+      />
       <VictoryPie
         data={[
           { x: "Completed", y: 35 },
@@ -19,4 +23,14 @@ function Points() {
   );
 
 }
+const styles = StyleSheet.create({
+  title: {
+    textAnchor: "start",
+    verticalAnchor: "end",
+    fill: "#000000",
+    fontFamily: "inherit",
+    fontSize: "24px",
+    fontWeight: "bold"
+  },
+});
 export default Points;

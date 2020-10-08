@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Button, View, SafeAreaView, Text, Alert } from "react-native";
-import { VictoryLine, VictoryChart, VictoryTheme } from "victory";
+import { VictoryLabel, VictoryLine, VictoryChart, VictoryTheme } from "victory";
 
 function MonthlyHours() {
   return(
@@ -9,6 +9,9 @@ function MonthlyHours() {
       domainPadding={400}
       width = {900}
     >
+      <VictoryLabel style={styles.title}
+        text="Volunteering Hours per Month"
+      />
       <VictoryLine
         style={{
           data: { stroke: "#c43a31" },
@@ -26,4 +29,12 @@ function MonthlyHours() {
   );
 
 }
+const styles = StyleSheet.create({
+  title: {
+    fill: "#000000",
+    fontFamily: "inherit",
+    fontSize: "24px",
+    fontWeight: "bold"
+  },
+});
 export default MonthlyHours;

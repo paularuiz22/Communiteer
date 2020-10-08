@@ -42,7 +42,7 @@ class Analytics extends Component {
           <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
           <Picker.Item label="Types of Jobs" value = "types of jobs"/>
         </Picker>
-        <div style={styles.graph}>
+        <div>
           {this.switchGraph()}
         </div>
       </SafeAreaView>
@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 50,
     width: 400, 
-    marginTop:10,
   },
   graph: {
     height: 500,
