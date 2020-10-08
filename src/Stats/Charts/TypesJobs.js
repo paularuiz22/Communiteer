@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
-import { VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } from "victory";
+import { VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } from "victory-native";
 
 function MonthlyHours() {
   return(

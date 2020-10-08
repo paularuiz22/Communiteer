@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
-import { VictoryLabel, VictoryPie, VictoryChart, VictoryTheme } from "victory";
+import { VictoryLabel, VictoryPie, VictoryChart, VictoryTheme } from "victory-native";
 
 function Points() {
   return(

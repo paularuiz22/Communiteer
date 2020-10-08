@@ -16,7 +16,6 @@ class Analytics extends Component {
   }
   handleChangeGraph = (event) => {
     this.setState({graph: event});
-    console.log(this.state.graph);
   }
   switchGraph() {
     switch(this.state.graph) {
@@ -34,6 +33,7 @@ class Analytics extends Component {
   render() {
     return(
       <SafeAreaView style={styles.container}>
+        <View style = {styles.container}>
         <Picker
           selectedValue={this.state.language}
           style={styles.dropdown}
@@ -42,9 +42,11 @@ class Analytics extends Component {
           <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
           <Picker.Item label="Types of Jobs" value = "types of jobs"/>
         </Picker>
-        <div>
-          {this.switchGraph()}
-        </div>
+        </View>
+
+        <View style = {styles.container}>
+         {this.switchGraph()}
+        </View>
       </SafeAreaView>
     );
   }
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     marginHorizontal: 16,
+
   },
   title: {
     textAlign: "center",
