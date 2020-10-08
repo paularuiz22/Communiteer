@@ -1,11 +1,20 @@
+import { StackActions } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Text, View } from 'react-native';
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Button } from 'react-native';
-//import AssignedJobs from "/AssignedJobs/AssignedJobs.js";
+
+
+const Stack = createStackNavigator();
 
 function Login({navigation}) {
   return (
+    // <Stack.Navigator>
+    // <Stack.Screen
+
+
+
+
     <View style={styles.container}>
         <Text style={styles.logo}>Communiteer</Text>
         <View style={styles.inputView} >
@@ -26,19 +35,22 @@ function Login({navigation}) {
         <TouchableOpacity>
           <Text style={styles.forgot}>Forgot Password?</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity 
+        style={styles.loginBtn}
+        onPress={() => navigation.navigate('AssignedJobs')}
+        >
           <Text style={styles.loginText}>LOGIN</Text>
-          <Button
-          title="Sign In"
-          onPress={() => navigation.navigate('AssignedJobs')}
-        />
+          
         </TouchableOpacity>
         <TouchableOpacity>
           <Text style={styles.loginText}>Signup</Text>
         </TouchableOpacity>
+    </View>
 
-  
-      </View>
+
+    
+    // />
+    // </Stack.Navigator>
   );
 }
 
