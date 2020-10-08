@@ -36,13 +36,15 @@ class Analytics extends Component {
       <SafeAreaView style={styles.container}>
         <Picker
           selectedValue={this.state.language}
-          style={{height: 50, width: 400}}
+          style={styles.dropdown}
           onValueChange = {this.handleChangeGraph}>
           <Picker.Item label="Points Status" value="points"/>
           <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
           <Picker.Item label="Types of Jobs" value = "types of jobs"/>
         </Picker>
-        {this.switchGraph()}
+        <div style={styles.graph}>
+          {this.switchGraph()}
+        </div>
       </SafeAreaView>
     );
   }
@@ -67,5 +69,14 @@ const styles = StyleSheet.create({
     borderBottomColor: "#737373",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  dropdown: {
+    height: 50,
+    width: 400, 
+    marginTop:10,
+  },
+  graph: {
+    height: 500,
+    width: 500,
+  }
 });
 export default Analytics;
