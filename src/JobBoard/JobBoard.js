@@ -122,20 +122,20 @@ const styles = StyleSheet.create({
     padding: 10
   },
   numberLabel: {
-    fontSize: 42,
+    fontSize: 30,
     padding: 10,
     color: '#fff',
     textAlign: 'center'
   },
   circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 100/2,
+    width: 75,
+    height: 75,
+    borderRadius: 75/2,
     backgroundColor: "#264653",
     padding: 10
   },
   jobLabel: {
-    width: 300,
+    width: 270,
     height: 100,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
