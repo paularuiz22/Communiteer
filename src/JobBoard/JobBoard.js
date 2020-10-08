@@ -4,7 +4,7 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View } from 'react-
 import Constants from 'expo-constants';
 
 function JobBoard() {
-  const [selectedValue, setSelectedValue] = useState("java");
+  const [selectedValue, setSelectedValue] = useState("alljobs");
   return (
     <SafeAreaView style={styles.container}>
       <Header
@@ -18,13 +18,13 @@ function JobBoard() {
         style={{height:150, width:200}}
         onValueChange={(itemValue, itemIndex) => selectedValue(itemValue)}
       >
-        <Picker.Item label="All Jobs" />
-        <Picker.Item label="Beautification" />
-        <Picker.Item label="Children" />
-        <Picker.Item label="House Chores" />
-        <Picker.Item label="Pet Care" />
-        <Picker.Item label="Shopping" />
-        <Picker.Item label="Tutoring" />
+        <Picker.Item label="All Jobs" value="alljobs"/>
+        <Picker.Item label="Beautification" value="beautification"/>
+        <Picker.Item label="Children" value="children"/>
+        <Picker.Item label="House Chores" value="housechores"/>
+        <Picker.Item label="Pet Care" value="petcare"/>
+        <Picker.Item label="Shopping" value="shopping"/>
+        <Picker.Item label="Tutoring" value="tutoring"/>
       </Picker>
       <ScrollView style={styles.scrollView}>
         <Text style={styles.headingOne}>September</Text>
