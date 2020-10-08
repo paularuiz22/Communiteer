@@ -1,40 +1,36 @@
 import React from "react";
-import { StyleSheet, Button, View, SafeAreaView, Text, Alert } from "react-native";
-import { VictoryLabel, VictoryLine, VictoryChart, VictoryTheme } from "victory-native";
+import { LineChart, Path, Grid } from "react-native-svg-charts";
 
-function MonthlyHours() {
-  return(
-    <VictoryChart
-      theme={VictoryTheme.material}
-      domainPadding={400}
-      width = {900}
-    >
-      <VictoryLabel
-        text="Volunteering Hours per Month"
+class LineChartExample extends React.PureComponent {
+
+  render() {
+
+    const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ];
+
+    const Shadow = ({ line }) => (
+      <Path
+        key={"shadow"}
+        y={2}
+        d={line}
+        fill={"none"}
+        strokeWidth={4}
+        stroke={"rgba(134, 65, 244, 0.2)"}
       />
-      <VictoryLine
-        style={{
-          data: { stroke: "#c43a31" },
-          parent: { border: "1px solid #ccc"}
-        }}
-        data={[
-          { x: 1, y: 2 },
-          { x: 2, y: 3 },
-          { x: 3, y: 5 },
-          { x: 4, y: 4 },
-          { x: 5, y: 7 }
-        ]}
-      />
-    </VictoryChart>
-  );
+    );
+
+    return (
+      <LineChart
+        style={ { height: 200 } }
+        data={ data }
+        svg={{ stroke: "rgb(134, 65, 244)" }}
+        contentInset={ { top: 20, bottom: 20 } }
+      >
+        <Grid/>
+        <Shadow/>
+      </LineChart>
+    );
+  }
 
 }
-// const styles = StyleSheet.create({
-//   title: {
-//     fill: "#000000",
-//     fontFamily: "inherit",
-//     fontSize: "24px",
-//     fontWeight: "bold"
-//   },
-// });
-export default MonthlyHours;
+
+export default LineChartExample;

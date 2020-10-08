@@ -1,19 +1,30 @@
 import React, { Component } from "react";
-import { StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
 import {Picker} from "@react-native-community/picker";
 
 import MonthlyHours from "./Charts/MonthlyHours.js";
-import Points from "./Charts/Points.js";
+import Points from "./Charts/Progress.js";
 import TypesJobs from "./Charts/TypesJobs.js";
+
+const window = Dimensions.get("window");
+const screen = Dimensions.get("screen");
 
 class Analytics extends Component {
   constructor() {
     super();
     this.state = {
       graph: "points",
+      dimensions: {
+        window,
+        screen
+      }
     };
     this.handleChangeGraph = this.handleChangeGraph.bind(this);
   }
+  onChange = ({ window, screen }) => {
+    this.setState({ dimensions: { window, screen } });
+  };
+
   handleChangeGraph = (event) => {
     this.setState({graph: event});
   }
@@ -28,9 +39,18 @@ class Analytics extends Component {
       case "hours per month":
         return <MonthlyHours/>;
     }
-
   }
+
+  componentDidMount() {
+    Dimensions.addEventListener("change", this.onChange);
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener("change", this.onChange);
+  }
+  
   render() {
+    const { dimensions } = this.state;
     return(
       <SafeAreaView style={styles.container}>
         <View style = {styles.container}>
