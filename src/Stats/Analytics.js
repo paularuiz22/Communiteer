@@ -28,10 +28,20 @@ class Analytics extends Component {
   handleChangeGraph = (event) => {
     this.setState({graph: event});
   }
+  switchTitle() {
+    switch(this.state.graph) {
+      case null:
+      case "points":
+        return "Points Progress";
+      case "types of jobs":
+        return "Types of Jobs"
+      case "hours per month":
+        return "Hours Per Month";
+    }
+  }
   switchGraph() {
     switch(this.state.graph) {
       case null:
-        return <Points/>;
       case "points":
         return <Points/>;
       case "types of jobs":
@@ -52,7 +62,7 @@ class Analytics extends Component {
   render() {
     const { dimensions } = this.state;
     return(
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.dropdown_container}>
         <View style = {styles.container}>
         <Picker
           selectedValue={this.state.language}
@@ -63,8 +73,10 @@ class Analytics extends Component {
           <Picker.Item label="Types of Jobs" value = "types of jobs"/>
         </Picker>
         </View>
-
         <View style = {styles.container}>
+          <Text style = {styles.title}>{this.switchTitle()} </Text>
+        </View>
+        <View style = {styles.graph}>
          {this.switchGraph()}
         </View>
       </SafeAreaView>
@@ -75,30 +87,28 @@ class Analytics extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 16,
-
   },
-  title: {
-    textAlign: "center",
-    marginVertical: 8,
-  },
-  fixToText: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  separator: {
-    marginVertical: 8,
-    borderBottomColor: "#737373",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+  dropdown_container: {
+    flex: 1,
   },
   dropdown: {
     height: 50,
-    width: 400, 
+    width: screen.width/2,
+  },
+  title: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginTop: 0,
+    width: screen.width/2,
   },
   graph: {
-    height: 500,
-    width: 500,
-  }
+    flex: 3, 
+    backgroundColor: "purple",
+    // alignItems: "center",
+    // justifyContent: "center",
+  },
 });
 export default Analytics;

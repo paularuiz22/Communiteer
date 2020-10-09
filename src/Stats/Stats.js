@@ -14,7 +14,7 @@ function Stats() {
       <Tab.Navigator tabBarOptions={{
         labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
         tabStyle: { width: windowWidth / 2 },
-        style: { backgroundColor: "powderblue" },
+        style: { backgroundColor: "#FFFFFF" },
       }}>
         <Tab.Screen name="Leaderboard" component={Leaderboard} />
         <Tab.Screen name="Analytics" component={Analytics} />

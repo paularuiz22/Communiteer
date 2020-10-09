@@ -1,5 +1,10 @@
 import React from "react";
 import { LineChart, Path, Grid } from "react-native-svg-charts";
+import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
+
+const window = Dimensions.get("window");
+const screen = Dimensions.get("screen");
+
 
 class LineChartExample extends React.PureComponent {
 
@@ -19,18 +24,18 @@ class LineChartExample extends React.PureComponent {
     );
 
     return (
-      <LineChart
-        style={ { height: 200 } }
-        data={ data }
-        svg={{ stroke: "rgb(134, 65, 244)" }}
-        contentInset={ { top: 20, bottom: 20 } }
-      >
-        <Grid/>
-        <Shadow/>
-      </LineChart>
+      <View>
+        <LineChart
+          style={ { height: screen.height/2, width: screen.width/2, padding: 30}}
+          data={ data }
+          svg={{ stroke: "rgb(134, 65, 244)" }}
+          contentInset={ { top: 20, bottom: 20 } }
+        >
+          <Grid/>
+          <Shadow/>
+        </LineChart>
+      </View>
     );
   }
-
 }
-
 export default LineChartExample;

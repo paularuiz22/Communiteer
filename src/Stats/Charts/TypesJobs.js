@@ -1,8 +1,10 @@
 import React from "react";
 import { BarChart, XAxis } from "react-native-svg-charts";
-import { View } from "react-native";
 import * as scale from "d3-scale";
+import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
 
+const window = Dimensions.get("window");
+const screen = Dimensions.get("screen");
 class XAxisExample extends React.PureComponent {
 
   render() {
@@ -10,7 +12,7 @@ class XAxisExample extends React.PureComponent {
     const data = [ 14, 80, 100, 55 ];
 
     return (
-      <View style={{ height: 200, padding: 20 }}>
+      <View style={{ height: screen.height/2, width: screen.width/2}}>
         <BarChart
           style={{ flex: 1 }}
           data={data}
