@@ -17,7 +17,7 @@ class XAxisExample extends React.PureComponent {
           style={{ flex: 1 }}
           data={data}
           gridMin={0}
-          svg={{ fill: "rgb(134, 65, 244)" }}
+          svg={{ fill: "#E76F51" }}
         />
         <XAxis
           style={{ marginTop: 10 }}

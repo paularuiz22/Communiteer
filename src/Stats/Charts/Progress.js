@@ -14,7 +14,7 @@ class Points extends React.PureComponent {
         <ProgressCircle
           style={ { height: screen.height/2 } }
           progress={ 0.7 }
-          progressColor={"rgb(134, 65, 244)"}
+          progressColor={"#E76F51"}
           startAngle={ -Math.PI * 0.8 }
           endAngle={ Math.PI * 0.8 }
         />

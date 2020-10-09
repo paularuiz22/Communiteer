@@ -19,7 +19,7 @@ class LineChartExample extends React.PureComponent {
         d={line}
         fill={"none"}
         strokeWidth={4}
-        stroke={"rgba(134, 65, 244, 0.2)"}
+        stroke={"#E76F51"}
       />
     );
 

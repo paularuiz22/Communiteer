@@ -62,8 +62,8 @@ class Analytics extends Component {
   render() {
     const { dimensions } = this.state;
     return(
-      <SafeAreaView style={styles.dropdown_container}>
-        <View style = {styles.container}>
+      <SafeAreaView style={styles.container}>
+        <View style = {styles.dropdown_container}>
         <Picker
           selectedValue={this.state.language}
           style={styles.dropdown}
@@ -73,10 +73,10 @@ class Analytics extends Component {
           <Picker.Item label="Types of Jobs" value = "types of jobs"/>
         </Picker>
         </View>
-        <View style = {styles.container}>
+        <View style = {styles.title_container}>
           <Text style = {styles.title}>{this.switchTitle()} </Text>
         </View>
-        <View style = {styles.graph}>
+        <View style = {styles.graph_container}>
          {this.switchGraph()}
         </View>
       </SafeAreaView>
@@ -96,6 +96,12 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 50,
     width: screen.width/2,
+    marginTop: 30,
+  },
+  title_container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     textAlign: 'center',
@@ -104,11 +110,9 @@ const styles = StyleSheet.create({
     marginTop: 0,
     width: screen.width/2,
   },
-  graph: {
+  graph_container: {
     flex: 3, 
-    backgroundColor: "purple",
-    // alignItems: "center",
-    // justifyContent: "center",
+    width: screen.width/2,
   },
 });
 export default Analytics;
