@@ -8,6 +8,7 @@ function Login({navigation}) {
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>Communiteer</Text>
+      <Image source={require("../img/logo.png")} />
       <View style={styles.inputView} >
         <TextInput  
           style={styles.inputText}

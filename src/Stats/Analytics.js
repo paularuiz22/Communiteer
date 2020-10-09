@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
 import {Picker} from "@react-native-community/picker";
+// import { Divider } from 'react-native-paper';
 
 import MonthlyHours from "./Charts/MonthlyHours.js";
 import Points from "./Charts/Progress.js";
@@ -65,7 +66,7 @@ class Analytics extends Component {
       <SafeAreaView style={styles.container}>
         <View style = {styles.dropdown_container}>
         <Picker
-          selectedValue={this.state.language}
+          selectedValue={this.state.graph}
           style={styles.dropdown}
           onValueChange = {this.handleChangeGraph}>
           <Picker.Item label="Points Status" value="points"/>
@@ -73,6 +74,7 @@ class Analytics extends Component {
           <Picker.Item label="Types of Jobs" value = "types of jobs"/>
         </Picker>
         </View>
+        {/* <Divider/> */}
         <View style = {styles.title_container}>
           <Text style = {styles.title}>{this.switchTitle()} </Text>
         </View>
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 50,
     width: screen.width/2,
-    marginTop: 30,
+    marginVertical: 10,
   },
   title_container: {
     flex: 1,
@@ -107,11 +109,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 30,
-    marginTop: 0,
+    marginVertical: 20,
     width: screen.width/2,
   },
   graph_container: {
-    flex: 3, 
+    flex: 6, 
     width: screen.width/2,
   },
 });
