@@ -11,6 +11,7 @@ function index() {
         'description': 'Please walk my dog. She is well-behaved and gentle.'
     }).then(function(docRef) {
           console.log("Document written with ID: ", docRef.id);
+     });
 
     const gardenClaraRef = db.collection('jobs').doc('gardenClara');
 
@@ -26,6 +27,15 @@ function index() {
     const snapshot = await db.collection('jobs').get();
     snapshot.forEach((doc) => {
         console.log(doc.id, '=>', doc.data());
+    });
+
+    const testVolRef = db.collection('volunteers').doc('test1');
+
+    await testVolRef.set({
+        'username': 'test-user-1',
+        'password': '0000',
+        'firstName': 'Halburt',
+        'lastName': 'Helmut',
     });
 
 }
