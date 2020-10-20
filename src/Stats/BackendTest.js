@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { View, Text, Button, Alert, Image, Dimensions, ScrollView, TextInput, StyleSheet, Picker } from 'react-native';
+import { View, Text, Button, Alert, Image, Dimensions, ScrollView, TextInput, StyleSheet, Picker, ActivityIndicator } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import { ButtonGroup } from 'react-native-elements';
 import * as firebase from 'firebase';
@@ -18,12 +18,17 @@ var config = {
     storageBucket: "communiteer-2020fall.appspot.com"
 };
 const app = firebase.initializeApp(config);
-const db = app.database();
+export const db = app.database();
+
 
 type JobData = {
     requestor: string;
     jobType: string;
     date: string;
+    startTime: string,
+    endTime: string,
+    numVolunteers: string,
+    description: string
 };
 
 const ToDoItem = ({job: {job: title, /*requestorUserName, jobType, date, startTime, endTime, volunteer,*/ done}, id}) => {
@@ -59,13 +64,85 @@ export default class LeaderBoard extends Component {
 
   constructor() {
     super();
+    this.ref = db.ref('/jobs');
     this.state = {
-      todos: {},
-      presentToDo: '',
+      title: '',
+      description: '',
     };
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.addNewTodo = this.addNewTodo.bind(this);
   }
+  //  this.componentDidMount = this.componentDidMount.bind(this);
+  //  this.addNewTodo = this.addNewTodo.bind(this);
+  //}
+
+  updateTextInput = (text, field) => {
+    const state = this.state
+    state[field] = text;
+    this.setState(state);
+  }
+
+  saveBoard() {
+    this.setState({
+      isLoading: true,
+    });
+    this.ref.push({
+      title: this.state.title,
+      description: this.state.description,
+    }).then((docRef) => {
+      this.setState({
+        title: '',
+        description: '',
+        isLoading: false,
+      });
+      this.props.navigation.goBack();
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+      this.setState({
+        isLoading: false,
+      });
+    });
+  }
+
+ render() {
+   if(this.state.isLoading){
+     return(
+       <View style={styles.activity}>
+         <ActivityIndicator size="large" color="#0000ff"/>
+       </View>
+     )
+   }
+   return (
+     <ScrollView style={styles.container}>
+       <View style={styles.subContainer}>
+         <TextInput
+             placeholder={'Title'}
+             value={this.state.title}
+             onChangeText={(text) => this.updateTextInput(text, 'title')}
+         />
+       </View>
+       <View style={styles.subContainer}>
+         <TextInput
+             multiline={true}
+             numberOfLines={4}
+             placeholder={'Description'}
+             value={this.state.description}
+             onChangeText={(text) => this.updateTextInput(text, 'description')}
+         />
+       </View>
+       <View style={styles.button}>
+         <Button
+           large
+           leftIcon={{name: 'save'}}
+           title='Save'
+           onPress={() => this.saveBoard()} />
+       </View>
+     </ScrollView>
+   );
+ }
+
+}
+
+/*
   componentDidMount() {
     db.ref('/jobs').on('value', querySnapShot => {
       let data = querySnapShot.val() ? querySnapShot.val() : {};
@@ -75,11 +152,12 @@ export default class LeaderBoard extends Component {
       });
     });
   }
+*/
 
   /*const onSubmit = (data: JobData) => {
     db.ref('/jobs').push(data);
   };*/
-
+/*
   addNewTodo() {
     db.ref('/jobs').push({
       done: false,
@@ -92,9 +170,9 @@ export default class LeaderBoard extends Component {
   }
   clearTodos() {
     db.ref('/jobs').remove();
-  }
+  }*/
 
-  render() {
+  /*render() {
     let todosKeys = Object.keys(this.state.todos);
     return (
       <ScrollView
@@ -134,8 +212,8 @@ export default class LeaderBoard extends Component {
         </View>
       </ScrollView>
     );
-  }
-}
+  }*/
+//}
 
 //TODO: function for assign volunteer
 //TODO: multiple parts to form
