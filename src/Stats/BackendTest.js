@@ -137,6 +137,100 @@ export default class LeaderBoard extends Component {
   }
 }
 
+//TODO: function for assign volunteer
+//TODO: multiple parts to form
+//TODO: format dates
+
+class JobsForm extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      todos: {},
+      presentTitle: '',
+      presentRequestor: '',
+      presentDate: '',
+      presentJobType: ''
+    };
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.addNewTodo = this.addNewTodo.bind(this);
+  }
+
+  componentDidMount() {
+    db.ref('/jobs').on('value', querySnapShot => {
+      let data = querySnapShot.val() ? querySnapShot.val() : {};
+      let jobs = {...data};
+      this.setState({
+        todos: jobs,
+      });
+    });
+  }
+
+  addNewTodo() {
+      db.ref('/jobs').push({
+        done: false,
+        title: this.state.presentTitle,
+        requestor: this.state.presentRequestor,
+        jobType: this.state.presentJobType,
+        date: this.state.presentDate
+      });
+      Alert.alert('Action!', 'A new job was created');
+      this.setState({
+        presentTitle: '',
+        presentRequestor: '',
+        presentDate: '',
+        presentJobType: ''
+      });
+    }
+
+    clearTodos() {
+      db.ref('/jobs').remove();
+    }
+
+      render() {
+        let todosKeys = Object.keys(this.state.todos);
+        return (
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.contentContainerStyle}>
+            <View>
+              {todosKeys.length > 0 ? (
+                todosKeys.map(key => (
+                  <ToDoItem
+                    key={key}
+                    id={key}
+                    job={this.state.todos[key]}
+                  />
+                ))
+              ) : (
+                    <Text>No jobs</Text>
+              )}
+             </View>
+
+            <TextInput
+              placeholder="Job Title"
+              value={this.state.presentTitle}
+              style={styles.textInput}
+              onChangeText={e => {
+                this.setState({
+                  presentTitle: e,
+                });
+              }}
+              onSubmitEditing = {this.addNewTodo}
+            />
+            <Button
+              title="Add new job"
+              onPress={this.addNewTodo}
+              color="lightgreen"
+            />
+            <View style={{marginTop: 20}}>
+              <Button title="Clear jobs" onPress={this.clearTodos} color="red" />
+            </View>
+          </ScrollView>
+        );
+      }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
