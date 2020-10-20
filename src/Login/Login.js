@@ -27,15 +27,11 @@ function Login({navigation}) {
       <TouchableOpacity>
         <Text style={styles.forgot}>Forgot Password?</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>LOGIN</Text>
-        <Button
-          title="Sign In"
-          onPress={() => navigation.navigate("AssignedJobs")}
-        />
+      <TouchableOpacity onPress={() => navigation.navigate("AssignedJobs")} style={styles.loginBtn}>
+        <Button title="LOG IN" color="#264653" onPress={() => navigation.navigate("AssignedJobs")}/>
       </TouchableOpacity>
-      <TouchableOpacity>
-        <Text style={styles.loginText}>Signup</Text>
+      <TouchableOpacity style={styles.signUpBtn}>
+        <Text style={styles.loginText}>SIGN UP</Text>
       </TouchableOpacity>
     </View>
   );
@@ -80,11 +76,20 @@ const styles = StyleSheet.create({
     height:50,
     alignItems:"center",
     justifyContent:"center",
-    marginTop:40,
+    marginTop:30,
     marginBottom:10
   },
   loginText:{
-    color:"white"
-  }
+    color:"#264653"
+  },
+  signUpBtn:{
+    width:"80%",
+    backgroundColor:"#FFFFFF",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginBottom:10
+  },
 });
 
