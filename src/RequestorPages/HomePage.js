@@ -12,12 +12,12 @@ function HomePage() {
   return (
     <SafeAreaView style={styles.container}>
       <Tab.Navigator tabBarOptions={{
-        labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
-        tabStyle: { width: windowWidth / 2 },
-        style: { backgroundColor: "#FFFFFF" },
-      }}>
-        <Tab.Screen name="UpcomingPosts" component={UpcomingPosts} />
-        <Tab.Screen name="PastPosts" component={PastPosts} />
+            labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
+            tabStyle: { width: windowWidth / 2 },
+            style: { backgroundColor: "#FFFFFF" },
+          }}>
+          <Tab.Screen name="My Posts" component={UpcomingPosts} />
+          <Tab.Screen name="Past Posts" component={PastPosts} />
       </Tab.Navigator>
     </SafeAreaView>
   );

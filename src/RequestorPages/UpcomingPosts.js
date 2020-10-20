@@ -10,8 +10,11 @@ import TypesJobs from "./Charts/TypesJobs.js";*/
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
-class UpcomingPosts extends Component {
-
+function UpcomingPosts() {
+    return (
+        <SafeAreaView style={styles.container}>
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
