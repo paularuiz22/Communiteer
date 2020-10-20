@@ -10,6 +10,7 @@ import PastJobs from "./src/PastJobs/PastJobs.js";
 import Stats from "./src/Stats/Stats.js";
 import Login from "./src/Login/Login.js";
 import HomePage from "./src/RequestorPages/HomePage.js";
+import NewJobPage from "./src/RequestorPages/NewJobPage.js";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -22,6 +23,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
         <Stack.Screen name="HomePage" component={HomePage}/>
+        <Stack.Screen name="NewJobPage" component={NewJobPage}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

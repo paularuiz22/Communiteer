@@ -1,16 +1,14 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
 import {Picker} from "@react-native-community/picker";
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
-function UpcomingPosts({navigation}) {
+function NewJobPage () {
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
-                <Button title="Add New Job" color="#E76F51" onPress={() => navigation.navigate("NewJobPage")}/>
-            </TouchableOpacity>
+            <Text>New Job Page</Text>
         </SafeAreaView>
     );
 }
@@ -45,15 +43,5 @@ const styles = StyleSheet.create({
     flex: 6, 
     width: screen.width/2,
   },
-  newJobBtn:{
-    width:"25%",
-    backgroundColor:"#E76F51",
-    borderRadius:25,
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:10,
-    marginBottom:10
-  },
 });
-export default UpcomingPosts;
+export default NewJobPage;

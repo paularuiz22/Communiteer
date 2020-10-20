@@ -2,7 +2,6 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Image, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Button } from "react-native";
-//import AssignedJobs from "/AssignedJobs/AssignedJobs.js";
 
 function Login({navigation}) {
   return (
