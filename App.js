@@ -9,6 +9,7 @@ import JobBoard from "./src/JobBoard/JobBoard.js";
 import PastJobs from "./src/PastJobs/PastJobs.js";
 import Stats from "./src/Stats/Stats.js";
 import Login from "./src/Login/Login.js";
+import HomePage from "./src/RequestorPages/HomePage.js";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -20,6 +21,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
+        <Stack.Screen name="RequestorNavigator" component={RequestorNavigator}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -36,6 +38,18 @@ function VolunteerNavigator () {
             <Tab.Screen name="PastJobs" component={PastJobs} />
             <Tab.Screen name="JobBoard" component={JobBoard} />
             <Tab.Screen name="Stats" component={Stats}/>
+        </Tab.Navigator>
+    );
+}
+
+function RequestorNavigator () {
+    return (
+        <Tab.Navigator tabBarOptions={{
+            labelStyle: { fontSize: 20, color: "#FFFFFF", fontWeight: "bold" },
+            tabStyle: { width: windowWidth / 2 },
+            style: { backgroundColor: "#2A9D8F" },
+        }}>
+            <Tab.Screen name="HomePage" component={HomePage} />
         </Tab.Navigator>
     );
 }

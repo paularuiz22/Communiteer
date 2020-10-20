@@ -30,8 +30,8 @@ function Login({navigation}) {
       <TouchableOpacity onPress={() => navigation.navigate("VolunteerNavigator")} style={styles.loginBtn}>
         <Button title="VOLUNTEER LOG IN" color="#264653" onPress={() => navigation.navigate("VolunteerNavigator")}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginBtn}>
-         <Button title="REQUESTOR LOG IN" color="#264653"/>
+      <TouchableOpacity onPress={() => navigation.navigate("RequestorNavigator")} style={styles.loginBtn}>
+         <Button title="REQUESTOR LOG IN" color="#264653" onPress={() => navigation.navigate("RequestorNavigator")}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.signUpBtn}>
         <Text style={styles.loginText}>SIGN UP</Text>
