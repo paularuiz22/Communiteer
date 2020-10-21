@@ -45,7 +45,6 @@ class NewJobPage extends Component {
             startTime: this.state.startTime,
             endTime: this.state.endTime,
             location: this.state.location,
-            about: this.state.about,
             numVolunteers: this.state.numVolunteers,
         }).then((docRef) => {
             this.setState({
