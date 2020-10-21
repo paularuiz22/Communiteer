@@ -1,66 +1,67 @@
 import React, { useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
-import db from "../firebase.js";
+import * as firebase from "firebase";
 
-export default function LoginScreen({navigation}) {
+export default function RegistrationScreen({navigation}) {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const onFooterLinkPress = () => {
-    navigation.navigate("Registration");
+    navigation.navigate("Login");
   };
 
-  const onLoginPress = () => {
-    db
+  const onRegisterPress = () => {
+    if (password !== confirmPassword) {
+      alert("Passwords don't match.");
+      return;
+    }
+    firebase
       .auth()
-      .signInWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(email, password)
       .then((response) => {
         const uid = response.user.uid;
-        const usersRef = db.firestore().collection("users");
+        const data = {
+          id: uid,
+          email,
+          fullName,
+        };
+        const usersRef = firebase.firestore().collection("users");
         usersRef
           .doc(uid)
-          .get()
-          .then(firestoreDocument => {
-            if (!firestoreDocument.exists) {
-              alert("User does not exist anymore.");
-              return;
-            }
-            const user = firestoreDocument.data();
-            navigation.navigate("Home", {user});
+          .set(data)
+          .then(() => {
+            navigation.navigate("Home", {user: data});
           })
-          .catch(error => {
+          .catch((error) => {
             alert(error);
           });
       })
-      .catch(error => {
+      .catch((error) => {
         alert(error);
       });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>Communiteer</Text>
-      {/* <View style={styles.inputView} >
-        <TextInput  
-          style={styles.inputText}
-          placeholder="Email" 
-          placeholderTextColor="#003f5c"
-          onChangeText={text => this.setState({email:text})}/>
-      </View>
       <View style={styles.inputView} >
-        <TextInput  
-          secureTextEntry
+        <TextInput
           style={styles.inputText}
-          placeholder="Password" 
-          placeholderTextColor="#003f5c"
-          onChangeText={text => this.setState({password:text})}/>
-      </View> */}
+          placeholder='Full Name'
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setFullName(text)}
+          value={fullName}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+      </View>
       <View style={styles.inputView} >
         <TextInput
           style={styles.inputText}
           placeholder='E-mail'
-          placeholderTextColor="#003f5c"
+          placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setEmail(text)}
           value={email}
           underlineColorAndroid="transparent"
@@ -70,7 +71,7 @@ export default function LoginScreen({navigation}) {
       <View style={styles.inputView} >
         <TextInput
           style={styles.inputText}
-          placeholderTextColor="#003f5c"
+          placeholderTextColor="#aaaaaa"
           secureTextEntry
           placeholder='Password'
           onChangeText={(text) => setPassword(text)}
@@ -79,24 +80,36 @@ export default function LoginScreen({navigation}) {
           autoCapitalize="none"
         />
       </View>
+      <View style={styles.inputView} >
+        <TextInput
+          style={styles.inputText}
+          placeholderTextColor="#aaaaaa"
+          secureTextEntry
+          placeholder='Confirm Password'
+          onChangeText={(text) => setConfirmPassword(text)}
+          value={confirmPassword}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
 
+      </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => onLoginPress()}>
-        <Text style={styles.buttonTitle}>Log in</Text>
+        onPress={() => onRegisterPress()}>
+        <Text style={styles.buttonTitle}>Create account</Text>
       </TouchableOpacity>
       <View style={styles.footerView}>
-        <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
+        <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
       </View>
     </View>
   );
 }
-
 // import React from "react";
 // import { Text, View } from "react-native";
 // import { Image, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 // import { Button } from "react-native";
 
+// function Registration({navigation}) {
 //   return (
 //     <View style={styles.container}>
 //       <Text style={styles.logo}>Communiteer</Text>
@@ -132,7 +145,7 @@ export default function LoginScreen({navigation}) {
 //   );
 // }
 
-// export default Login;
+// export default Registration;
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -141,7 +154,6 @@ export default function LoginScreen({navigation}) {
 //     alignItems: "center",
 //     justifyContent: "center",
 //   },
-
 //   logo:{
 //     fontWeight:"bold",
 //     fontSize:50,

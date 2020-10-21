@@ -17,8 +17,8 @@ var config = {
     databaseURL: "https://communiteer-2020fall.firebaseio.com/",
     storageBucket: "communiteer-2020fall.appspot.com"
 };
-const app = firebase.initializeApp(config);
-const db = app.database();
+// const app = firebase.initializeApp(config);
+// const db = app.database();
 
 type JobData = {
     requestor: string;
