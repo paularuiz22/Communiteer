@@ -2,10 +2,7 @@ import React, { useState, Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity, TextInput } from "react-native";
 import {Picker} from "@react-native-community/picker";
 import { db } from '../Stats/BackendTest';
-import DatePicker from 'react-native-datepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
@@ -67,7 +64,6 @@ class NewJobPage extends Component {
    }
 
     render () {
-
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
@@ -214,9 +210,12 @@ const styles = StyleSheet.create({
     marginBottom:10
   },
   row: {
+    width: 500,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10
+    padding: 10,
+    alignItems:"center",
+    justifyContent:"center",
   },
   picker: {
     height: 150,
@@ -226,6 +225,7 @@ const styles = StyleSheet.create({
   },
   input: {
      height: 40,
+     width: "60%",
      backgroundColor:"#D3D3D3",
      borderRadius: 10,
      borderColor: '#D3D3D3',

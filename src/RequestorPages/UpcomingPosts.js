@@ -9,7 +9,7 @@ function UpcomingPosts({navigation}) {
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={() => navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
-                <Button title="Add New Job" color="#E76F51" onPress={() => navigation.navigate("NewJobPage")}/>
+                <Text style={{color: 'white'}}>ADD NEW JOB</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
