@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity, TextInput } from "react-native";
 import {Picker} from "@react-native-community/picker";
-import DatePicker from 'react-native-datepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
@@ -9,6 +9,8 @@ const screen = Dimensions.get("screen");
 function NewJobPage () {
     const [selectedValue, setSelectedValue] = useState("alljobs");
     const [titleValue, titleText] = React.useState('');
+    const [startDateValue, startDateText] = React.useState('');
+    const [endDateValue, endDateText] = React.useState('');
     const [startTimeValue, startTimeText] = React.useState('');
     const [endTimeValue, endTimeText] = React.useState('');
     const [locationValue, locationText] = React.useState('');
@@ -42,11 +44,27 @@ function NewJobPage () {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.headingOne}>Start Time</Text>
+                    <Text style={styles.headingOne}>Start Date</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={text => startTimeText(text)}
-                        value={startTimeValue}
+                        onChangeText={startDateValue => startDateText(startDateValue)}
+                        value={startDateValue}
+                    />
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.headingOne}>End Date</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={endDateValue => endDateText(endDateValue)}
+                        value={endDateValue}
+                    />
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.headingOne}>Start Time</Text>
+                    <TextInput
+                          style={styles.input}
+                          onChangeText={startTimeValue => startTimeText(startTimeValue)}
+                          value={startTimeValue}
                     />
                 </View>
                 <View style={styles.row}>
@@ -81,28 +99,6 @@ function NewJobPage () {
                         value={numberValue}
                     />
                 </View>
-                <DatePicker
-                    style={{width: 200}}
-                    date="2020-10-15"
-                    mode="date"
-                    placeholder="select date"
-                    format="YYYY-MM-DD"
-                    minDate="2020-10-1"
-                    maxDate="2021-10-1"
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    customStyles={{
-                        dateIcon: {
-                            position: 'absolute',
-                            left: 0,
-                            top: 4,
-                            marginLeft: 0
-                        },
-                        dateInput: {
-                            marginLeft: 36
-                        }
-                    }}
-                />
                 <TouchableOpacity style={styles.saveBtn}>
                     <Text style={{color: 'white'}}>SAVE</Text>
                 </TouchableOpacity>
