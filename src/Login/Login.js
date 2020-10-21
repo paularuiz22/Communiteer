@@ -27,10 +27,10 @@ function Login({navigation}) {
         <Text style={styles.forgot}>Forgot Password?</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("VolunteerNavigator")} style={styles.loginBtn}>
-        <Button title="VOLUNTEER LOG IN" color="#264653" onPress={() => navigation.navigate("VolunteerNavigator")}/>
+        <Text style={{color: 'white'}}>VOLUNTEER LOG IN</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("HomePage")} style={styles.loginBtn}>
-         <Button title="REQUESTOR LOG IN" color="#264653" onPress={() => navigation.navigate("HomePage")}/>
+         <Text style={{color: 'white'}}>REQUESTOR LOG IN</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.signUpBtn}>
         <Text style={styles.loginText}>SIGN UP</Text>

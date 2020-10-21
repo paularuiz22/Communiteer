@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity, TextInput } from "react-native";
 import {Picker} from "@react-native-community/picker";
+import DatePicker from 'react-native-datepicker';
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
@@ -36,7 +37,7 @@ function NewJobPage () {
                     <Text style={styles.headingOne}>Title</Text>
                     <TextInput
                           style={styles.input}
-                          onChangeText={text => onChangeText(text)}
+                          onChangeText={titleValue => titleText(titleValue)}
                           value={titleValue}
                     />
                 </View>
@@ -44,7 +45,7 @@ function NewJobPage () {
                     <Text style={styles.headingOne}>Start Time</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={text => onChangeText(text)}
+                        onChangeText={text => startTimeText(text)}
                         value={startTimeValue}
                     />
                 </View>
@@ -52,7 +53,7 @@ function NewJobPage () {
                     <Text style={styles.headingOne}>End Time</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={text => onChangeText(text)}
+                        onChangeText={text => endTimeText(text)}
                         value={endTimeValue}
                     />
                 </View>
@@ -60,7 +61,7 @@ function NewJobPage () {
                     <Text style={styles.headingOne}>Location</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={text => onChangeText(text)}
+                        onChangeText={text => locationText(text)}
                         value={locationValue}
                     />
                 </View>
@@ -68,7 +69,7 @@ function NewJobPage () {
                     <Text style={styles.headingOne}>About</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={text => onChangeText(text)}
+                        onChangeText={text => aboutText(text)}
                         value={aboutValue}
                     />
                 </View>
@@ -76,12 +77,34 @@ function NewJobPage () {
                     <Text style={styles.headingOne}># of volunteers</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={text => onChangeText(text)}
+                        onChangeText={text => numberText(text)}
                         value={numberValue}
                     />
                 </View>
+                <DatePicker
+                    style={{width: 200}}
+                    date="2020-10-15"
+                    mode="date"
+                    placeholder="select date"
+                    format="YYYY-MM-DD"
+                    minDate="2020-10-1"
+                    maxDate="2021-10-1"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                        dateIcon: {
+                            position: 'absolute',
+                            left: 0,
+                            top: 4,
+                            marginLeft: 0
+                        },
+                        dateInput: {
+                            marginLeft: 36
+                        }
+                    }}
+                />
                 <TouchableOpacity style={styles.saveBtn}>
-                    <Button title="SAVE" color="#264653"/>
+                    <Text style={{color: 'white'}}>SAVE</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
@@ -137,9 +160,12 @@ const styles = StyleSheet.create({
     marginBottom:10
   },
   row: {
+    width: 500,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10
+    padding: 10,
+    alignItems:"center",
+    justifyContent:"center",
   },
   picker: {
     height: 150,
@@ -149,6 +175,7 @@ const styles = StyleSheet.create({
   },
   input: {
      height: 40,
+     width: "60%",
      backgroundColor:"#D3D3D3",
      borderRadius: 10,
      borderColor: '#D3D3D3',
