@@ -2,7 +2,6 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Image, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Button } from "react-native";
-//import AssignedJobs from "/AssignedJobs/AssignedJobs.js";
 
 function Login({navigation}) {
   return (
@@ -27,15 +26,14 @@ function Login({navigation}) {
       <TouchableOpacity>
         <Text style={styles.forgot}>Forgot Password?</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>LOGIN</Text>
-        <Button
-          title="Sign In"
-          onPress={() => navigation.navigate("AssignedJobs")}
-        />
+      <TouchableOpacity onPress={() => navigation.navigate("VolunteerNavigator")} style={styles.loginBtn}>
+        <Text style={{color: 'white'}}>VOLUNTEER LOG IN</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
-        <Text style={styles.loginText}>Signup</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("HomePage")} style={styles.loginBtn}>
+         <Text style={{color: 'white'}}>REQUESTOR LOG IN</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.signUpBtn}>
+        <Text style={styles.loginText}>SIGN UP</Text>
       </TouchableOpacity>
     </View>
   );
@@ -80,11 +78,20 @@ const styles = StyleSheet.create({
     height:50,
     alignItems:"center",
     justifyContent:"center",
-    marginTop:40,
+    marginTop:30,
     marginBottom:10
   },
   loginText:{
-    color:"white"
-  }
+    color:"#264653"
+  },
+  signUpBtn:{
+    width:"80%",
+    backgroundColor:"#FFFFFF",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginBottom:10
+  },
 });
 
