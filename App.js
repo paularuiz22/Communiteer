@@ -3,6 +3,7 @@ import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
+import index from "./index";
 
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
 import JobBoard from "./src/JobBoard/JobBoard.js";
@@ -17,6 +18,7 @@ const Stack = createStackNavigator();
 const windowWidth = Dimensions.get("window").width;
 
 export default function App() {
+  //index();
   return (
     <NavigationContainer>
       <Stack.Navigator>
