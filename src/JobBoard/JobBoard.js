@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   numberLabel: {
     fontSize: 30,
-    padding: 10,
+    padding: 8,
     color: '#fff',
     textAlign: 'center'
   },
