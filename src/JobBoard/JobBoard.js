@@ -10,7 +10,6 @@ function JobBoard() {
       <Header
         backgroundColor="#2A9D8F"
         centerComponent={{text: 'Job Board', style: {color: '#fff'}}}
-        rightComponent={{icon: 'home', color: '#fff'}}
       />
       <Text style={styles.headingOne}>Job Type</Text>
       <Picker
