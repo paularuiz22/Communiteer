@@ -40,7 +40,7 @@ class NewJobPage extends Component {
             title: this.state.title,
             jobType: this.state.jobType,
             description: this.state.description,
-            date: this.state.date,
+            date: parseInt(this.state.date, 10),
             startTime: this.state.startTime,
             endTime: this.state.endTime,
             location: this.state.location,
@@ -56,6 +56,7 @@ class NewJobPage extends Component {
                 about: '',
                 numVolunteers: '',
             });
+            this.props.navigation.goBack();
         }).catch((error) => {
                 console.error("Error adding document: ", error);
         });

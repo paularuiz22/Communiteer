@@ -1,37 +1,45 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
 import {Picker} from "@react-native-community/picker";
-// import { Divider } from 'react-native-paper';
 import { db } from '../Stats/BackendTest';
-
-
-/*import MonthlyHours from "./Charts/MonthlyHours.js";
-import Points from "./Charts/Progress.js";
-import TypesJobs from "./Charts/TypesJobs.js";*/
+import { sortBy } from 'lodash';
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
+const today = new Date();
+let todayDay = today.getDate();
 
-const Job = ({job: {job: title, description, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
-
-    return (
-        <View style={styles.row}>
-            <View style={styles.circle}>
-                <Text style={styles.numberLabel}>{date}</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text>{title}</Text>
-                <View style={styles.row}>
-                    <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
-                    <View style={styles.typeLabel}>
-                        <Text style={styles.smallText}>{jobType}</Text>
+const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
+    if (date < todayDay) {
+        return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.row}>
+                <View style={styles.circle}>
+                    <Text style={styles.numberLabel}>{date}</Text>
+                </View>
+                <View style={styles.jobLabel}>
+                    <View style={styles.column}>
+                        <Text style={styles.jobLabelTitle}>{title}</Text>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
+                            <View style={styles.typeLabel}>
+                                <Text style={styles.smallText}>{jobType}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{location}</Text>
+                        </View>
                     </View>
-                    <Text style={styles.mediumText}>{location}</Text>
                 </View>
             </View>
-        </View>
-    )
+         </SafeAreaView>
+        )
+    }
+    else {
+        return null
+    }
 };
+
 
 export default class PastPosts extends Component {
 
@@ -39,19 +47,20 @@ export default class PastPosts extends Component {
         super();
         this.ref = db.ref('/jobs');
         this.state = {
-         jobs: this.ref,
+         jobs: sortBy(this.ref, 'date'),
         };
       }
 
-      componentDidMount() {
-          db.ref('/jobs').on('value', querySnapShot => {
+    componentDidMount() {
+        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
             this.setState({
-              jobs: jobItems,
+            jobs: sortBy(jobItems, 'date'),
             });
-          });
-        }
+        });
+    }
+
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
         return (
@@ -78,6 +87,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    padding: 5,
     justifyContent: "center",
   },
   dropdown_container: {
@@ -135,7 +145,7 @@ const styles = StyleSheet.create({
       padding: 10
     },
     jobLabelTitle: {
-      fontSize: 24,
+      fontSize: 20,
     },
     typeLabel: {
       width: 100,
@@ -143,7 +153,7 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       backgroundColor: "#FF9B21",
       marginLeft: 10,
-      padding: 5
+      padding: 5,
     },
     smallText: {
       fontSize: 14,
@@ -152,11 +162,16 @@ const styles = StyleSheet.create({
       textAlignVertical: "center"
     },
     mediumText: {
-      fontSize: 18,
+      fontSize: 17,
     },
     row: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      padding: 10
-    }
+      padding: 3
+    },
+    column: {
+      flexDirection: 'column',
+      flexWrap: 'wrap',
+      padding: 5
+    },
 });
