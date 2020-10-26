@@ -8,7 +8,7 @@ import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
 import JobBoard from "./src/JobBoard/JobBoard.js";
 import PastJobs from "./src/PastJobs/PastJobs.js";
-import Stats from "./src/Stats/Stats.js";
+import Stats from "./src/TrustedRequestors/TrustedRequestorsList.js";
 import Login from "./src/Login/Login.js";
 
 const Tab = createBottomTabNavigator();
@@ -32,7 +32,7 @@ export default function App() {
         <Tab.Screen name="AssignedJobs" component={AssignedJobs} />
         <Tab.Screen name="PastJobs" component={PastJobs} />
         <Tab.Screen name="JobBoard" component={JobBoard} />
-        <Tab.Screen name="Stats" component={Stats} />
+        <Tab.Screen name="TrustedRequestors" component={Stats} />
       </Tab.Navigator>
      
     </NavigationContainer>

@@ -1,7 +1,20 @@
 import React, {useState} from "react";
 import { Header } from 'react-native-elements';
-import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View } from 'react-native';
+import { StyleSheet,TouchableOpacity, Text, SafeAreaView, ScrollView, Picker, View } from 'react-native';
 import Constants from 'expo-constants';
+import data from "../TrustedRequestors/data.js"
+
+let count = 50
+
+const onPress = (name, picture) => {  
+    data.push(
+    {
+      id: count,
+      name: name,
+    });   
+    count = count + 1
+    console.log(data)
+  }
 
 function AssignedJobs() {
   const [selectedValue, setSelectedValue] = useState("alljobs");
@@ -19,8 +32,12 @@ function AssignedJobs() {
                     <Text style={styles.numberLabel}>26</Text>
                 </View>
                 <View style={styles.jobLabel}>
-                    <Text style={styles.jobLabelTitle}>Mow Catherine's Lawn</Text>
+                    <Text style={styles.jobLabelTitle}>Mow Lawn</Text>
                     <Text style={styles.mediumText}>3pm - 5pm</Text>
+                    <TouchableOpacity onPress={onPress("Catherine Asparagus", 
+                    'https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094043-stock-illustration-profile-icon-male-avatar.jpg')}>
+                      <Text style={styles.mediumText}>Catherine Asparagus</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.row}>

@@ -27,12 +27,12 @@ function Login({navigation}) {
       <TouchableOpacity>
         <Text style={styles.forgot}>Forgot Password?</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>LOGIN</Text>
-        <Button
-          title="Sign In"
-          onPress={() => navigation.navigate("AssignedJobs")}
-        />
+      <TouchableOpacity 
+        style={styles.loginBtn}
+        onPress={() => navigation.navigate('AssignedJobs')}
+        >
+          <Text style={styles.loginText}>LOGIN</Text>
+          
       </TouchableOpacity>
       <TouchableOpacity>
         <Text style={styles.loginText}>Signup</Text>
