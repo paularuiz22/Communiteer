@@ -3,6 +3,8 @@ import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, A
 import {Picker} from "@react-native-community/picker";
 import { db } from '../Stats/BackendTest';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
@@ -38,7 +40,7 @@ class NewJobPage extends Component {
             title: this.state.title,
             jobType: this.state.jobType,
             description: this.state.description,
-            date: this.state.date,
+            date: parseInt(this.state.date, 10),
             startTime: this.state.startTime,
             endTime: this.state.endTime,
             location: this.state.location,
@@ -54,6 +56,7 @@ class NewJobPage extends Component {
                 about: '',
                 numVolunteers: '',
             });
+            this.props.navigation.goBack();
         }).catch((error) => {
                 console.error("Error adding document: ", error);
         });
@@ -63,7 +66,17 @@ class NewJobPage extends Component {
       this.setState({ jobType: jobType })
    }
 
+
+   showDatePicker = () => {
+        dateVisible = true;
+     };
+
+   hideDatePicker = () => {
+        dateVisible = false;
+   };
+
     render () {
+       var dateVisible = false;
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
@@ -93,21 +106,11 @@ class NewJobPage extends Component {
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Date</Text>
-                        <DateTimePicker
-                                  value={this.state.date}
-                                  mode="date"
-                                  display="default"
-                                  onChange={(e, d) => {
-                                    if (Platform.OS === 'ios') {
-                                      this.setState({ date: d });
-                                      onChange(d);
-                                    } else {
-                                      this.setState({ date: d});
-                                      onClose(d);
-                                    }
-                                 }}
-                                 style={{ backgroundColor: 'white' }}
-                               />
+                      <TextInput
+                              style={styles.input}
+                              onChangeText={(text) => this.updateTextInput(text, 'date')}
+                              value={this.state.date}
+                        />
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Start Time</Text>

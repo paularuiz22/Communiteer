@@ -8,7 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^3.0.4",
+    "@react-native-community/datetimepicker": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/picker": "^1.8.0",
     "@react-native-firebase/app": "^8.4.5",
@@ -19,6 +19,7 @@
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
     "firebase": "7.9.0",
+    "lodash": "^4.17.20",
     "react": "16.13.1",
     "react-datepicker": "^3.3.0",
     "react-dom": "16.13.1",
@@ -31,6 +32,7 @@
     "react-native-elements": "^2.3.2",
     "react-native-gesture-handler": "~1.7.0",
     "react-native-leaderboard": "^1.0.6",
+    "react-native-modal-datetime-picker": "^9.0.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",

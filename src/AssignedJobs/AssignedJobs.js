@@ -10,7 +10,6 @@ function AssignedJobs() {
         <Header
             backgroundColor="#2A9D8F"
             centerComponent={{text: 'Assigned Jobs', style: {color: '#fff'}}}
-            rightComponent={{icon: 'home', color: '#fff'}}
         />
         <ScrollView style={styles.scrollView}>
             <Text style={styles.headingOne}>September</Text>

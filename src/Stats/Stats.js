@@ -3,7 +3,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 const Tab = createMaterialTopTabNavigator();
 import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
 
-import LeaderBoard from "./BackendTest.js";
 import Analytics from "./Analytics.js";
 
 const windowWidth = Dimensions.get("window").width;
@@ -11,14 +10,7 @@ const windowWidth = Dimensions.get("window").width;
 function Stats() {
   return (
     <SafeAreaView style={styles.container}>
-      <Tab.Navigator tabBarOptions={{
-        labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
-        tabStyle: { width: windowWidth / 2 },
-        style: { backgroundColor: "#FFFFFF" },
-      }}>
-        <Tab.Screen name="Create Job" component={LeaderBoard} />
-        <Tab.Screen name="Analytics" component={Analytics} />
-      </Tab.Navigator>
+      <Analytics/>
     </SafeAreaView>
   );
 }

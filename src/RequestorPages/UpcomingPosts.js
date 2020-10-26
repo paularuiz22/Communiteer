@@ -1,25 +1,94 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
 import {Picker} from "@react-native-community/picker";
+import { db } from '../Stats/BackendTest';
+import { sortBy } from 'lodash';
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
-function UpcomingPosts({navigation}) {
-    return (
-        <SafeAreaView style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
-                <Text style={{color: 'white'}}>ADD NEW JOB</Text>
-            </TouchableOpacity>
-        </SafeAreaView>
-    );
+let today = new Date();
+let todayDay = today.getDate();
+
+const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
+    if (date >= todayDay) {
+        return (
+            <View style={styles.row}>
+                <View style={styles.circle}>
+                    <Text style={styles.numberLabel}>{date}</Text>
+                </View>
+                <View style={styles.jobLabel}>
+                    <View style={styles.column}>
+                        <Text style={styles.jobLabelTitle}>{title}</Text>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
+                            <View style={styles.typeLabel}>
+                                <Text style={styles.smallText}>{jobType}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{location}</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+    else {
+        return null
+    }
+};
+
+class UpcomingPosts extends Component {
+
+    constructor() {
+        super();
+        this.ref = db.ref('/jobs');
+        this.state = {
+            jobs: sortBy(this.ref, 'date'),
+        };
+    }
+    componentDidMount() {
+        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let jobItems = {...data};
+            this.setState({
+                jobs: sortBy(jobItems, 'date'),
+            });
+        });
+    }
+
+    render () {
+        let jobsKeys = Object.keys(this.state.jobs);
+        return (
+            <SafeAreaView style={styles.container}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
+                    <Text style={{color: 'white'}}>ADD NEW JOB</Text>
+                </TouchableOpacity>
+                <ScrollView style={styles.scrollView}>
+                <View>
+                  {jobsKeys.length > 0 ? (
+                    jobsKeys.map(key => (
+                      <Job
+                        key={key}
+                        id={key}
+                        job={this.state.jobs[key]}
+                      />
+                    ))
+                  ) : (
+                        <Text>No upcoming jobs</Text>
+                  )}
+                </View>
+                </ScrollView>
+            </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
   },
   dropdown_container: {
     flex: 1,
@@ -54,6 +123,63 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     marginTop:10,
     marginBottom:10
+  },
+  scrollView: {
+    marginHorizontal: 20,
+  },
+  headingOne: {
+    fontSize: 30,
+    padding: 10
+  },
+  numberLabel: {
+    fontSize: 30,
+    padding: 8,
+    color: '#fff',
+    textAlign: 'center'
+  },
+  circle: {
+    width: 75,
+    height: 75,
+    borderRadius: 75/2,
+    backgroundColor: "#264653",
+    padding: 10
+  },
+  jobLabel: {
+    width: 270,
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: "#EEEEEE",
+    padding: 10
+  },
+  jobLabelTitle: {
+    fontSize: 20,
+  },
+  typeLabel: {
+    width: 100,
+    height: 25,
+    borderRadius: 10,
+    backgroundColor: "#FF9B21",
+    marginLeft: 10,
+    padding: 5,
+  },
+  smallText: {
+    fontSize: 14,
+    color: "#fff",
+    textAlign: "center",
+    textAlignVertical: "center"
+  },
+  mediumText: {
+    fontSize: 17,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 2
+  },
+  column: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    padding: 5
   },
 });
 export default UpcomingPosts;

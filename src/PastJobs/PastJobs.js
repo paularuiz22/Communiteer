@@ -9,7 +9,6 @@ function PastJobs() {
         <Header
           backgroundColor="#2A9D8F"
           centerComponent={{text: 'Past Jobs', style: {color: '#fff'}}}
-          rightComponent={{icon: 'home', color: '#fff'}}
         />
         <View style={styles.scrollView}>
             <View style={styles.scrollBar}>
