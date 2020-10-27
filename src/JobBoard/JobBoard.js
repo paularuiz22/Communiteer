@@ -11,20 +11,23 @@ function JobBoard() {
         backgroundColor="#2A9D8F"
         centerComponent={{text: 'Job Board', style: {color: '#fff'}}}
       />
-      <Text style={styles.headingOne}>Job Type</Text>
-      <Picker
-        selectedValue={selectedValue}
-        style={{height:150, width:200}}
-        onValueChange={(itemValue, itemIndex) => selectedValue(itemValue)}
-      >
-        <Picker.Item label="All Jobs" value="alljobs"/>
-        <Picker.Item label="Beautification" value="beautification"/>
-        <Picker.Item label="Children" value="children"/>
-        <Picker.Item label="House Chores" value="housechores"/>
-        <Picker.Item label="Pet Care" value="petcare"/>
-        <Picker.Item label="Shopping" value="shopping"/>
-        <Picker.Item label="Tutoring" value="tutoring"/>
-      </Picker>
+      <View style={styles.topRow}>
+        <Text style={styles.headingOne}>Job Type</Text>
+        <Picker
+            selectedValue={selectedValue}
+            style={styles.pickerStyle}
+            itemStyle={{height: 44}}
+            onValueChange={(itemValue, itemIndex) => selectedValue(itemValue)}
+        >
+            <Picker.Item label="All Jobs" value="alljobs"/>
+            <Picker.Item label="Beautification" value="beautification"/>
+            <Picker.Item label="Children" value="children"/>
+            <Picker.Item label="House Chores" value="housechores"/>
+            <Picker.Item label="Pet Care" value="petcare"/>
+            <Picker.Item label="Shopping" value="shopping"/>
+            <Picker.Item label="Tutoring" value="tutoring"/>
+        </Picker>
+      </View>
       <ScrollView style={styles.scrollView}>
         <Text style={styles.headingOne}>September</Text>
         <View style={styles.row}>
@@ -160,10 +163,22 @@ const styles = StyleSheet.create({
   mediumText: {
     fontSize: 18,
   },
+  topRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 10,
+    alignItems:"center",
+    justifyContent:"center",
+  },
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10
+    padding: 10,
+  },
+  pickerStyle: {
+    height:80,
+    width:"75%",
+    fontSize: 32
   }
 });
 
