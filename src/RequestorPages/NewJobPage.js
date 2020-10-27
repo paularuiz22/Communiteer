@@ -10,7 +10,6 @@ const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
 class NewJobPage extends Component {
-
   constructor() {
     super();
     this.ref = db.ref('/jobs');
@@ -18,14 +17,17 @@ class NewJobPage extends Component {
       title: '',
       description: '',
       jobType: '',
-      date: new Date(),
-      startTime: '',
-      endTime: '',
+      startDateTime: '',
+      endDateTime: '',
       location: '',
       numVolunteers: '',
+      isStartDateTimePickerVisible: false,
+      isEndDateTimePickerVisible: false,
+      startDateTimeLabel: 'Select Start Date/Time',
+      endDateTimeLabel: 'Select End Date/Time',
     };
-      this.updateTextInput = this.updateTextInput.bind(this);
-      this.saveJob = this.saveJob.bind(this);
+    this.updateTextInput = this.updateTextInput.bind(this);
+    this.saveJob = this.saveJob.bind(this);
   }
 
 
@@ -40,21 +42,23 @@ class NewJobPage extends Component {
             title: this.state.title,
             jobType: this.state.jobType,
             description: this.state.description,
-            date: parseInt(this.state.date, 10),
-            startTime: this.state.startTime,
-            endTime: this.state.endTime,
+            startDateTime: this.state.startDateTime,
+            //endDateTime: this.state.endDateTime,
             location: this.state.location,
             numVolunteers: this.state.numVolunteers,
         }).then((docRef) => {
             this.setState({
                 title: '',
                 description: '',
-                date: '',
-                startTime: '',
-                endTime: '',
+                startDateTime: '',
+                endDateTime: '',
                 location: '',
                 about: '',
                 numVolunteers: '',
+                isStartDateTimePickerVisible: false,
+                isEndDateTimePickerVisible: false,
+                startDateTimeLabel: 'Select Start Date/Time',
+                endDateTimeLabel: 'Select End Date/Time',
             });
             this.props.navigation.goBack();
         }).catch((error) => {
@@ -62,21 +66,37 @@ class NewJobPage extends Component {
         });
     }
 
-   updateJobType = (jobType) => {
+    updateJobType = (jobType) => {
       this.setState({ jobType: jobType })
-   }
+    };
 
+    showStartDateTimePicker = () => {
+        this.setState({ isStartDateTimePickerVisible: true});
+    };
+    hideStartDateTimePicker = () => {
+        this.setState({ isStartDateTimePickerVisible: false});
+    };
+    handleStartDatePicked = (date) => {
+        console.log('A start date has been picked: ', date);
+        this.setState({ startDateTimeLabel: date.toString()});
+        this.setState({ startDateTime: date });
+        this.hideStartDateTimePicker();
+    }
 
-   showDatePicker = () => {
-        dateVisible = true;
-     };
-
-   hideDatePicker = () => {
-        dateVisible = false;
-   };
+    showEndDateTimePicker = () => {
+        this.setState({ isEndDateTimePickerVisible: true });
+    };
+    hideEndDateTimePicker = () => {
+        this.setState({ isEndDateTimePickerVisible: false });
+    };
+    handleEndDatePicked = (date) => {
+        console.log('An end date has been picked: ', date);
+        this.setState({ endDateTimeLabel: date.toString()});
+        this.setState({ endDateTime: date});
+        this.hideEndDateTimePicker();
+    }
 
     render () {
-       var dateVisible = false;
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
@@ -105,12 +125,32 @@ class NewJobPage extends Component {
                         />
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.headingOne}>Date</Text>
-                      <TextInput
-                              style={styles.input}
-                              onChangeText={(text) => this.updateTextInput(text, 'date')}
-                              value={this.state.date}
-                        />
+                        <Text style={styles.headingOne}>Start Date/Time</Text>
+                        <View>
+                            <Button onPress={this.showStartDateTimePicker} title = {this.state.startDateTimeLabel} />
+                        </View>
+                        {this.state.isStartDateTimePickerVisible && (
+                            <DateTimePickerModal
+                                isVisible={true}
+                                mode={'datetime'}
+                                onConfirm={this.handleStartDatePicked}
+                                onCancel={this.hideStartDateTimePicker}
+                            />
+                        )}
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.headingOne}>End Date/Time</Text>
+                        <View>
+                            <Button onPress={this.showEndDateTimePicker} title = {this.state.endDateTimeLabel} />
+                        </View>
+                        {this.state.isEndDateTimePickerVisible && (
+                            <DateTimePickerModal
+                                isVisible={true}
+                                mode={'datetime'}
+                                onConfirm={this.handleEndDatePicked}
+                                onCancel={this.hideEndDateTimePicker}
+                            />
+                        )}
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Start Time</Text>
@@ -175,8 +215,8 @@ const styles = StyleSheet.create({
     padding: 10
   },
   scrollView: {
-      marginHorizontal: 20,
-      marginTop: 20
+      marginHorizontal: 0,
+      marginTop: 0
   },
   dropdown_container: {
     flex: 1,
@@ -213,12 +253,12 @@ const styles = StyleSheet.create({
     marginBottom:10
   },
   row: {
-    width: 500,
+    width: '90%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
+    padding: 5,
     alignItems:"center",
-    justifyContent:"center",
+    justifyContent:"flex-start",
   },
   picker: {
     height: 150,
@@ -228,7 +268,7 @@ const styles = StyleSheet.create({
   },
   input: {
      height: 40,
-     width: "60%",
+     width: "50%",
      backgroundColor:"#D3D3D3",
      borderRadius: 10,
      borderColor: '#D3D3D3',
