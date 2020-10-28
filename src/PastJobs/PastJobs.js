@@ -10,7 +10,7 @@ function PastJobs() {
           backgroundColor="#2A9D8F"
           centerComponent={{text: 'Past Jobs', style: {color: '#fff'}}}
         />
-        <View style={styles.scrollView}>
+        <ScrollView style={styles.scrollView}>
             <View style={styles.scrollBar}>
                 <Text style={styles.whiteHeadingOne}>Yard Work</Text>
             </View>
@@ -41,7 +41,7 @@ function PastJobs() {
                 <Text style={styles.smallText}>August 8, 2020</Text>
                 <Text style={styles.smallText}>July 17, 2020</Text>
             </View>
-        </View>
+        </ScrollView>
     </SafeAreaView>
   );
 }
