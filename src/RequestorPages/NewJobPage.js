@@ -43,7 +43,7 @@ class NewJobPage extends Component {
             jobType: this.state.jobType,
             description: this.state.description,
             startDateTime: this.state.startDateTime,
-            //endDateTime: this.state.endDateTime,
+            endDateTime: this.state.endDateTime,
             location: this.state.location,
             numVolunteers: this.state.numVolunteers,
         }).then((docRef) => {

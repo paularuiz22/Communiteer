@@ -1,114 +1,254 @@
-import React, {useState} from "react";
+import React, {useState, Component} from "react";
 import { Header } from 'react-native-elements';
-import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList } from 'react-native';
 import Constants from 'expo-constants';
 
-function JobBoard() {
-  const [selectedValue, setSelectedValue] = useState("alljobs");
-  return (
-    <SafeAreaView style={styles.container}>
-      <Header
-        backgroundColor="#2A9D8F"
-        centerComponent={{text: 'Job Board', style: {color: '#fff'}}}
-      />
-      <View style={styles.topRow}>
-        <Text style={styles.headingOne}>Job Type</Text>
-        <Picker
-            selectedValue={selectedValue}
-            style={styles.pickerStyle}
-            itemStyle={{height: 44}}
-            onValueChange={(itemValue, itemIndex) => selectedValue(itemValue)}
-        >
-            <Picker.Item label="All Jobs" value="alljobs"/>
-            <Picker.Item label="Beautification" value="beautification"/>
-            <Picker.Item label="Children" value="children"/>
-            <Picker.Item label="House Chores" value="housechores"/>
-            <Picker.Item label="Pet Care" value="petcare"/>
-            <Picker.Item label="Shopping" value="shopping"/>
-            <Picker.Item label="Tutoring" value="tutoring"/>
-        </Picker>
-      </View>
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.headingOne}>September</Text>
-        <View style={styles.row}>
-            <View style={styles.circle}>
-                <Text style={styles.numberLabel}>27</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.jobLabelTitle}>Pick-up Groceries</Text>
+class JobBoard extends Component {
+    constructor () {
+        super();
+        this.state = {
+            selectedValue: "alljobs",
+            data: [
+            {
+                month: "January",
+                day: 27,
+                title: "Pick-up Groceries",
+                time: "4pm - 5pm",
+                type: "Shopping",
+                location: "Woodstock, GA"
+            },
+            {
+                month: "February",
+                day: 30,
+                title: "Walk Dog",
+                time: "3pm - 3:30pm",
+                type: "Pet Care",
+                location: "Downtown Atlanta, GA"
+            },
+            {
+                month: "August",
+                day: 1,
+                title: "Vacuum Main Floor",
+                time: "2pm - 4pm",
+                type: "House Chores",
+                location: "Vinings, GA"
+            },
+            {
+                month: "September",
+                day: 2,
+                title: "Water Patio Plants",
+                time: "9am - 9:30am",
+                type: "House Chores",
+                location: "Buckhead, GA"
+            },
+            {
+                month: "September",
+                day: 3,
+                title: "Decorate for Halloween",
+                time: "10am - 12am",
+                type: "House Chores",
+                location: "Buckhead, GA"
+            }
+            ]
+        };
+    }
+
+    FlatListItemSeparator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: "100%",
+                    backgroundColor: "#607D8B",
+                }}
+            />
+        );
+    }
+
+    JobItem (props) {
+        if (props.dataPoint.month == props.month) {
+            return (
                 <View style={styles.row}>
-                    <Text style={styles.mediumText}>4pm - 5pm</Text>
-                    <View style={styles.typeLabel}>
-                        <Text style={styles.smallText}>Shopping</Text>
+                    <View style={styles.circle}>
+                        <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
                     </View>
-                    <Text style={styles.mediumText}>Woodstock, GA</Text>
-                </View>
-            </View>
-        </View>
-        <View style={styles.row}>
-            <View style={styles.circle}>
-                <Text style={styles.numberLabel}>30</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.jobLabelTitle}>Walk Dog</Text>
-                <View style={styles.row}>
-                    <Text style={styles.mediumText}>3pm - 3:30pm</Text>
-                    <View style={styles.typeLabel}>
-                        <Text style={styles.smallText}>Pet Care</Text>
+                    <View style={styles.jobLabel}>
+                        <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
+                            <View style={styles.typeLabel}>
+                                <Text style={styles.smallText}>{props.dataPoint.type}</Text>
+                            </View>
+                            <Text style={styles.mediumText}>{props.dataPoint.location}</Text>
+                        </View>
                     </View>
-                    <Text style={styles.mediumText}>Downtown Atlanta, GA</Text>
                 </View>
-            </View>
-        </View>
-        <Text style={styles.headingOne}>October</Text>
-        <View style={styles.row}>
-            <View style={styles.circle}>
-                <Text style={styles.numberLabel}>1</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.jobLabelTitle}>Vacuum Main Floor</Text>
-                <View style={styles.row}>
-                    <Text style={styles.mediumText}>2pm - 4pm</Text>
-                    <View style={styles.typeLabel}>
-                        <Text style={styles.smallText}>House Chores</Text>
-                    </View>
-                    <Text style={styles.mediumText}>Vinings, GA</Text>
+            );
+        }
+        return <View style={styles.filler}></View>;
+    }
+
+    render () {
+        return (
+            <SafeAreaView style={styles.container}>
+                <Header
+                    backgroundColor="#2A9D8F"
+                    centerComponent={{text: 'Job Board', style: {color: '#fff'}}}
+                />
+                <View style={styles.topRow}>
+                    <Text style={styles.headingOne}>Job Type</Text>
+                    <Picker
+                        selectedValue={this.state.selectedValue}
+                        style={styles.pickerStyle}
+                        itemStyle={{height: 44}}
+                        onValueChange={(value) => this.setState({ selectedValue: value })}
+                    >
+                        <Picker.Item label="All Jobs" value="alljobs"/>
+                        <Picker.Item label="Beautification" value="beautification"/>
+                        <Picker.Item label="Children" value="children"/>
+                        <Picker.Item label="House Chores" value="housechores"/>
+                        <Picker.Item label="Pet Care" value="petcare"/>
+                        <Picker.Item label="Shopping" value="shopping"/>
+                        <Picker.Item label="Tutoring" value="tutoring"/>
+                    </Picker>
                 </View>
-            </View>
-        </View>
-        <View style={styles.row}>
-            <View style={styles.circle}>
-                <Text style={styles.numberLabel}>2</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.jobLabelTitle}>Water Patio Plants</Text>
-                <View style={styles.row}>
-                    <Text style={styles.mediumText}>9am - 9:30am</Text>
-                    <View style={styles.typeLabel}>
-                        <Text style={styles.smallText}>House Chores</Text>
-                    </View>
-                    <Text style={styles.mediumText}>Buckhead, GA</Text>
-                </View>
-            </View>
-        </View>
-        <View style={styles.row}>
-            <View style={styles.circle}>
-                <Text style={styles.numberLabel}>3</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.jobLabelTitle}>Decorate for Halloween</Text>
-                <View style={styles.row}>
-                    <Text style={styles.mediumText}>10am - 12am</Text>
-                    <View style={styles.typeLabel}>
-                        <Text style={styles.smallText}>House Chores</Text>
-                    </View>
-                    <Text style={styles.mediumText}>Buckhead, GA</Text>
-                </View>
-            </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+                <ScrollView style={styles.scrollView}>
+                    <Text style={styles.headingOne}>January</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="January" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>February</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="February" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>March</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="March" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>April</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="April" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>May</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="May" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>June</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="June" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>July</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="July" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>August</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="August" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>September</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="September" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>October</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="October" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>November</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="November" />
+                        }
+                    />
+                    <Text style={styles.headingOne}>December</Text>
+                    <FlatList
+                        data={this.state.data}
+                        width='100%'
+                        extraData={this.state.data}
+                        keyExtractor={(item) => item.key}
+                        ItemSeparatorComponent={this.FlatListItemSeparator}
+                        renderItem={({ item }) =>
+                            <this.JobItem dataPoint={item} month="December" />
+                        }
+                    />
+                </ScrollView>
+            </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -179,6 +319,9 @@ const styles = StyleSheet.create({
     height:80,
     width:"75%",
     fontSize: 32
+  },
+  filler: {
+    height: 0,
   }
 });
 
