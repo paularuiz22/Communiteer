@@ -7,7 +7,6 @@ import index from "./index";
 
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
 import JobBoard from "./src/JobBoard/JobBoard.js";
-import FullPostPage from "./src/JobBoard/FullPostPage";
 import PastJobs from "./src/PastJobs/PastJobs.js";
 import Stats from "./src/Stats/Stats.js";
 import Login from "./src/Login/Login.js";
@@ -25,7 +24,6 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
-        <Stack.Screen name="FullPostPage" component={FullPostPage}/>
         <Stack.Screen name="HomePage" component={HomePage}/>
         <Stack.Screen name="NewJobPage" component={NewJobPage}/>
       </Stack.Navigator>

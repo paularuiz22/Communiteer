@@ -81,7 +81,7 @@ class JobBoard extends Component {
                     <View style={styles.circle}>
                         <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => props.navigation.navigate("FullPostPage")} style={styles.jobLabel}>
+                    <TouchableOpacity style={styles.jobLabel}>
                         <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
