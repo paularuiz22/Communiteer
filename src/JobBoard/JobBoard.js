@@ -273,7 +273,7 @@ class JobBoard extends Component {
                         itemStyle={{height: 44}}
                         onValueChange={(value) => {
                             this.setState({ selectedRequestor: value});
-                            this.ItemList({ state: this.state, flatListItemSeparator: this.FlatListItemSeparator, jobItem: this.JobItem });
+                            this.setState({ refresh: !this.state.refresh });
                         }}
                     >
                         <Picker.Item label="All Requestors" value="All Requestors"/>
