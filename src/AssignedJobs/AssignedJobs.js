@@ -94,7 +94,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     padding: 10,
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: "center"
   },
   circle: {
     width: 75,
