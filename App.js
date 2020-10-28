@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import * as firebase from "firebase";
 import db from "./src/firebase.js";
 import { NavigationContainer } from "@react-navigation/native";
+import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from "./src/Login/Login.js";
@@ -17,6 +18,7 @@ import NewJobPage from "./src/RequestorPages/NewJobPage.js";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const windowWidth = Dimensions.get("window").width;
 
 export default function App() {
 

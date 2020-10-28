@@ -16,36 +16,36 @@ export default function RegistrationInfo({navigation}) {
     {label: "Requestor", value: 1 }
   ];
 
-  const onRegisterPress = () => {
-    if (password !== confirmPassword) {
-      alert("Passwords don't match.");
-      return;
-    }
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((response) => {
-        const uid = response.user.uid;
-        const data = {
-          id: uid,
-          email,
-          fullName,
-        };
-        const usersRef = firebase.firestore().collection("users");
-        usersRef
-          .doc(uid)
-          .set(data)
-          .then(() => {
-            navigation.navigate("VolunteerNavigator", {user: data});
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      })
-      .catch((error) => {
-        alert(error);
-      });
-  };
+  // const onRegisterPress = () => {
+  //   if (password !== confirmPassword) {
+  //     alert("Passwords don't match.");
+  //     return;
+  //   }
+  //   firebase
+  //     .auth()
+  //     .createUserWithEmailAndPassword(email, password)
+  //     .then((response) => {
+  //       const uid = response.user.uid;
+  //       const data = {
+  //         id: uid,
+  //         email,
+  //         fullName,
+  //       };
+  //       const usersRef = firebase.firestore().collection("users");
+  //       usersRef
+  //         .doc(uid)
+  //         .set(data)
+  //         .then(() => {
+  //           navigation.navigate("VolunteerNavigator", {user: data});
+  //         })
+  //         .catch((error) => {
+  //           alert(error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       alert(error);
+  //     });
+  // };
 
   return (
     <View style={styles.container}>
@@ -108,7 +108,8 @@ export default function RegistrationInfo({navigation}) {
       />
       <TouchableOpacity
         style={styles.button}
-        onPress={() => onRegisterPress()}>
+        // onPress={() => onRegisterPress()}>
+        onPress={() =>  navigation.navigate("VolunteerNavigator")}>
         <Text style={styles.buttonTitle}>Create account</Text>
       </TouchableOpacity>
     </View>
