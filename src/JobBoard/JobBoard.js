@@ -7,6 +7,7 @@ class JobBoard extends Component {
     constructor () {
         super();
         this.state = {
+            refresh: false,
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
             data: [
@@ -105,7 +106,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -116,7 +117,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -127,7 +128,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -138,7 +139,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -149,7 +150,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -160,7 +161,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -171,7 +172,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -182,7 +183,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -193,7 +194,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -204,7 +205,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -215,7 +216,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -226,7 +227,7 @@ class JobBoard extends Component {
                 <FlatList
                     data={state.data}
                     width='100%'
-                    extraData={state.data}
+                    extraData={state.refresh}
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
@@ -252,7 +253,7 @@ class JobBoard extends Component {
                         itemStyle={{height: 44}}
                         onValueChange={(value) => {
                             this.setState({ selectedType: value });
-                            this.ItemList({ state: this.state, flatListItemSeparator: this.FlatListItemSeparator, jobItem: this.JobItem, navigation: this.props.navigation});
+                            this.setState({ refresh: !this.state.refresh });
                         }}
                     >
                         <Picker.Item label="All Jobs" value="All Jobs"/>
