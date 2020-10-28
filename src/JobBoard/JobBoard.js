@@ -80,7 +80,7 @@ class JobBoard extends Component {
                     <View style={styles.circle}>
                         <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate("FullPostPage")} style={styles.jobLabel}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate("FullPostPage")} style={styles.jobLabel}>
                         <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
@@ -109,7 +109,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>February</Text>
@@ -120,7 +120,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>March</Text>
@@ -131,7 +131,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>April</Text>
@@ -142,7 +142,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>May</Text>
@@ -153,7 +153,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>June</Text>
@@ -164,7 +164,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>July</Text>
@@ -175,7 +175,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>August</Text>
@@ -186,7 +186,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>September</Text>
@@ -197,7 +197,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>October</Text>
@@ -208,7 +208,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>November</Text>
@@ -219,7 +219,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
                 <Text style={styles.headingOne}>December</Text>
@@ -230,7 +230,7 @@ class JobBoard extends Component {
                     keyExtractor={(item) => item.key}
                     ItemSeparatorComponent={props.flatListItemSeparator}
                     renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor}/>
+                        <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
                     }
                 />
             </ScrollView>
@@ -252,7 +252,7 @@ class JobBoard extends Component {
                         itemStyle={{height: 44}}
                         onValueChange={(value) => {
                             this.setState({ selectedType: value });
-                            this.ItemList({ state: this.state, flatListItemSeparator: this.FlatListItemSeparator, jobItem: this.JobItem });
+                            this.ItemList({ state: this.state, flatListItemSeparator: this.FlatListItemSeparator, jobItem: this.JobItem, navigation: this.props.navigation});
                         }}
                     >
                         <Picker.Item label="All Jobs" value="All Jobs"/>

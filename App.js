@@ -7,7 +7,7 @@ import index from "./index";
 
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
 import JobBoard from "./src/JobBoard/JobBoard.js";
-import FullPostPage from "./src/JobBoard/FullPostPage.js";
+import FullPostPage from "./src/JobBoard/FullPostPage";
 import PastJobs from "./src/PastJobs/PastJobs.js";
 import Stats from "./src/Stats/Stats.js";
 import Login from "./src/Login/Login.js";
