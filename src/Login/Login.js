@@ -72,6 +72,19 @@ export default function LoginScreen({navigation}) {
         style={styles.button}
         onPress={() => onLoginPress()}>
         <Text style={styles.buttonTitle}>Log in</Text>
+{/* =======
+      <TouchableOpacity>
+        <Text style={styles.forgot}>Forgot Password?</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("VolunteerNavigator")} style={styles.loginBtn}>
+        <Text style={{color: 'white'}}>VOLUNTEER LOG IN</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("HomePage")} style={styles.loginBtn}>
+         <Text style={{color: 'white'}}>REQUESTOR LOG IN</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.signUpBtn}>
+        <Text style={styles.loginText}>SIGN UP</Text>
+>>>>>>> main */}
       </TouchableOpacity>
       <View style={styles.footerView}>
         <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>

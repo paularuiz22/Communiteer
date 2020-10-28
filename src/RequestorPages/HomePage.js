@@ -7,17 +7,19 @@ import UpcomingPosts from "./UpcomingPosts.js";
 import PastPosts from "./PastPosts.js";
 
 const windowWidth = Dimensions.get("window").width;
+const screen = Dimensions.get("screen");
+
 
 function HomePage() {
   return (
     <SafeAreaView style={styles.container}>
       <Tab.Navigator tabBarOptions={{
-        labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
-        tabStyle: { width: windowWidth / 2 },
-        style: { backgroundColor: "#FFFFFF" },
-      }}>
-        <Tab.Screen name="My Posts" component={UpcomingPosts} />
-        <Tab.Screen name="Past Posts" component={PastPosts} />
+            labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
+            tabStyle: { width: windowWidth / 2 },
+            style: { backgroundColor: "#FFFFFF" },
+          }}>
+          <Tab.Screen name="Upcoming Posts" component={UpcomingPosts} />
+          <Tab.Screen name="Past Posts" component={PastPosts} />
       </Tab.Navigator>
     </SafeAreaView>
   );

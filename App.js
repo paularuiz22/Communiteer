@@ -15,6 +15,8 @@ import JobBoard from "./src/JobBoard/JobBoard.js";
 import PastJobs from "./src/PastJobs/PastJobs.js";
 import Stats from "./src/Stats/Stats.js";
 import NewJobPage from "./src/RequestorPages/NewJobPage.js";
+import TrustedRequestor from "./src/TrustedRequesters/TrustedRequesters.js";
+import TrustedVolunteers from "./src/RequestorPages/TrustedVolunteers/TrustedVolunteers.js";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,6 +64,7 @@ export default function App() {
         <Tab.Screen name="PastJobs" component={PastJobs} />
         <Tab.Screen name="JobBoard" component={JobBoard} />
         <Tab.Screen name="Stats" component={Stats}/>
+        <Tab.Screen name="TrustedRequestor" component={TrustedRequestor} />
       </Tab.Navigator>
     );
   }
@@ -87,3 +90,6 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+
+

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
 import {Picker} from "@react-native-community/picker";
-// import { Divider } from 'react-native-paper';
 
 import MonthlyHours from "./Charts/MonthlyHours.js";
 import Points from "./Charts/Progress.js";
@@ -65,16 +64,18 @@ class Analytics extends Component {
     return(
       <SafeAreaView style={styles.container}>
         <View style = {styles.dropdown_container}>
-        <Picker
-          selectedValue={this.state.graph}
-          style={styles.dropdown}
-          onValueChange = {this.handleChangeGraph}>
-          <Picker.Item label="Points Status" value="points"/>
-          <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
-          <Picker.Item label="Types of Jobs" value = "types of jobs"/>
-        </Picker>
+            <View style={styles.row}>
+                <Text style={styles.headingOne}>Graph Type</Text>
+                <Picker
+                  selectedValue={this.state.graph}
+                  style={styles.dropdown}
+                  onValueChange = {this.handleChangeGraph}>
+                  <Picker.Item label="Points Status" value="points"/>
+                  <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
+                  <Picker.Item label="Types of Jobs" value = "types of jobs"/>
+                </Picker>
+            </View>
         </View>
-        {/* <Divider/> */}
         <View style = {styles.title_container}>
           <Text style = {styles.title}>{this.switchTitle()} </Text>
         </View>
@@ -95,10 +96,24 @@ const styles = StyleSheet.create({
   dropdown_container: {
     flex: 1,
   },
+    headingOne: {
+      fontSize: 24,
+      padding: 10
+    },
+    row: {
+        width: 500,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 10,
+        alignItems:"center",
+        justifyContent:"center",
+    },
   dropdown: {
     height: 50,
     width: screen.width/2,
     marginVertical: 10,
+    alignItems:"center",
+    justifyContent:"center"
   },
   title_container: {
     flex: 1,
@@ -115,6 +130,7 @@ const styles = StyleSheet.create({
   graph_container: {
     flex: 6, 
     width: screen.width/2,
+    padding: 10,
   },
 });
 export default Analytics;
