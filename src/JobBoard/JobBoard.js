@@ -1,14 +1,14 @@
 import React, {useState, Component} from "react";
 import { Header } from 'react-native-elements';
-import { Dimensions, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList } from 'react-native';
+import { Dimensions, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 
 class JobBoard extends Component {
     constructor () {
         super();
         this.state = {
-            selectedType: "House Chores",
-            selectedRequestor: "Only Trusted Requestors",
+            selectedType: "All Jobs",
+            selectedRequestor: "All Requestors",
             data: [
             {
                 requestor: "Clara",
@@ -80,7 +80,7 @@ class JobBoard extends Component {
                     <View style={styles.circle}>
                         <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
                     </View>
-                    <View style={styles.jobLabel}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate("FullPostPage")} style={styles.jobLabel}>
                         <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
@@ -89,7 +89,7 @@ class JobBoard extends Component {
                             </View>
                             <Text style={styles.mediumText}>{props.dataPoint.location}</Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             );
         }
