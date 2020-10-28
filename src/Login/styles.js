@@ -7,8 +7,8 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-
+  space: {
+    marginTop: 60,
   },
   logo:{
     fontWeight:"bold",
@@ -16,13 +16,6 @@ export default StyleSheet.create({
     color:"#FFFFFF",
     marginBottom:40
   },
-  // logo: {
-  //   flex: 1,
-  //   height: 120,
-  //   width: 90,
-  //   alignSelf: "center",
-  //   margin: 30
-  // },
   input: {
     height: 48,
     borderRadius: 5,
@@ -51,7 +44,7 @@ export default StyleSheet.create({
     color:"white",
     fontSize:11
   },
-  loginBtn:{
+  button:{
     width:"80%",
     backgroundColor:"#264653",
     borderRadius:25,
@@ -72,16 +65,6 @@ export default StyleSheet.create({
     alignItems:"center",
     justifyContent:"center",
     marginBottom:10
-  },
-  button: {
-    backgroundColor: "#788eec",
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 20,
-    height: 48,
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center"
   },
   buttonTitle: {
     color: "white",

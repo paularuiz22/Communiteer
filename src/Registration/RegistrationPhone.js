@@ -24,8 +24,8 @@ export default function RegistrationPhone({navigation}) {
     navigation.navigate("Login");
   };
 
-  const navigateToHome = () => {
-    navigation.navigate("Home");
+  const continueOn = () => {
+    navigation.navigate("RegistrationInfo");
   };
 
   // const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
@@ -34,6 +34,7 @@ export default function RegistrationPhone({navigation}) {
     : undefined);
   return (
     <View style={styles.container}>
+      <Text style={styles.space}></Text>
       <Text style={{ marginTop: 20 }}>Enter phone number</Text>
       <View style = {styles.inputView}>
         <TextInput
@@ -97,6 +98,11 @@ export default function RegistrationPhone({navigation}) {
           }
         }}
       />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => continueOn()}>
+        <Text style={styles.buttonTitle}>Log in</Text>
+      </TouchableOpacity>
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={firebaseConfig}

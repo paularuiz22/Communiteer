@@ -9,7 +9,7 @@ export default function LoginScreen({navigation}) {
   const [password, setPassword] = useState("");
 
   const onFooterLinkPress = () => {
-    navigation.navigate("Registration");
+    navigation.navigate("RegistrationPhone");
   };
 
   const onLoginPress = () => {
@@ -41,6 +41,7 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.container}>
+      <Text style= {styles.space}></Text>
       <Text style={styles.logo}>Communiteer</Text>
       <Image source={require("../img/logo.png")} />
       <View style={styles.inputView} >
