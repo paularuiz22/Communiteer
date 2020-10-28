@@ -1,15 +1,17 @@
 import React, {useState, Component} from "react";
 import { Header } from 'react-native-elements';
-import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList } from 'react-native';
+import { Dimensions, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList } from 'react-native';
 import Constants from 'expo-constants';
 
 class JobBoard extends Component {
     constructor () {
         super();
         this.state = {
-            selectedValue: "alljobs",
+            selectedType: "House Chores",
+            selectedRequestor: "Only Trusted Requestors",
             data: [
             {
+                requestor: "Clara",
                 month: "January",
                 day: 27,
                 title: "Pick-up Groceries",
@@ -18,6 +20,7 @@ class JobBoard extends Component {
                 location: "Woodstock, GA"
             },
             {
+                requestor: "Charlie",
                 month: "February",
                 day: 30,
                 title: "Walk Dog",
@@ -26,6 +29,7 @@ class JobBoard extends Component {
                 location: "Downtown Atlanta, GA"
             },
             {
+                requestor: "Paula",
                 month: "August",
                 day: 1,
                 title: "Vacuum Main Floor",
@@ -34,6 +38,7 @@ class JobBoard extends Component {
                 location: "Vinings, GA"
             },
             {
+                requestor: "Bob",
                 month: "September",
                 day: 2,
                 title: "Water Patio Plants",
@@ -42,6 +47,7 @@ class JobBoard extends Component {
                 location: "Buckhead, GA"
             },
             {
+                requestor: "Clara",
                 month: "September",
                 day: 3,
                 title: "Decorate for Halloween",
@@ -66,7 +72,9 @@ class JobBoard extends Component {
     }
 
     JobItem (props) {
-        if (props.dataPoint.month == props.month) {
+        if (props.dataPoint.month == props.month
+            && (props.dataPoint.type == props.type || props.type == "All Jobs")
+            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
             return (
                 <View style={styles.row}>
                     <View style={styles.circle}>
@@ -88,6 +96,147 @@ class JobBoard extends Component {
         return <View style={styles.filler}></View>;
     }
 
+    ItemList (props) {
+        const state = props.state;
+
+        return (
+            <ScrollView style={styles.scrollView}>
+                <Text style={styles.headingOne}>January</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>February</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>March</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>April</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>May</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>June</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>July</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>August</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>September</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>October</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>November</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+                <Text style={styles.headingOne}>December</Text>
+                <FlatList
+                    data={state.data}
+                    width='100%'
+                    extraData={state.data}
+                    keyExtractor={(item) => item.key}
+                    ItemSeparatorComponent={props.flatListItemSeparator}
+                    renderItem={({ item }) =>
+                        <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor}/>
+                    }
+                />
+            </ScrollView>
+        );
+    }
+
     render () {
         return (
             <SafeAreaView style={styles.container}>
@@ -98,154 +247,41 @@ class JobBoard extends Component {
                 <View style={styles.topRow}>
                     <Text style={styles.headingOne}>Job Type</Text>
                     <Picker
-                        selectedValue={this.state.selectedValue}
+                        selectedValue={this.state.selectedType}
                         style={styles.pickerStyle}
                         itemStyle={{height: 44}}
-                        onValueChange={(value) => this.setState({ selectedValue: value })}
+                        onValueChange={(value) => {
+                            this.setState({ selectedType: value });
+                            this.ItemList({ state: this.state, flatListItemSeparator: this.FlatListItemSeparator, jobItem: this.JobItem });
+                        }}
                     >
-                        <Picker.Item label="All Jobs" value="alljobs"/>
-                        <Picker.Item label="Beautification" value="beautification"/>
-                        <Picker.Item label="Children" value="children"/>
-                        <Picker.Item label="House Chores" value="housechores"/>
-                        <Picker.Item label="Pet Care" value="petcare"/>
-                        <Picker.Item label="Shopping" value="shopping"/>
-                        <Picker.Item label="Tutoring" value="tutoring"/>
+                        <Picker.Item label="All Jobs" value="All Jobs"/>
+                        <Picker.Item label="Beautification" value="Beautification"/>
+                        <Picker.Item label="Children" value="Children"/>
+                        <Picker.Item label="House Chores" value="House Chores"/>
+                        <Picker.Item label="Pet Care" value="Pet Care"/>
+                        <Picker.Item label="Shopping" value="Shopping"/>
+                        <Picker.Item label="Tutoring" value="Tutoring"/>
                     </Picker>
                 </View>
-                <ScrollView style={styles.scrollView}>
-                    <Text style={styles.headingOne}>January</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="January" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>February</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="February" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>March</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="March" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>April</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="April" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>May</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="May" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>June</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="June" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>July</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="July" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>August</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="August" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>September</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="September" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>October</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="October" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>November</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="November" />
-                        }
-                    />
-                    <Text style={styles.headingOne}>December</Text>
-                    <FlatList
-                        data={this.state.data}
-                        width='100%'
-                        extraData={this.state.data}
-                        keyExtractor={(item) => item.key}
-                        ItemSeparatorComponent={this.FlatListItemSeparator}
-                        renderItem={({ item }) =>
-                            <this.JobItem dataPoint={item} month="December" />
-                        }
-                    />
-                </ScrollView>
+                <View style={styles.topRow}>
+                    <Text style={styles.headingOne}>Requestors</Text>
+                    <Picker
+                        selectedValue={this.state.selectedRequestor}
+                        style={styles.pickerStyle}
+                        itemStyle={{height: 44}}
+                        onValueChange={(value) => {
+                            this.setState({ selectedRequestor: value});
+                            this.ItemList({ state: this.state, flatListItemSeparator: this.FlatListItemSeparator, jobItem: this.JobItem });
+                        }}
+                    >
+                        <Picker.Item label="All Requestors" value="All Requestors"/>
+                        <Picker.Item label="Only Trusted Requestors" value="Only Trusted Requestors" />
+                        <Picker.Item label="Clara" value="Clara" />
+                        <Picker.Item label="Paula" value="Paula" />
+                    </Picker>
+                </View>
+                <this.ItemList state={this.state} flatListItemSeparator={this.FlatListItemSeparator} jobItem={this.JobItem} />
             </SafeAreaView>
         );
     }
