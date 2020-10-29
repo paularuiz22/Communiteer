@@ -19,8 +19,8 @@ function HomePage() {
             tabStyle: { width: windowWidth / 3 },
             style: { backgroundColor: "#FFFFFF" },
           }}>
-          <Tab.Screen name="Upcoming Posts" component={UpcomingPosts} />
-          <Tab.Screen name="Past Posts" component={PastPosts} />
+          <Tab.Screen name="Upcoming Jobs" component={UpcomingPosts} />
+          <Tab.Screen name="Past Jobs" component={PastPosts} />
           <Tab.Screen name="Trusted Volunteers" component={TrustedVolunteers} />
       </Tab.Navigator>
     </SafeAreaView>
