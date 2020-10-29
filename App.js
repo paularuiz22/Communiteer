@@ -7,7 +7,7 @@ import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from "./src/Login/Login.js";
-import HomePage from "./src/RequestorPages/HomePage.js";
+import RequestorHomePage from "./src/RequestorPages/HomePage.js";
 import RegistrationInfo from "./src/Registration/RegistrationInfo";
 import RegistrationPhone from "./src/Registration/RegistrationPhone.js";
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
@@ -84,7 +84,7 @@ export default function App() {
         )}
         <Stack.Screen name="RegistrationInfo" component={RegistrationInfo} options={{headerShown: false}}/>
         <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
-        <Stack.Screen name="HomePage" component={HomePage}/>
+        <Stack.Screen name="RequestorHomePage" component={RequestorHomePage}/>
         <Stack.Screen name="NewJobPage" component={NewJobPage}/>
       </Stack.Navigator>
     </NavigationContainer>

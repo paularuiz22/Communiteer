@@ -109,7 +109,7 @@ export default function RegistrationInfo({navigation}) {
       <TouchableOpacity
         style={styles.button}
         // onPress={() => onRegisterPress()}>
-        onPress={() =>  navigation.navigate("VolunteerNavigator")}>
+        onPress={() =>  navigation.navigate("RequestorHomePage")}>
         <Text style={styles.buttonTitle}>Create account</Text>
       </TouchableOpacity>
     </View>
