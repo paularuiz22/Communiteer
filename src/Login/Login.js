@@ -4,6 +4,17 @@ import { Image, StyleSheet, TextInput, TouchableOpacity, ScrollView } from "reac
 import { Button } from "react-native";
 
 class Login extends Component {
+    constructor () {
+        super();
+        this.state = {
+            email: '',
+            password: '',
+        };
+    }
+
+    login() {
+    }
+
     render () {
         return (
             <View style={styles.container}>
