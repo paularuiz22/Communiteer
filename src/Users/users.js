@@ -14,7 +14,21 @@ export default function Users() {
             city: 'Woodstock',
             state: 'GA',
             zipCode: 30189,
-            userType: userTypes.VOLUNTEER
+            userType: userTypes.VOLUNTEER,
+            trustedUsers: ['jessicaruizwoodstock']
+        },
+        {
+            id: '4',
+            username: 'elenaEruiz',
+            email: 'elenaeruiz@gmail.com',
+            firstName: 'Elena',
+            lastName: 'Ruiz',
+            streetAddress: '205 Beaver Creek Lane',
+            city: 'Woodstock',
+            state: 'GA',
+            zipCode: 30189,
+            userType: userTypes.VOLUNTEER,
+            trustedUsers: ['lizBashaw']
         },
         {
             id: '2',
@@ -26,9 +40,22 @@ export default function Users() {
             city: 'Woodstock',
             state: 'GA',
             zipCode: 30189,
-            userType: userTypes.REQUESTOR
+            userType: userTypes.REQUESTOR,
+            trustedUsers: ['paularuiz22']
         },
-
+        {
+            id: '3',
+            username: 'lizBashaw',
+            email: 'lizbashaw@gmail.com',
+            firstName: 'Elizabeth',
+            lastName: 'Bashaw',
+            streetAddress: '47 North Ridge Lane',
+            city: 'Asheville',
+            state: 'NC',
+            zipCode: 28791,
+            userType: userTypes.REQUESTOR,
+            trustedUsers: ['paularuiz22']
+        },
     ];
     userData.forEach((user) => {
         db.ref('/users').push({
@@ -40,7 +67,8 @@ export default function Users() {
             city: user.city,
             state: user.state,
             zipCode: user.zipCode,
-            userType: user.userType
+            userType: user.userType,
+            trustedUsers: user.trustedUsers
          });
     });
     //db.ref('/users').push({userData});
