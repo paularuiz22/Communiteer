@@ -1,18 +1,53 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-import { Image, StyleSheet, TextInput, TouchableOpacity, ScrollView } from "react-native";
+import { Image, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { Button } from "react-native";
+import { db } from '../Stats/BackendTest';
+import { sortBy } from 'lodash';
 
 class Login extends Component {
     constructor () {
         super();
         this.state = {
-            email: '',
+            username: '',
             password: '',
+            users: sortBy(this.ref, 'username'),
+            userVerified: false,
+            userType: '',
         };
+        this.login = this.login.bind(this);
+    }
+
+    componentDidMount() {
+        db.ref('/users').orderByChild("username").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let userItems = {...data};
+            this.setState({
+                users: sortBy(userItems, 'username'),
+            });
+        });
     }
 
     login() {
+        let userKeys = Object.keys(this.state.users);
+        userKeys.forEach(function(key) {
+            if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username) && this.state.users[key].password == this.state.password)
+            {
+                this.setState({ userVerified: true, userType: this.state.users[key].userType });
+            }
+        });
+        if (this.state.userVerified && this.state.userType == 'volunteer')
+        {
+            this.props.navigation.navigate("VolunteerNavigator");
+        }
+        else if (this.state.userVerified && this.state.userType == 'requestor')
+        {
+            this.props.navigation.navigate("HomePage");
+        }
+        else
+        {
+            Alert.alert('Invalid username or password');
+        }
     }
 
     render () {
@@ -23,9 +58,9 @@ class Login extends Component {
                 <View style={styles.inputView} >
                     <TextInput
                         style={styles.inputText}
-                        placeholder="Email"
+                        placeholder="Username or Email"
                         placeholderTextColor="#003f5c"
-                        onChangeText={text => this.setState({email:text})}/>
+                        onChangeText={text => this.setState({username:text})}/>
                 </View>
                 <View style={styles.inputView} >
                     <TextInput
@@ -38,11 +73,8 @@ class Login extends Component {
                 <TouchableOpacity>
                     <Text style={styles.forgot}>Forgot Password?</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate("VolunteerNavigator")} style={styles.loginBtn}>
-                    <Text style={{color: 'white'}}>VOLUNTEER LOG IN</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate("HomePage")} style={styles.loginBtn}>
-                    <Text style={{color: 'white'}}>REQUESTOR LOG IN</Text>
+                <TouchableOpacity onPress={this.login} style={styles.loginBtn}>
+                    <Text style={{color: 'white'}}>LOG IN</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.signUpBtn}>
                     <Text style={styles.loginText}>SIGN UP</Text>
