@@ -1,47 +1,45 @@
-import React from "react";
+import React, { Component } from "react";
 import { Text, View } from "react-native";
 import { Image, StyleSheet, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { Button } from "react-native";
 
-function Login({navigation}) {
-  return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <Text style={styles.logo}>Communiteer</Text>
-        <Image source={require("../img/logo.png")} />
-        <View style={styles.inputView} >
-          <TextInput
-            style={styles.inputText}
-            placeholder="Email"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({email:text})}/>
-        </View>
-        <View style={styles.inputView} >
-          <TextInput
-            secureTextEntry
-            style={styles.inputText}
-            placeholder="Password"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({password:text})}/>
-        </View>
-        <TouchableOpacity>
-          <Text style={styles.forgot}>Forgot Password?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("VolunteerNavigator")} style={styles.loginBtn}>
-          <Text style={{color: 'white'}}>VOLUNTEER LOG IN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("HomePage")} style={styles.loginBtn}>
-          <Text style={{color: 'white'}}>REQUESTOR LOG IN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.signUpBtn}>
-          <Text style={styles.loginText}>SIGN UP</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
+class Login extends Component {
+    render () {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.logo}>Communiteer</Text>
+                <Image source={require("../img/logo.png")} />
+                <View style={styles.inputView} >
+                    <TextInput
+                        style={styles.inputText}
+                        placeholder="Email"
+                        placeholderTextColor="#003f5c"
+                        onChangeText={text => this.setState({email:text})}/>
+                </View>
+                <View style={styles.inputView} >
+                    <TextInput
+                        secureTextEntry
+                        style={styles.inputText}
+                        placeholder="Password"
+                        placeholderTextColor="#003f5c"
+                        onChangeText={text => this.setState({password:text})}/>
+                </View>
+                <TouchableOpacity>
+                    <Text style={styles.forgot}>Forgot Password?</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate("VolunteerNavigator")} style={styles.loginBtn}>
+                    <Text style={{color: 'white'}}>VOLUNTEER LOG IN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate("HomePage")} style={styles.loginBtn}>
+                    <Text style={{color: 'white'}}>REQUESTOR LOG IN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.signUpBtn}>
+                    <Text style={styles.loginText}>SIGN UP</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 }
-
-export default Login;
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -99,4 +97,4 @@ const styles = StyleSheet.create({
     marginBottom:10
   },
 });
-
+export default Login;
