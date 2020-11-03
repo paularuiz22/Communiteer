@@ -6,6 +6,7 @@ import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
 import UpcomingPosts from "./UpcomingPosts.js";
 import PastPosts from "./PastPosts.js";
 import TrustedVolunteers from "./TrustedVolunteers.js";
+import Users from "../Users/users.js"
 
 const windowWidth = Dimensions.get("window").width;
 const screen = Dimensions.get("screen");
@@ -22,6 +23,7 @@ function HomePage() {
           <Tab.Screen name="Upcoming Jobs" component={UpcomingPosts} />
           <Tab.Screen name="Past Jobs" component={PastPosts} />
           <Tab.Screen name="Trusted Volunteers" component={TrustedVolunteers} />
+          <Tab.Screen name="Users" component={Users}/>
       </Tab.Navigator>
     </SafeAreaView>
   );

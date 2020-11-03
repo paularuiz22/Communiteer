@@ -4,17 +4,6 @@ import { StyleSheet, FlatList, Text, SafeAreaView, ScrollView, Picker, View, Tou
 import Constants from 'expo-constants';
 import data from './data.js'
 
-// const Item = ({ name }) => (
-//   <View style={styles.row}>
-//     <Text style={styles.jobLabel}>{name}</Text>
-//   </View>
-// );
-
-// const onPress = () => {  
-//   return(
-
-//   )
-// }
 
 const Item = ({ name, onPress}) => (
   <TouchableOpacity onPress={onPress}>
@@ -49,8 +38,11 @@ function TrustedRequestors() {
 
 const styles = StyleSheet.create({
     requestors: {
-      flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-                    marginBottom: 5, marginTop: 5
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 5,
+      marginTop: 5
     },
     container: {
       flex: 1,
@@ -80,8 +72,6 @@ const styles = StyleSheet.create({
       flex: 1,
       fontSize: 30,
       padding: 10,
-      // width: 320,
-      // height: 100,
       borderRadius: 10,
       backgroundColor: "white",
       padding: 10
