@@ -2,23 +2,20 @@ import React, { Component } from "react";
 import { Text, View } from "react-native";
 import { Image, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { Button } from "react-native";
-import { db } from '../../config';
+import { db } from '../Stats/BackendTest';
 import { sortBy } from 'lodash';
 
 class Login extends Component {
     constructor () {
         super();
-        this.ref = db.ref('/users');
         this.state = {
             username: '',
             password: '',
-            // @Clara: what are you trying to sort with this.ref? I've added what I think you mean as line 11: `this.ref = db.ref('/users');` -Paula
             users: sortBy(this.ref, 'username'),
             userVerified: false,
             userType: '',
         };
         this.login = this.login.bind(this);
-        this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount() {
@@ -33,8 +30,7 @@ class Login extends Component {
 
     login() {
         let userKeys = Object.keys(this.state.users);
-        console.log('logins : ', this); 
-        userKeys.forEach((key) => {
+        userKeys.forEach(function(key) {
             if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username) && this.state.users[key].password == this.state.password)
             {
                 this.setState({ userVerified: true, userType: this.state.users[key].userType });
@@ -58,9 +54,7 @@ class Login extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.logo}>Communiteer</Text>
-                <View>
-                    <Image source={require("../img/logo.png")} />
-                </View>
+                <Image source={require("../img/logo.png")} />
                 <View style={styles.inputView} >
                     <TextInput
                         style={styles.inputText}

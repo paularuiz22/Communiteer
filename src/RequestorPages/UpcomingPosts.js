@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
 import {Picker} from "@react-native-community/picker";
-import { db } from '../../config';
+import { db } from '../Stats/BackendTest';
 import { sortBy } from 'lodash';
 
 const window = Dimensions.get("window");
