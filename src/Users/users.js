@@ -15,7 +15,8 @@ export default function Users() {
             state: 'GA',
             zipCode: 30189,
             userType: userTypes.VOLUNTEER,
-            trustedUsers: ['jessicaruizwoodstock']
+            trustedUsers: ['jessicaruizwoodstock'],
+            password: 'test1'
         },
         {
             id: '4',
@@ -28,7 +29,8 @@ export default function Users() {
             state: 'GA',
             zipCode: 30189,
             userType: userTypes.VOLUNTEER,
-            trustedUsers: ['lizBashaw']
+            trustedUsers: ['lizBashaw'],
+            password: 'test2'
         },
         {
             id: '2',
@@ -41,7 +43,8 @@ export default function Users() {
             state: 'GA',
             zipCode: 30189,
             userType: userTypes.REQUESTOR,
-            trustedUsers: ['paularuiz22']
+            trustedUsers: ['paularuiz22'],
+            password: 'test3'
         },
         {
             id: '3',
@@ -54,7 +57,8 @@ export default function Users() {
             state: 'NC',
             zipCode: 28791,
             userType: userTypes.REQUESTOR,
-            trustedUsers: ['paularuiz22']
+            trustedUsers: ['paularuiz22'],
+            password: 'test4'
         },
     ];
     userData.forEach((user) => {
