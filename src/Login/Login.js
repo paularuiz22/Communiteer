@@ -12,7 +12,6 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
-            // @Clara: what are you trying to sort with this.ref? I've added what I think you mean as line 11: `this.ref = db.ref('/users');` -Paula
             users: '',
             userVerified: false,
             userType: '',
@@ -36,9 +35,10 @@ class Login extends Component {
         var usersProcessed = 0;
         var verified = false;
         var userType = '';
+        console.log('logins : ', this);
         userKeys.forEach((key) => {
             usersProcessed++;
-            if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username))
+            if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username) && this.state.users[key].password == this.state.password)
             {
                 this.setState({ userVerified: true, userType: this.state.users[key].userType });
                 verified = true;
