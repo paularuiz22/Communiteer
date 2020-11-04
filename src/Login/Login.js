@@ -13,7 +13,7 @@ class Login extends Component {
             username: '',
             password: '',
             // @Clara: what are you trying to sort with this.ref? I've added what I think you mean as line 11: `this.ref = db.ref('/users');` -Paula
-            users: sortBy(this.ref, 'username'),
+            users: '',
             userVerified: false,
             userType: '',
         };
@@ -33,25 +33,33 @@ class Login extends Component {
 
     login() {
         let userKeys = Object.keys(this.state.users);
-        console.log('logins : ', this); 
+        var usersProcessed = 0;
+        var verified = false;
+        var userType = '';
         userKeys.forEach((key) => {
-            if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username) && this.state.users[key].password == this.state.password)
+            usersProcessed++;
+            if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username))
             {
                 this.setState({ userVerified: true, userType: this.state.users[key].userType });
+                verified = true;
+                userType = this.state.users[key].userType;
             }
-        });
-        if (this.state.userVerified && this.state.userType == 'volunteer')
-        {
-            this.props.navigation.navigate("VolunteerNavigator");
-        }
-        else if (this.state.userVerified && this.state.userType == 'requestor')
-        {
-            this.props.navigation.navigate("HomePage");
-        }
-        else
-        {
-            Alert.alert('Invalid username or password');
-        }
+            if (usersProcessed == userKeys.length)
+            {
+                if (verified && userType == 'volunteer')
+                {
+                    this.props.navigation.navigate("VolunteerNavigator");
+                }
+                else if (verified && userType == 'requestor')
+                {
+                    this.props.navigation.navigate("HomePage");
+                }
+                else
+                {
+                    Alert.alert('Invalid username or password');
+                }
+            }
+        })
     }
 
     render () {
