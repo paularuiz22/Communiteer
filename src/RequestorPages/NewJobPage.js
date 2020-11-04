@@ -2,11 +2,9 @@ import React, { useState, Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity, TextInput } from "react-native";
 import {Picker} from "@react-native-community/picker";
 import db from "../../config.js"
-import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import ToggleSwitch from 'toggle-switch-react-native';
 
-
-const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
 class NewJobPage extends Component {
@@ -25,6 +23,7 @@ class NewJobPage extends Component {
       isEndDateTimePickerVisible: false,
       startDateTimeLabel: 'Select Start Date/Time',
       endDateTimeLabel: 'Select End Date/Time',
+      onlyForTrusted: false,
     };
     this.updateTextInput = this.updateTextInput.bind(this);
     this.saveJob = this.saveJob.bind(this);
@@ -38,6 +37,7 @@ class NewJobPage extends Component {
     }
 
     saveJob() {
+        // TODO: verify the input fields (that they're not empty, time is formatted correctly, etc) before pushing
         this.ref.push({
             title: this.state.title,
             jobType: this.state.jobType,
@@ -46,6 +46,8 @@ class NewJobPage extends Component {
             endDateTime: this.state.endDateTime,
             location: this.state.location,
             numVolunteers: this.state.numVolunteers,
+            onlyForTrusted: this.state.onlyForTrusted,
+
         }).then((docRef) => {
             this.setState({
                 title: '',
@@ -59,6 +61,7 @@ class NewJobPage extends Component {
                 isEndDateTimePickerVisible: false,
                 startDateTimeLabel: 'Select Start Date/Time',
                 endDateTimeLabel: 'Select End Date/Time',
+                onlyForTrusted: false
             });
             this.props.navigation.goBack();
         }).catch((error) => {
@@ -125,6 +128,14 @@ class NewJobPage extends Component {
                         />
                     </View>
                     <View style={styles.row}>
+                        <Text style={styles.headingOne}>About</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => this.updateTextInput(text, 'description')}
+                            value={this.state.description}
+                        />
+                    </View>
+                    <View style={styles.row}>
                         <Text style={styles.headingOne}>Start Date/Time</Text>
                         <View>
                             <Button onPress={this.showStartDateTimePicker} title = {this.state.startDateTimeLabel} />
@@ -177,14 +188,6 @@ class NewJobPage extends Component {
                         />
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.headingOne}>About</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'description')}
-                            value={this.state.description}
-                        />
-                    </View>
-                    <View style={styles.row}>
                         <Text style={styles.headingOne}># of volunteers</Text>
                         <TextInput
                             style={styles.input}
@@ -192,10 +195,21 @@ class NewJobPage extends Component {
                             value={this.state.numVolunteers}
                         />
                     </View>
+                    <View style={styles.row}>
+                        <ToggleSwitch
+                            isOn={this.state.onlyForTrusted}
+                            onColor='#264653'
+                            offColor='#D3D3D9'
+                            label="Only show to trusted volunteers?"
+                            labelStyle={{color: "black", fontWeight: "4"}}
+                            size="large"
+                            onToggle={isOn => this.setState({ onlyForTrusted: isOn})}
+                        />
+                    </View>
                     <TouchableOpacity style={styles.saveBtn}>
                         <Button
                             title="SAVE"
-                            color="#264653"
+                            color="white"
                             onPress={() => this.saveJob()} />
                     </TouchableOpacity>
                 </ScrollView>
@@ -212,11 +226,11 @@ const styles = StyleSheet.create({
   },
   headingOne: {
     fontSize: 24,
-    padding: 10
+    padding: 8
   },
   scrollView: {
-      marginHorizontal: 0,
-      marginTop: 0
+      margin: 20,
+      alignSelf: 'center',
   },
   dropdown_container: {
     flex: 1,
@@ -256,7 +270,7 @@ const styles = StyleSheet.create({
     width: '90%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 5,
+    padding: 2,
     alignItems:"center",
     justifyContent:"flex-start",
   },
