@@ -14,6 +14,7 @@ import HomePage from "./src/RequestorPages/HomePage.js";
 import NewJobPage from "./src/RequestorPages/NewJobPage.js";
 import TrustedRequestor from "./src/TrustedRequesters/TrustedRequesters.js";
 import TrustedVolunteers from "./src/RequestorPages/TrustedVolunteers/TrustedVolunteers.js";
+import Registration from "./src/Registration/Registration.js";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="Registration" component={Registration}/>
         <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
         <Stack.Screen name="HomePage" component={HomePage}/>
         <Stack.Screen name="NewJobPage" component={NewJobPage}/>

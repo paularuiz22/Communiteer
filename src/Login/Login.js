@@ -17,8 +17,13 @@ class Login extends Component {
             userType: '',
         };
         this.login = this.login.bind(this);
+        this.onFooterLinkPress = this.onFooterLinkPress.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
     }
+
+    onFooterLinkPress() {
+        this.props.navigation.navigate("Registration");
+    };
 
     componentDidMount() {
         db.ref('/users').orderByChild("username").on('value', querySnapShot => {
@@ -90,9 +95,10 @@ class Login extends Component {
                 <TouchableOpacity onPress={this.login} style={styles.loginBtn}>
                     <Text style={{color: 'white'}}>LOG IN</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.signUpBtn}>
-                    <Text style={styles.loginText}>SIGN UP</Text>
-                </TouchableOpacity>
+                <View style={styles.footerView}>
+                    <Text style={styles.footerText}>Don't have an account? <Text onPress={this.onFooterLinkPress}
+                    style={styles.footerLink}>SIGN UP</Text></Text>
+                </View>
             </View>
         );
     }
@@ -153,5 +159,19 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     marginBottom:10
   },
+  footerView: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: 20
+  },
+  footerText: {
+    fontSize: 16,
+    color: "#2e2e2d"
+  },
+  footerLink: {
+    color: "#788eec",
+    fontWeight: "bold",
+    fontSize: 16
+  }
 });
 export default Login;
