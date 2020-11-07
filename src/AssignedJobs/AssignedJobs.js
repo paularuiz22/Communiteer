@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
-    padding: 10
   },
   jobLabelTitle: {
     fontSize: 24,
@@ -121,7 +120,6 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 10,
     backgroundColor: "#FF9B21",
-    padding: 10
   },
   smallText: {
     fontSize: 12,
@@ -135,7 +133,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10
+    padding: 5
   },
 });
 
