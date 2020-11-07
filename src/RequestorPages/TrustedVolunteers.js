@@ -1,43 +1,13 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, TextInput, Text, Alert, TouchableOpacity, KeyboardAvoidingView } from "react-native";
-import {Picker} from "@react-native-community/picker";
+import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, TextInput, Text, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import db from "../../config.js"
 import { sortBy } from 'lodash';
 
-const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
 let today = new Date();
 let todayDay = today.getDate();
 
-const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
-    if (date >= todayDay) {
-        return (
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>{date}</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <View style={styles.column}>
-                        <Text style={styles.jobLabelTitle}>{title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{jobType}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{location}</Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        )
-    }
-    else {
-        return null
-    }
-};
 
 class TrustedVolunteers extends Component {
 

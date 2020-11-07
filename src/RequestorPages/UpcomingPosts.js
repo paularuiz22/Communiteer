@@ -15,7 +15,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
     let endJSONdate = new Date(endDateTime);
     let startClockTime = formatTime(startJSONdate);
     let endClockTime = formatTime(endJSONdate);
-    if (startDateTime >= todayDay.toString()) {
+    if (startJSONdate >= today) {
         return (
             <View style={styles.row}>
                 <View style={styles.circle}>
