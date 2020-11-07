@@ -24,6 +24,7 @@ class NewJobPage extends Component {
       startDateTimeLabel: 'Select Start Date/Time',
       endDateTimeLabel: 'Select End Date/Time',
       onlyForTrusted: false,
+      requestor: '',
     };
     this.updateTextInput = this.updateTextInput.bind(this);
     this.saveJob = this.saveJob.bind(this);
@@ -47,6 +48,7 @@ class NewJobPage extends Component {
             location: this.state.location,
             numVolunteers: this.state.numVolunteers,
             onlyForTrusted: this.state.onlyForTrusted,
+            requestor: this.state.requestor,
 
         }).then((docRef) => {
             this.setState({
@@ -61,7 +63,8 @@ class NewJobPage extends Component {
                 isEndDateTimePickerVisible: false,
                 startDateTimeLabel: 'Select Start Date/Time',
                 endDateTimeLabel: 'Select End Date/Time',
-                onlyForTrusted: false
+                onlyForTrusted: false,
+                requestor: '',
             });
             this.props.navigation.goBack();
         }).catch((error) => {
@@ -129,11 +132,13 @@ class NewJobPage extends Component {
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>About</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'description')}
-                            value={this.state.description}
-                        />
+                        <View style ={{ flex: 1}}>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => this.updateTextInput(text, 'description')}
+                                value={this.state.description}
+                            />
+                        </View>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Start Date/Time</Text>
@@ -206,6 +211,14 @@ class NewJobPage extends Component {
                             onToggle={isOn => this.setState({ onlyForTrusted: isOn})}
                         />
                     </View>
+                    <View style={styles.row}>
+                        <Text style={styles.headingOne}>Requestor</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => this.updateTextInput(text, 'requestor')}
+                            value={this.state.requestor}
+                        />
+                    </View>
                     <TouchableOpacity style={styles.saveBtn}>
                         <Button
                             title="SAVE"
@@ -223,14 +236,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: 'column',
+    flexWrap: 'wrap'
   },
   headingOne: {
     fontSize: 24,
     padding: 8
   },
   scrollView: {
-      margin: 20,
-      alignSelf: 'center',
+    margin: 10,
+    alignSelf: 'center',
   },
   dropdown_container: {
     flex: 1,
@@ -263,15 +278,15 @@ const styles = StyleSheet.create({
     height:50,
     alignItems:"center",
     justifyContent:"center",
-    marginTop:30,
+    alignSelf: 'center',
+    marginTop:15,
     marginBottom:10
   },
   row: {
-    width: '90%',
+    //width: '90%',
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 2,
-    alignItems:"center",
     justifyContent:"flex-start",
   },
   picker: {
@@ -282,13 +297,14 @@ const styles = StyleSheet.create({
   },
   input: {
      height: 40,
-     width: "50%",
+     //width: "50%",
      backgroundColor:"#D3D3D3",
      borderRadius: 10,
      borderColor: '#D3D3D3',
      borderWidth: 1,
      alignItems:"center",
      justifyContent:"center",
+     flex: 1
   }
 });
 export default NewJobPage;

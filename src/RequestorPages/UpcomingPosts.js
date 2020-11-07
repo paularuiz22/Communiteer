@@ -1,16 +1,15 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
-import {Picker} from "@react-native-community/picker";
+import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, Text, TouchableOpacity } from "react-native";
 import db from "../../config.js"
 import { sortBy } from 'lodash';
+import Icon from "react-native-vector-icons/MaterialIcons";
 
-const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
 let today = new Date();
 let todayDay = today.getDate();
 
-const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
+const Job = ({job: {title, jobType, date, startTime, endTime, location, requestor}}) => {
     if (date >= todayDay) {
         return (
             <View style={styles.row}>
@@ -29,6 +28,10 @@ const Job = ({job: {job: description, title, jobType, date, startTime, endTime, 
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{location}</Text>
                         </View>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{requestor}</Text>
+                        </View>
+                        
                     </View>
                 </View>
             </View>
@@ -63,7 +66,7 @@ class UpcomingPosts extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
-                    <Text style={{color: 'white'}}>ADD NEW JOB</Text>
+                  <Icon name="add_task" size={30} />
                 </TouchableOpacity>
                 <ScrollView style={styles.scrollView}>
                 <View>
