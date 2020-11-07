@@ -1,11 +1,15 @@
-import React, { useState, Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity, TextInput } from "react-native";
+import React, { Component } from "react";
+import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, TouchableOpacity, TextInput, KeyboardAvoidingView } from "react-native";
 import {Picker} from "@react-native-community/picker";
 import db from "../../config.js"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import ToggleSwitch from 'toggle-switch-react-native';
 
 const screen = Dimensions.get("screen");
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+const weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 class NewJobPage extends Component {
   constructor() {
@@ -50,7 +54,7 @@ class NewJobPage extends Component {
             onlyForTrusted: this.state.onlyForTrusted,
             requestor: this.state.requestor,
 
-        }).then((docRef) => {
+        }).then(() => {
             this.setState({
                 title: '',
                 description: '',
@@ -84,9 +88,18 @@ class NewJobPage extends Component {
     };
     handleStartDatePicked = (date) => {
         console.log('A start date has been picked: ', date);
-        this.setState({ startDateTimeLabel: date.toString()});
+        let formattedDate = this.formatDate(date);
+        console.log('formatted date: ', formattedDate);
+        this.setState({ startDateTimeLabel: formattedDate});
         this.setState({ startDateTime: date });
         this.hideStartDateTimePicker();
+    }
+
+    formatDate = (date) => {
+        let time = date.getHours() % 12;
+        let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
+        let formattedDate = weekDayNames[date.getDay()] + ', ' + monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' at ' + time.toString() + ':' + date.getMinutes().toString() + timeLabel;
+        return formattedDate;
     }
 
     showEndDateTimePicker = () => {
@@ -97,14 +110,15 @@ class NewJobPage extends Component {
     };
     handleEndDatePicked = (date) => {
         console.log('An end date has been picked: ', date);
-        this.setState({ endDateTimeLabel: date.toString()});
+        let formattedDate = this.formatDate(date);
+        this.setState({ endDateTimeLabel: formattedDate});
         this.setState({ endDateTime: date});
         this.hideEndDateTimePicker();
     }
 
     render () {
         return (
-            <SafeAreaView style={styles.container}>
+            <KeyboardAvoidingView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Job Type</Text>
@@ -151,6 +165,7 @@ class NewJobPage extends Component {
                                 mode={'datetime'}
                                 onConfirm={this.handleStartDatePicked}
                                 onCancel={this.hideStartDateTimePicker}
+                                style={{alignContent: 'center', alignItems: 'center'}}
                             />
                         )}
                     </View>
@@ -226,7 +241,7 @@ class NewJobPage extends Component {
                             onPress={() => this.saveJob()} />
                     </TouchableOpacity>
                 </ScrollView>
-            </SafeAreaView>
+            </KeyboardAvoidingView>
         );
      }
 }
