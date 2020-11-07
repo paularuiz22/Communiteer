@@ -57,14 +57,14 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     fontSize:50,
     color:"#FFFFFF",
-    marginBottom:40
+    flex: 2
   },
   inputView:{
     width:"80%",
     backgroundColor:"#40877E",
     borderRadius:25,
     height:50,
-    marginBottom:20,
+    marginBottom:10,
     justifyContent:"center",
     padding:20
   },
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     height:50,
     alignItems:"center",
     justifyContent:"center",
-    marginTop:30,
-    marginBottom:10
+    marginTop: 10,
+    marginBottom: 5,
   },
   loginText:{
     color:"#264653"
