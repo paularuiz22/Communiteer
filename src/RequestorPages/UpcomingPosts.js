@@ -9,8 +9,8 @@ const screen = Dimensions.get("screen");
 let today = new Date();
 let todayDay = today.getDate();
 
-const Job = ({job: {title, jobType, date, startTime, endTime, location, requestor}}) => {
-    if (date >= todayDay) {
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, numVolunteers, onlyForTrusted}}) => {
+    if (startDateTime >= todayDay.toString()) {
         return (
             <View style={styles.row}>
                 <View style={styles.circle}>
@@ -30,8 +30,7 @@ const Job = ({job: {title, jobType, date, startTime, endTime, location, requesto
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{requestor}</Text>
-                        </View>
-                        
+                        </View>         
                     </View>
                 </View>
             </View>
@@ -48,15 +47,15 @@ class UpcomingPosts extends Component {
         super();
         this.ref = db.ref('/jobs');
         this.state = {
-            jobs: sortBy(this.ref, 'date'),
+            jobs: sortBy(this.ref, 'title'),
         };
     }
     componentDidMount() {
-        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
+        db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
             this.setState({
-                jobs: sortBy(jobItems, 'date'),
+                jobs: sortBy(jobItems, 'title'),
             });
         });
     }
