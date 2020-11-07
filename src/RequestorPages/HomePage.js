@@ -1,15 +1,15 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"; // generates warnings i mean i guess its fine but idk
 const Tab = createMaterialTopTabNavigator();
-import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet } from "react-native";
 
+import Icon from "react-native-vector-icons/MaterialIcons"
 import UpcomingPosts from "./UpcomingPosts.js";
 import PastPosts from "./PastPosts.js";
 import TrustedVolunteers from "./TrustedVolunteers.js";
 import Users from "../Users/users.js"
 
 const windowWidth = Dimensions.get("window").width;
-const screen = Dimensions.get("screen");
 
 
 function HomePage() {
@@ -19,8 +19,18 @@ function HomePage() {
             labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
             tabStyle: { width: windowWidth / 3 },
             style: { backgroundColor: "#FFFFFF" },
+            showIcon: true,
           }}>
-          <Tab.Screen name="Upcoming Jobs" component={UpcomingPosts} />
+          <Tab.Screen 
+            name="Upcoming Jobs" 
+            component={UpcomingPosts}
+            options= {{
+              tabBarLabel:"Upcoming Jobs",
+              tabBarIcon: ({ }) => (
+                <Icon name="today" size={30} color="#900" />
+              )
+            }} 
+            />
           <Tab.Screen name="Past Jobs" component={PastPosts} />
           <Tab.Screen name="Trusted Volunteers" component={TrustedVolunteers} />
           <Tab.Screen name="Users" component={Users}/>
