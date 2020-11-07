@@ -66,7 +66,7 @@ class UpcomingPosts extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
-                  <Icon name="add_task" size={30} />
+                  <Icon name="add-box" size={30} style={{color:'white'}}/>
                 </TouchableOpacity>
                 <ScrollView style={styles.scrollView}>
                 <View>
