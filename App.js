@@ -1,9 +1,8 @@
 import * as React from "react";
-import { NavigationContainer, StackActions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
-import index from "./index";
+import { Dimensions } from "react-native";
 
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
 import JobBoard from "./src/JobBoard/JobBoard.js";
@@ -13,14 +12,12 @@ import Login from "./src/Login/Login.js";
 import HomePage from "./src/RequestorPages/HomePage.js";
 import NewJobPage from "./src/RequestorPages/NewJobPage.js";
 import TrustedRequestor from "./src/TrustedRequesters/TrustedRequesters.js";
-import TrustedVolunteers from "./src/RequestorPages/TrustedVolunteers/TrustedVolunteers.js";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const windowWidth = Dimensions.get("window").width;
 
 export default function App() {
-  //index();
   return (
     <NavigationContainer>
       <Stack.Navigator>
