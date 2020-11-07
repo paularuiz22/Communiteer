@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, Text, Touchable
 import db from "../../config.js"
 import { sortBy } from 'lodash';
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { formatDate, formatTime } from "./NewJobPage";
 
 const screen = Dimensions.get("screen");
 
@@ -10,17 +11,21 @@ let today = new Date();
 let todayDay = today.getDate();
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, numVolunteers, onlyForTrusted}}) => {
+    let startJSONdate = new Date(startDateTime);
+    let endJSONdate = new Date(endDateTime);
+    let startClockTime = formatTime(startJSONdate);
+    let endClockTime = formatTime(endJSONdate);
     if (startDateTime >= todayDay.toString()) {
         return (
             <View style={styles.row}>
                 <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>{date}</Text>
+                    <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                 </View>
                 <View style={styles.jobLabel}>
                     <View style={styles.column}>
                         <Text style={styles.jobLabelTitle}>{title}</Text>
                         <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
+                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
                             <View style={styles.typeLabel}>
                                 <Text style={styles.smallText}>{jobType}</Text>
                             </View>
@@ -137,14 +142,22 @@ const styles = StyleSheet.create({
     fontSize: 30,
     padding: 8,
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
+    alignItems: "center",
+    alignContent: "center",
+    textAlignVertical: "center"
   },
   circle: {
-    width: 75,
-    height: 75,
-    borderRadius: 75/2,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: "#264653",
-    padding: 10
+    padding: 10,
+    alignContent: "center",
+    alignItems: "center",
+    textAlignVertical: "center",
+    textAlign: "center",
+    alignSelf: "center"
   },
   jobLabel: {
     width: 270,

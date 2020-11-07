@@ -18,8 +18,9 @@ function HomePage() {
       <Tab.Navigator tabBarOptions={{
             labelStyle: { fontSize: 20, color: "#E76F51", fontWeight: "bold" },
             tabStyle: { width: windowWidth / 3 },
-            style: { backgroundColor: "#FFFFFF" },
+            style: { backgroundColor: "#FFFFFF", alignContent: "center", justifyContent: "center" },
             showIcon: true,
+            showLabel: false,
           }}>
           <Tab.Screen 
             name="Upcoming Jobs" 
@@ -31,8 +32,21 @@ function HomePage() {
               )
             }} 
             />
-          <Tab.Screen name="Past Jobs" component={PastPosts} />
-          <Tab.Screen name="Trusted Volunteers" component={TrustedVolunteers} />
+          <Tab.Screen name="Past Jobs" component={PastPosts}  options= {{
+              tabBarLabel:"Past Jobs",
+              tabBarIcon: ({ }) => (
+                <Icon name="history" size={30} color="#900" />
+              )
+            }} 
+            />
+          <Tab.Screen name="Trusted Volunteers" component={TrustedVolunteers}
+           options= {{
+              tabBarLabel:"Trusted Volunteers",
+              tabBarIcon: ({ }) => (
+                <Icon name="supervisor-account" size={30} color="#900" />
+              )
+            }} 
+            /> 
           <Tab.Screen name="Users" component={Users}/>
       </Tab.Navigator>
     </SafeAreaView>

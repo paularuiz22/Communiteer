@@ -1,23 +1,23 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, TouchableOpacity, TextInput, KeyboardAvoidingView } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
 import {Picker} from "@react-native-community/picker";
 import db from "../../config.js"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import ToggleSwitch from 'toggle-switch-react-native';
+//import ToggleSwitch from 'toggle-switch-react-native';
 import jobTypes from "../../jobTypes";
 
 const screen = Dimensions.get("screen");
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-class NewJobPage extends Component {
+export default class NewJobPage extends Component {
   constructor() {
     super();
     this.ref = db.ref('/jobs');
     this.state = {
       title: '',
       description: '',
-      jobType: s.OTHER,
+      jobType: jobTypes.OTHER,
       startDateTime: '',
       endDateTime: '',
       location: '',
@@ -87,19 +87,14 @@ class NewJobPage extends Component {
     };
     handleStartDatePicked = (date) => {
         console.log('A start date has been picked: ', date);
-        let formattedDate = this.formatDate(date);
+        let formattedDate = formatDate(date);
         console.log('formatted date: ', formattedDate);
         this.setState({ startDateTimeLabel: formattedDate});
         this.setState({ startDateTime: date.toString() });
         this.hideStartDateTimePicker();
     }
 
-    formatDate = (date) => {
-        let time = date.getHours() % 12;
-        let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
-        let formattedDate = weekDayNames[date.getDay()] + ', ' + monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' at ' + time.toString() + ':' + date.getMinutes().toString() + timeLabel;
-        return formattedDate;
-    }
+
 
     showEndDateTimePicker = () => {
         this.setState({ isEndDateTimePickerVisible: true });
@@ -109,7 +104,7 @@ class NewJobPage extends Component {
     };
     handleEndDatePicked = (date) => {
         console.log('An end date has been picked: ', date);
-        let formattedDate = this.formatDate(date);
+        let formattedDate = formatDate(date);
         this.setState({ endDateTimeLabel: formattedDate});
         this.setState({ endDateTime: date.toString()});
         this.hideEndDateTimePicker();
@@ -197,14 +192,16 @@ class NewJobPage extends Component {
                         />
                     </View>
                     <View style={styles.row}>
-                        <ToggleSwitch
-                            isOn={this.state.onlyForTrusted}
-                            onColor='#264653'
-                            offColor='#D3D3D9'
+                        <Text style={styles.smallerHeading}>Only show to trusted volunteers?</Text>
+                        <Switch
+                            trackColor={{ false: '#D3D3D9', true: "#264653" }}
+                            thumbColor={this.state.onlyForTrusted ? "#f5dd4b" : "#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            value={this.state.onlyForTrusted}
                             label="Only show to trusted volunteers?"
                             labelStyle={{color: "black", fontWeight: "4"}}
                             size="large"
-                            onToggle={isOn => this.setState({ onlyForTrusted: isOn})}
+                            onValueChange={value => this.setState({ onlyForTrusted: value})}
                         />
                     </View>
                     <View style={styles.row}>
@@ -238,6 +235,10 @@ const styles = StyleSheet.create({
   headingOne: {
     fontSize: 24,
     padding: 8
+  },
+  smallerHeading: {
+      fontSize: 18,
+      padding: 8,
   },
   scrollView: {
     margin: 10,
@@ -303,4 +304,16 @@ const styles = StyleSheet.create({
      flex: 1
   }
 });
-export default NewJobPage;
+export const formatDate = (date) => {
+    let time = date.getHours() % 12;
+    let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
+    let formattedDate = weekDayNames[date.getDay()] + ', ' + monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' at ' + time.toString() + ':' + date.getMinutes().toString() + timeLabel;
+    return formattedDate;
+}
+
+export const formatTime = (date) => {
+    let time = date.getHours() % 12;
+    let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
+    let formattedTime = time.toString() + ':' + date.getMinutes().toString() + timeLabel;
+    return formattedTime;
+}
