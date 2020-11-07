@@ -4,11 +4,10 @@ import {Picker} from "@react-native-community/picker";
 import db from "../../config.js"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import ToggleSwitch from 'toggle-switch-react-native';
+import jobTypes from "../../jobTypes";
 
 const screen = Dimensions.get("screen");
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 class NewJobPage extends Component {
@@ -18,7 +17,7 @@ class NewJobPage extends Component {
     this.state = {
       title: '',
       description: '',
-      jobType: '',
+      jobType: s.OTHER,
       startDateTime: '',
       endDateTime: '',
       location: '',
@@ -91,7 +90,7 @@ class NewJobPage extends Component {
         let formattedDate = this.formatDate(date);
         console.log('formatted date: ', formattedDate);
         this.setState({ startDateTimeLabel: formattedDate});
-        this.setState({ startDateTime: date });
+        this.setState({ startDateTime: date.toString() });
         this.hideStartDateTimePicker();
     }
 
@@ -112,7 +111,7 @@ class NewJobPage extends Component {
         console.log('An end date has been picked: ', date);
         let formattedDate = this.formatDate(date);
         this.setState({ endDateTimeLabel: formattedDate});
-        this.setState({ endDateTime: date});
+        this.setState({ endDateTime: date.toString()});
         this.hideEndDateTimePicker();
     }
 
@@ -127,13 +126,10 @@ class NewJobPage extends Component {
                             style={styles.picker}
                             onValueChange={this.updateJobType}
                         >
-                            <Picker.Item label="All Jobs" value="alljobs"/>
-                            <Picker.Item label="Beautification" value="beautification"/>
-                            <Picker.Item label="Children" value="children"/>
-                            <Picker.Item label="House Chores" value="housechores"/>
-                            <Picker.Item label="Pet Care" value="petcare"/>
-                            <Picker.Item label="Shopping" value="shopping"/>
-                            <Picker.Item label="Tutoring" value="tutoring"/>
+                            {Object.keys(jobTypes).map((key) => {
+                                return (<Picker.Item label={jobTypes[key]} value={key} key={key}/>);
+                            })}
+
                         </Picker>
                     </View>
                     <View style={styles.row}>
@@ -183,22 +179,7 @@ class NewJobPage extends Component {
                             />
                         )}
                     </View>
-                    <View style={styles.row}>
-                        <Text style={styles.headingOne}>Start Time</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'startTime')}
-                            value={this.state.startTime}
-                        />
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.headingOne}>End Time</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'endTime')}
-                            value={this.state.endTime}
-                        />
-                    </View>
+
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Location</Text>
                         <TextInput
