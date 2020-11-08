@@ -7,30 +7,41 @@ const screen = Dimensions.get("screen");
 
 let today = new Date();
 let todayDay = today.getDate();
+const activeUserName = 'lizBashaw'
 
+const User = ({user: {city, email, firstName, lastName, state, streetAddress, trustedUsers, userType, username, zipCode}}, key) => {
+  return (
+    <TouchableOpacity
+      key={key} style={styles.volunteer}
+      onPress={ () => this.removeVolunteer(key)}
+    >
+      <Text style={styles.volunteerText}>{username}</Text>
+    </TouchableOpacity>
+  )
+};
 
 class TrustedVolunteers extends Component {
 
     constructor() {
         super();
-        this.ref = db.ref('/jobs');
+        this.ref = db.ref('/users');
         this.state = {
-            volunteer: '',
-            volunteers: []
+            createVolunteer: '',
+            trustedVolunteers: []
         };
     }
     componentDidMount() {
-        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
-            let jobItems = {...data};
+            let userItems = {...data};
             this.setState({
-                jobs: sortBy(jobItems, 'date'),
+                volunteers: sortBy(userItems, 'username'),
             });
         });
     }
 
     cloneVolunteers() {
-        return [...this.state.volunteers];
+        return [...this.state.trustedVolunteers];
     }
 
     async removeVolunteer(i) {
@@ -44,11 +55,11 @@ class TrustedVolunteers extends Component {
     }
 
     async addVolunteer() {
-        if (this.state.volunteer.length <= 0)
+        if (this.state.createVolunteer.length <= 0)
             return;
         try {
             const volunteers = this.cloneVolunteers();
-            volunteers.push(this.state.volunteer);
+            this.ref.push(this.state.createVolunteer);
             this.setState({
                 volunteers: volunteers,
                 volunteer: ''
@@ -58,24 +69,24 @@ class TrustedVolunteers extends Component {
         }
     }
 
-    renderVolunteers() {
-        return this.state.volunteers.map((volunteer, i) => {
-            return (
-                <TouchableOpacity
-                    key={i} style={styles.volunteer}
-                    onPress={ () => this.removeVolunteer(i)}
-                >
-                    <Text style={styles.volunteerText}>{volunteer}</Text>
-                </TouchableOpacity>
-            );
-        });
-    }
-
     render () {
+      let userKeys = Object.keys(this.state.trustedVolunteers);
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                    {this.renderVolunteers()}
+                  <View>
+                    {userKeys.length > 0 ? (
+                      userKeys.map(key => (
+                        <User
+                          key={key}
+                          id={key}
+                          user={this.state.trustedVolunteers[key]}
+                        />
+                      ))
+                    ): (
+                      <Text>No trusted users</Text>
+                    )}
+                  </View>
                 </ScrollView>
                 <KeyboardAvoidingView
                     style={styles.footer}
@@ -94,7 +105,7 @@ class TrustedVolunteers extends Component {
                             placeholder={'Add Trusted Volunteer'}
                             placeholderTextColor={'rgba(255, 255, 255, .7)'}
                             onChangeText={(volunteer) => this.setState({volunteer})}
-                            value={this.state.volunteer}
+                            value={this.state.createVolunteer}
                         />
                     </View>
                 </KeyboardAvoidingView>

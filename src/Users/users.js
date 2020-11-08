@@ -61,7 +61,8 @@ export default function Users() {
             password: 'test4'
         },
     ];
-    userData.forEach((user) => {
+    /*userData.forEach((user) => {
+
         db.ref('/users').push({
             username: user.username,
             email: user.email,
@@ -74,7 +75,7 @@ export default function Users() {
             userType: user.userType,
             trustedUsers: user.trustedUsers
          });
-    });
+    });*/
     //db.ref('/users').push({userData});
     return null;
 }
