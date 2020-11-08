@@ -88,6 +88,7 @@ class TrustedVolunteers extends Component {
         return [...this.state.allUsers];
     }
 
+    // TODO: finish implementing removal of trusted
     async removeVolunteer(i) {
         try {
             const volunteers = this.cloneVolunteers();
@@ -98,6 +99,7 @@ class TrustedVolunteers extends Component {
         }
     }
 
+    // TODO: integrate backend into implementation to add trusted volunteer
     async addVolunteer() {
         if (this.state.createVolunteer.length <= 0)
             return;
