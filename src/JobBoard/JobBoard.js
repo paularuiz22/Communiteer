@@ -18,6 +18,16 @@ const data= [
         expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))"
     },
     {
+        requestor: "Clara",
+        month: "January",
+        day: 28,
+        title: "Pick-up Groceries",
+        time: "4pm - 5pm",
+        type: "Shopping",
+        location: "Woodstock, GA",
+        expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))"
+    },
+    {
         requestor: "Charlie",
         month: "February",
         day: 30,
@@ -88,7 +98,7 @@ class JobBoard extends Component {
             style={[styles.header, isActive ? styles.active : styles.inactive]}
             transition="backgroundColor"
           >
-            <Text style={styles.headerText}>{section.title}</Text>
+            <Text style={styles.headerText}>{section.month}</Text>
             <View style={styles.row}>
                     <View style={styles.circle}>
                         <Text style={styles.numberLabel}>{section.day}</Text>
@@ -363,10 +373,10 @@ class JobBoard extends Component {
                     />
                     </ScrollView>
                 </View>
-                <this.ItemList 
+                {/* <this.ItemList 
                     state={this.state} 
                     flatListItemSeparator={this.FlatListItemSeparator} 
-                    jobItem={this.JobItem} />
+                    jobItem={this.JobItem} /> */}
             </SafeAreaView>
         );
     }

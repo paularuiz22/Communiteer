@@ -28,7 +28,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-        <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator} options={{headerShown: false}}/>
+        <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
         <Stack.Screen name="HomePage" component={HomePage} options={{headerShown: false}}/>
         <Stack.Screen name="NewJobPage" component={NewJobPage}/>
       </Stack.Navigator>
@@ -43,15 +43,15 @@ function VolunteerNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === "AssignedJobs") {
-            iconName = focused ? "ios-clipboard" : "ios-clipboard";
+            iconName = "ios-clipboard";
           } else if (route.name === "PastJobs") {
-            iconName = focused ? "ion-md-checkbox" : "ios-list";
+            iconName = "ios-checkmark";
           } else if (route.name === "JobBoard") {
-            iconName = focused ? "ios-list-box" : "ios-list";
+            iconName = "ios-list";
           } else if (route.name === "Stats") {
-            iconName = focused ? "ios-analytics" : "ios-analytics-outline";
+            iconName = "ios-analytics";
           }else if (route.name === "TrustedRequestor") {
-            iconName = focused ? "ios-contact" : "ios-list";
+            iconName ="ios-contact";
           }
 
           // You can return any component that you like here!
@@ -64,7 +64,7 @@ function VolunteerNavigator() {
       }}
     >
       <Tab.Screen name="AssignedJobs" component={AssignedJobs}/>
-      <Tab.Screen name="PastJobs" component={PastJobs} />
+      <Tab.Screen name="PastJobs" component={PastJobs}/>
       <Tab.Screen name="JobBoard" component={JobBoard} />
       <Tab.Screen name="Stats" component={Stats}/>
       <Tab.Screen name="TrustedRequestor" component={TrustedRequestor} />
