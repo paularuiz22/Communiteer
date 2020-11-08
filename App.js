@@ -16,6 +16,7 @@ import TrustedRequestor from "./src/TrustedRequesters/TrustedRequesters.js";
 import TrustedVolunteers from "./src/RequestorPages/TrustedVolunteers/TrustedVolunteers.js";
 import { Ionicons } from "@expo/vector-icons";
 import Collapse from "./src/RequestorPages/collapse"
+import collapse from "./src/RequestorPages/collapse";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -64,7 +65,7 @@ function VolunteerNavigator() {
     >
       <Tab.Screen name="AssignedJobs" component={AssignedJobs}/>
       <Tab.Screen name="PastJobs" component={PastJobs} />
-      <Tab.Screen name="JobBoard" component={Collapse} />
+      <Tab.Screen name="JobBoard" component={JobBoard} />
       <Tab.Screen name="Stats" component={Stats}/>
       <Tab.Screen name="TrustedRequestor" component={TrustedRequestor} />
     </Tab.Navigator>
