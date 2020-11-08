@@ -10,7 +10,7 @@ const screen = Dimensions.get("screen");
 let today = new Date();
 let todayDay = today.getDate();
 
-const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, numVolunteers, onlyForTrusted}}) => {
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, numVolunteers, onlyForTrusted}}, id) => {
     let startJSONdate = new Date(startDateTime);
     let endJSONdate = new Date(endDateTime);
     let startClockTime = formatTime(startJSONdate);
