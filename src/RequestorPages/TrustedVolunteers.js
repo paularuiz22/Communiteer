@@ -2,22 +2,31 @@ import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, TextInput, Text, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import db from "../../config.js"
 import { sortBy } from 'lodash';
+import userTypes from "../Users/userType"
 
 const screen = Dimensions.get("screen");
 
 let today = new Date();
 let todayDay = today.getDate();
 const activeUserName = 'lizBashaw'
+var activeUser = Object.bind();
+var targetVolunteers = Array();
 
-const User = ({user: {city, email, firstName, lastName, state, streetAddress, trustedUsers, userType, username, zipCode}}, key) => {
-  return (
-    <TouchableOpacity
-      key={key} style={styles.volunteer}
-      onPress={ () => this.removeVolunteer(key)}
-    >
-      <Text style={styles.volunteerText}>{username}</Text>
-    </TouchableOpacity>
-  )
+const VolunteerUser = ({user: {city, email, firstName, lastName, state, streetAddress, trustedUsers, userType, username, zipCode}}, key) => {
+  if (userType == userTypes.VOLUNTEER) {
+    return (
+      <TouchableOpacity
+        key={key} style={styles.volunteer}
+        onPress={ () => this.removeVolunteer(key)}
+      >
+        <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
+        <Text style={styles.volunteerText}>{userType}</Text>
+
+      </TouchableOpacity>
+    );
+  } else {
+    return null;
+  }
 };
 
 class TrustedVolunteers extends Component {
@@ -33,11 +42,15 @@ class TrustedVolunteers extends Component {
     componentDidMount() {
         db.ref('/users').orderByChild('username').on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
+            if (data.username == activeUserName) {
+              activeUser = data;
+              targetVolunteers.push(data.trustedUsers);
+            }
             let userItems = {...data};
             this.setState({
-                volunteers: sortBy(userItems, 'username'),
+                trustedVolunteers: sortBy(userItems, 'username'),
             });
-        });
+        }); 
     }
 
     cloneVolunteers() {
@@ -48,7 +61,7 @@ class TrustedVolunteers extends Component {
         try {
             const volunteers = this.cloneVolunteers();
             volunteers.splice(i, 1);
-            this.setState({volunteers: volunteers});
+            this.setState({trustedVolunteers: volunteers});
         }
         catch(e) {
         }
@@ -61,13 +74,17 @@ class TrustedVolunteers extends Component {
             const volunteers = this.cloneVolunteers();
             this.ref.push(this.state.createVolunteer);
             this.setState({
-                volunteers: volunteers,
+                trustedVolunteers: volunteers,
                 volunteer: ''
             });
         }
         catch (e) {
         }
     }
+
+    /*async getActiveUsersTrustedVolunteers() {
+      db.ref('/users').orderByChild("username").
+    }*/
 
     render () {
       let userKeys = Object.keys(this.state.trustedVolunteers);
@@ -77,7 +94,7 @@ class TrustedVolunteers extends Component {
                   <View>
                     {userKeys.length > 0 ? (
                       userKeys.map(key => (
-                        <User
+                        <VolunteerUser
                           key={key}
                           id={key}
                           user={this.state.trustedVolunteers[key]}
@@ -163,8 +180,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   volunteerText: {
-    fontSize: 14,
-    padding: 20
+    fontSize: 20,
+    padding: 20,
   },
   container: {
     flex: 1,
