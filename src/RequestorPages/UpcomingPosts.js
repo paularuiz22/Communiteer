@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
 import {Picker} from "@react-native-community/picker";
-import { db } from '../Stats/BackendTest';
-import { sortBy } from 'lodash';
+import { db } from "../Stats/BackendTest";
+import { sortBy } from "lodash";
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
@@ -11,78 +11,78 @@ let today = new Date();
 let todayDay = today.getDate();
 
 const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
-    if (date >= todayDay) {
-        return (
+  if (date >= todayDay) {
+    return (
+      <View style={styles.row}>
+        <View style={styles.circle}>
+          <Text style={styles.numberLabel}>{date}</Text>
+        </View>
+        <View style={styles.jobLabel}>
+          <View style={styles.column}>
+            <Text style={styles.jobLabelTitle}>{title}</Text>
             <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>{date}</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <View style={styles.column}>
-                        <Text style={styles.jobLabelTitle}>{title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{jobType}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{location}</Text>
-                        </View>
-                    </View>
-                </View>
+              <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
+              <View style={styles.typeLabel}>
+                <Text style={styles.smallText}>{jobType}</Text>
+              </View>
             </View>
-        )
-    }
-    else {
-        return null
-    }
+            <View style={styles.row}>
+              <Text style={styles.mediumText}>{location}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+  else {
+    return null;
+  }
 };
 
 class UpcomingPosts extends Component {
 
-    constructor() {
-        super();
-        this.ref = db.ref('/jobs');
-        this.state = {
-            jobs: sortBy(this.ref, 'date'),
-        };
-    }
-    componentDidMount() {
-        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
-            let data = querySnapShot.val() ? querySnapShot.val() : {};
-            let jobItems = {...data};
-            this.setState({
-                jobs: sortBy(jobItems, 'date'),
-            });
-        });
-    }
+  constructor() {
+    super();
+    this.ref = db.ref("/jobs");
+    this.state = {
+      jobs: sortBy(this.ref, "date"),
+    };
+  }
+  componentDidMount() {
+    db.ref("/jobs").orderByChild("date").on("value", querySnapShot => {
+      let data = querySnapShot.val() ? querySnapShot.val() : {};
+      let jobItems = {...data};
+      this.setState({
+        jobs: sortBy(jobItems, "date"),
+      });
+    });
+  }
 
-    render () {
-        let jobsKeys = Object.keys(this.state.jobs);
-        return (
-            <SafeAreaView style={styles.container}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
-                    <Text style={{color: 'white'}}>ADD NEW JOB</Text>
-                </TouchableOpacity>
-                <ScrollView style={styles.scrollView}>
-                <View>
-                  {jobsKeys.length > 0 ? (
-                    jobsKeys.map(key => (
-                      <Job
-                        key={key}
-                        id={key}
-                        job={this.state.jobs[key]}
-                      />
-                    ))
-                  ) : (
-                        <Text>No upcoming jobs</Text>
-                  )}
-                </View>
-                </ScrollView>
-            </SafeAreaView>
-        );
-    }
+  render () {
+    let jobsKeys = Object.keys(this.state.jobs);
+    return (
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
+          <Text style={{color: "white"}}>ADD NEW JOB</Text>
+        </TouchableOpacity>
+        <ScrollView style={styles.scrollView}>
+          <View>
+            {jobsKeys.length > 0 ? (
+              jobsKeys.map(key => (
+                <Job
+                  key={key}
+                  id={key}
+                  job={this.state.jobs[key]}
+                />
+              ))
+            ) : (
+              <Text>No upcoming jobs</Text>
+            )}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 30,
     marginVertical: 20,
     width: screen.width/2,
@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
   numberLabel: {
     fontSize: 30,
     padding: 8,
-    color: '#fff',
-    textAlign: 'center'
+    color: "#fff",
+    textAlign: "center"
   },
   circle: {
     width: 75,
@@ -172,13 +172,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     padding: 2
   },
   column: {
-    flexDirection: 'column',
-    flexWrap: 'wrap',
+    flexDirection: "column",
+    flexWrap: "wrap",
     padding: 5
   },
 });
