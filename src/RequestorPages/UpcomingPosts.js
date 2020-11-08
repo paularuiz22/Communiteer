@@ -4,6 +4,7 @@ import db from "../../config.js"
 import { sortBy } from 'lodash';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { formatDate, formatTime } from "./NewJobPage";
+// TODO: fix UI of jobs
 
 const screen = Dimensions.get("screen");
 

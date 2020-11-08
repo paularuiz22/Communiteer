@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, ScrollView, View, Text } from "react-native";
 import db from "../../config.js"
 import { sortBy } from 'lodash';
 import { formatTime } from "./NewJobPage";
+// TODO: fix UI of jobs
 
 
 const screen = Dimensions.get("screen");
