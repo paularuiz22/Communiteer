@@ -9,11 +9,18 @@ const screen = Dimensions.get("screen");
 let today = new Date();
 let todayDay = today.getDate();
 const activeUserName = 'lizBashaw'
-var activeUser = Object.bind();
+var activeUser;
 var targetVolunteers = Array();
 
 const VolunteerUser = ({user: {city, email, firstName, lastName, state, streetAddress, trustedUsers, userType, username, zipCode}}, key) => {
-  if (userType == userTypes.VOLUNTEER) {
+  var trusted = false;
+  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+    if (activeUser.trustedUsers[i] == username) {
+      trusted = true;
+    }
+  }
+  if (userType == userTypes.VOLUNTEER & trusted) {
+
     return (
       <TouchableOpacity
         key={key} style={styles.volunteer}
@@ -21,6 +28,34 @@ const VolunteerUser = ({user: {city, email, firstName, lastName, state, streetAd
       >
         <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
         <Text style={styles.volunteerText}>{userType}</Text>
+        <Text style={styles.volunteerText}>{username}</Text>
+        <Text style={styles.volunteerText}>trusted? {trusted ? "yes" : "no"}</Text>
+
+
+      </TouchableOpacity>
+    );
+  } else {
+    return null;
+  }
+};
+const ActiveUser = ({user: {city, email, firstName, lastName, state, streetAddress, trustedUsers, userType, username, zipCode}}, key) => {
+  if (userType == userTypes.REQUESTOR & username == activeUserName) {
+    var listOfTrusted = new Array(...trustedUsers);
+    return (
+      <TouchableOpacity
+        key={key} style={styles.volunteer}
+        onPress={ () => this.removeVolunteer(key)}
+      >
+      {trustedUsers.length > 0 ? (
+            trustedUsers.forEach(element => {
+              <Text>{element}</Text>
+            })
+          ): (
+            <Text>No trusted users</Text>
+          )}
+        <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
+        <Text style={styles.volunteerText}>{userType}</Text>
+        <Text style={styles.volunteerText}>trusted volunteers: {trustedUsers[0]}</Text>
 
       </TouchableOpacity>
     );
@@ -36,32 +71,28 @@ class TrustedVolunteers extends Component {
         this.ref = db.ref('/users');
         this.state = {
             createVolunteer: '',
-            trustedVolunteers: []
+            allUsers: []
         };
     }
     componentDidMount() {
         db.ref('/users').orderByChild('username').on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
-            if (data.username == activeUserName) {
-              activeUser = data;
-              targetVolunteers.push(data.trustedUsers);
-            }
             let userItems = {...data};
             this.setState({
-                trustedVolunteers: sortBy(userItems, 'username'),
+                allUsers: sortBy(userItems, 'username'),
             });
         }); 
     }
 
     cloneVolunteers() {
-        return [...this.state.trustedVolunteers];
+        return [...this.state.allUsers];
     }
 
     async removeVolunteer(i) {
         try {
             const volunteers = this.cloneVolunteers();
             volunteers.splice(i, 1);
-            this.setState({trustedVolunteers: volunteers});
+            this.setState({allUsers: volunteers});
         }
         catch(e) {
         }
@@ -74,7 +105,7 @@ class TrustedVolunteers extends Component {
             const volunteers = this.cloneVolunteers();
             this.ref.push(this.state.createVolunteer);
             this.setState({
-                trustedVolunteers: volunteers,
+                allUsers : volunteers,
                 volunteer: ''
             });
         }
@@ -82,26 +113,52 @@ class TrustedVolunteers extends Component {
         }
     }
 
-    /*async getActiveUsersTrustedVolunteers() {
-      db.ref('/users').orderByChild("username").
-    }*/
-
     render () {
-      let userKeys = Object.keys(this.state.trustedVolunteers);
+      let userKeys = Object.keys(this.state.allUsers);
+      let userObjects = Object.values(this.state.allUsers);
+      var i = 0;
+      for (var i = 0; i < userObjects.length; i++) {
+        var curr = userObjects[i];
+        if (curr.username == activeUserName) {
+          activeUser = curr;
+        }
+      }
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
+                <View>
+                    {userKeys.length > 0 ? (
+                      userKeys.map(key => (
+                        <ActiveUser
+                          key={key}
+                          id={key}
+                          user={this.state.allUsers[key]}
+                        />
+                      ))
+                    ): (
+                      <Text>No trusted users</Text>
+                    )}
+                  </View>
                   <View>
                     {userKeys.length > 0 ? (
                       userKeys.map(key => (
                         <VolunteerUser
                           key={key}
                           id={key}
-                          user={this.state.trustedVolunteers[key]}
+                          user={this.state.allUsers[key]}
                         />
                       ))
                     ): (
                       <Text>No trusted users</Text>
+                    )}
+                  </View>
+                  <View>
+                    {activeUser ? (
+                      <VolunteerUser
+                      user={activeUser}
+                      />
+                    ) : (
+                      <Text>No active user</Text>
                     )}
                   </View>
                 </ScrollView>
