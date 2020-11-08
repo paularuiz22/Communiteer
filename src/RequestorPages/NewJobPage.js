@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, T
 import {Picker} from "@react-native-community/picker";
 import db from "../../config.js"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import ToggleSwitch from 'toggle-switch-react-native';
+// import ToggleSwitch from 'toggle-switch-react-native';
 
 const screen = Dimensions.get("screen");
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -216,7 +216,7 @@ class NewJobPage extends Component {
                         />
                     </View>
                     <View style={styles.row}>
-                        <ToggleSwitch
+                        {/* <ToggleSwitch
                             isOn={this.state.onlyForTrusted}
                             onColor='#264653'
                             offColor='#D3D3D9'
@@ -224,7 +224,7 @@ class NewJobPage extends Component {
                             labelStyle={{color: "black", fontWeight: "4"}}
                             size="large"
                             onToggle={isOn => this.setState({ onlyForTrusted: isOn})}
-                        />
+                        /> */}
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Requestor</Text>

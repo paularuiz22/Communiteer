@@ -15,7 +15,9 @@ export default function Users() {
             state: 'GA',
             zipCode: 30189,
             userType: userTypes.VOLUNTEER,
-            trustedUsers: ['jessicaruizwoodstock'],
+            trustedUsers: {
+                'qcaliendo3':true
+            },
             password: 'test1'
         },
         {
@@ -57,7 +59,9 @@ export default function Users() {
             state: 'NC',
             zipCode: 28791,
             userType: userTypes.REQUESTOR,
-            trustedUsers: ['paularuiz22'],
+            trustedUsers: {
+                'paularuiz22':true
+            },
             password: 'test4'
         },
     ];

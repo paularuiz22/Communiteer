@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
 import {Picker} from "@react-native-community/picker";
 import db from "../../config.js"
 import { sortBy } from 'lodash';
@@ -9,7 +9,8 @@ const screen = Dimensions.get("screen");
 const today = new Date();
 let todayDay = today.getDate();
 
-const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
+const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location,
+   numVolunteers, onlyForTrusted, requestor, volunteer}, id}) => {
     if (date < todayDay) {
         return (
         <SafeAreaView style={styles.container}>
@@ -28,6 +29,9 @@ const Job = ({job: {job: description, title, jobType, date, startTime, endTime, 
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{location}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{volunteer}</Text>
                         </View>
                     </View>
                 </View>
@@ -77,6 +81,16 @@ export default class PastPosts extends Component {
               ) : (
                     <Text>No previous jobs</Text>
               )}
+              {/* hey so this is garbage, but for now it's a button that manually adds a hardcoded trusted volunteer to a hardcoded 
+              user */}
+              <TouchableOpacity onPress={() => db.ref('/users').child("-MLd44cDNeuZCahhWo3B").child("trustedUsers")
+              .update({
+                "catherinelee5000": true
+              })
+            }
+               style={styles.addTrustedBtn}>
+                          <Text>add trusted user</Text>
+            </TouchableOpacity>
             </View>
             </ScrollView>
         );
@@ -84,6 +98,16 @@ export default class PastPosts extends Component {
 }
 
 const styles = StyleSheet.create({
+  addTrustedBtn: {
+    width:"25%",
+    backgroundColor:"#E76F51",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop:10,
+    marginBottom:10
+  },
   container: {
     flex: 1,
     alignItems: "center",

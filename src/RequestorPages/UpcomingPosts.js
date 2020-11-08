@@ -82,6 +82,11 @@ class UpcomingPosts extends Component {
                         <Text>No upcoming jobs</Text>
                   )}
                 </View>
+                {/* Here's a crappy button that deletes a hardcoded id job! */}
+                <TouchableOpacity onPress={() => db.ref('/jobs').child("-MLd51LUs81akbpo6uhm")
+                  .remove()} style={styles.delJobBtn}>
+                  <Text>delete job post</Text>
+                </TouchableOpacity>
                 </ScrollView>
             </SafeAreaView>
         );
@@ -126,6 +131,16 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     marginTop:10,
     marginBottom:10
+  },
+  delJobBtn:{
+    width:"100%",
+    backgroundColor:"#E76F51",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop: 10,
+    marginBottom: 5,
   },
   scrollView: {
     marginHorizontal: 20,

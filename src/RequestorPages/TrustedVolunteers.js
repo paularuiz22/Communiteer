@@ -113,6 +113,10 @@ class TrustedVolunteers extends Component {
                     enabled={true}
                 >
                     <View style={styles.footerInner}>
+                    <TouchableOpacity onPress={() => db.ref('/users').child("-MLd44cDNeuZCahhWo3B")
+                        .child("trustedUsers").child("catherinelee5000").remove()} style={styles.addTrustedBtn}>
+                        <Text>delete trusted contact</Text>
+                    </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.btn}
                             onPress={() => this.addVolunteer()}
@@ -134,6 +138,16 @@ class TrustedVolunteers extends Component {
 }
 
 const styles = StyleSheet.create({
+  addTrustedBtn: {
+    width:"25%",
+    backgroundColor:"#E76F51",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop:10,
+    marginBottom:10
+  },
   footer: {
     position: 'absolute',
     width: '100%',
