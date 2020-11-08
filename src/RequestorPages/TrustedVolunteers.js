@@ -7,12 +7,10 @@ import userTypes from "../Users/userType"
 const screen = Dimensions.get("screen");
 
 let today = new Date();
-let todayDay = today.getDate();
 const activeUserName = 'lizBashaw'
 var activeUser;
-var targetVolunteers = Array();
 
-const VolunteerUser = ({user: {city, email, firstName, lastName, state, streetAddress, trustedUsers, userType, username, zipCode}}, key) => {
+const VolunteerUser = ({user: {firstName, lastName, userType, username}}, key) => {
   var trusted = false;
   for(var i = 0; i < activeUser.trustedUsers.length; i++) {
     if (activeUser.trustedUsers[i] == username) {
@@ -38,10 +36,10 @@ const VolunteerUser = ({user: {city, email, firstName, lastName, state, streetAd
     return null;
   }
 };
-const ActiveUser = ({user: {city, email, firstName, lastName, state, streetAddress, trustedUsers, userType, username, zipCode}}, key) => {
+const ActiveUser = ({user: {firstName, lastName, trustedUsers, userType, username}}, key) => {
   if (userType == userTypes.REQUESTOR & username == activeUserName) {
-    var listOfTrusted = new Array(...trustedUsers);
-    return (
+    return null;
+    /*(
       <TouchableOpacity
         key={key} style={styles.volunteer}
         onPress={ () => this.removeVolunteer(key)}
@@ -55,10 +53,10 @@ const ActiveUser = ({user: {city, email, firstName, lastName, state, streetAddre
           )}
         <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
         <Text style={styles.volunteerText}>{userType}</Text>
-        <Text style={styles.volunteerText}>trusted volunteers: {trustedUsers[0]}</Text>
+        <Text style={styles.volunteerText}>trusted volunteers: {trustedUsers.map((user)=> {<Text>{user}</Text>})}</Text>
 
       </TouchableOpacity>
-    );
+    );*/
   } else {
     return null;
   }
@@ -74,6 +72,7 @@ class TrustedVolunteers extends Component {
             allUsers: []
         };
     }
+    
     componentDidMount() {
         db.ref('/users').orderByChild('username').on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};

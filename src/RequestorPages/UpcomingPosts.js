@@ -57,13 +57,13 @@ class UpcomingPosts extends Component {
         };
     }
     componentDidMount() {
-        db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
-            let data = querySnapShot.val() ? querySnapShot.val() : {};
-            let jobItems = {...data};
-            this.setState({
-                jobs: sortBy(jobItems, 'title'),
-            });
-        });
+      db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
+          let data = querySnapShot.val() ? querySnapShot.val() : {};
+          let jobItems = {...data};
+          this.setState({
+            jobs: sortBy(jobItems, 'title'),
+          });
+      });
     }
 
     render () {
