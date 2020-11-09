@@ -7,10 +7,13 @@ import { AuthContext } from "../../AuthContext";
 
 const screen = Dimensions.get("screen");
 
-const activeUserName = 'lizBashaw'
-var activeUser;
+//const activeUserName = 'jessica'
+var activeUser  = {
+  username: '',
+  trustedUsers: [],
+};
 
-const VolunteerUser = ({user: {firstName, lastName, userType, username}}, key) => {
+const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
   var trusted = false;
   for(var i = 0; i < activeUser.trustedUsers.length; i++) {
     if (activeUser.trustedUsers[i] == username) {
@@ -18,51 +21,21 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}, key) =
     }
   }
   if (userType == userTypes.VOLUNTEER & trusted) {
-
     return (
-      <TouchableOpacity
-        key={key} style={styles.volunteer}
-        onPress={ () => this.removeVolunteer(key)}
-      >
-        <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
-        <Text style={styles.volunteerText}>{userType}</Text>
-        <Text style={styles.volunteerText}>{username}</Text>
-        <Text style={styles.volunteerText}>trusted? {trusted ? "yes" : "no"}</Text>
-
-
-      </TouchableOpacity>
+      <View style={styles.requestor}>
+          <Text style={styles.mediumText}>{firstName} {lastName}</Text>
+          <Text style={styles.mediumText}>{userType}</Text>
+          <Text style={styles.mediumText}>{username}</Text>
+      </View>
     );
-  } else {
-    return null;
-  }
+    } else {
+      return null;
+    }
 };
-const ActiveUser = ({user: {userType, username}}) => {
-  if (userType == userTypes.REQUESTOR & username == activeUserName) {
-    return null;
-    /*(
-      <TouchableOpacity
-        key={key} style={styles.volunteer}
-        onPress={ () => this.removeVolunteer(key)}
-      >
-      {trustedUsers.length > 0 ? (
-            trustedUsers.forEach(element => {
-              <Text>{element}</Text>
-            })
-          ): (
-            <Text>No trusted users</Text>
-          )}
-        <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
-        <Text style={styles.volunteerText}>{userType}</Text>
-        <Text style={styles.volunteerText}>trusted volunteers: {trustedUsers.map((user)=> {<Text>{user}</Text>})}</Text>
 
-      </TouchableOpacity>
-    );*/
-  } else {
-    return null;
-  }
-};
 
 class TrustedVolunteers extends Component {
+
     static contextType = AuthContext;
     
     constructor() {
@@ -72,6 +45,7 @@ class TrustedVolunteers extends Component {
             createVolunteer: '',
             allUsers: []
         };
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
     
     componentDidMount() {
@@ -118,30 +92,18 @@ class TrustedVolunteers extends Component {
     render () {
       let value = this.context;
       let userKeys = Object.keys(this.state.allUsers);
-      let userObjects = Object.values(this.state.allUsers);
       var i = 0;
-      for (var i = 0; i < userObjects.length; i++) {
-        var curr = userObjects[i];
+      for (var i = 0; i < userKeys.length; i++) {
+        var curr = this.state.allUsers[userKeys[i]];
         if (curr.username == value["username"]) {
-          activeUser = curr;
+          activeUser.username = curr.username;
+          activeUser.trustedUsers = curr.trustedUsers;
         }
       }
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                <View>
-                    {userKeys.length > 0 ? (
-                      userKeys.map(key => (
-                        <ActiveUser
-                          key={key}
-                          id={key}
-                          user={this.state.allUsers[key]}
-                        />
-                      ))
-                    ): (
-                      <Text>No trusted users</Text>
-                    )}
-                  </View>
+        <View><Text>{activeUser.trustedUsers.length}</Text></View>
                   <View>
                     {userKeys.length > 0 ? (
                       userKeys.map(key => (
@@ -152,17 +114,8 @@ class TrustedVolunteers extends Component {
                         />
                       ))
                     ): (
-                      <Text>No trusted users</Text>
-                    )}
-                  </View>
-                  <View>
-                    {activeUser ? (
-                      <VolunteerUser
-                      user={activeUser}
-                      />
-                    ) : (
-                      <Text>No active user</Text>
-                    )}
+                    <Text>No trusted users</Text>
+                  )}
                   </View>
                 </ScrollView>
                 <KeyboardAvoidingView
