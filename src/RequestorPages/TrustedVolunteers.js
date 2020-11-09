@@ -6,7 +6,6 @@ import userTypes from "../Users/userType"
 
 const screen = Dimensions.get("screen");
 
-let today = new Date();
 const activeUserName = 'lizBashaw'
 var activeUser;
 
@@ -36,7 +35,7 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}, key) =
     return null;
   }
 };
-const ActiveUser = ({user: {firstName, lastName, trustedUsers, userType, username}}, key) => {
+const ActiveUser = ({user: {userType, username}}) => {
   if (userType == userTypes.REQUESTOR & username == activeUserName) {
     return null;
     /*(

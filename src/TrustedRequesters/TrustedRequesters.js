@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { Header } from 'react-native-elements';
-import { StyleSheet, FlatList, Text, SafeAreaView, ScrollView, Picker, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, View } from 'react-native';
 import Constants from 'expo-constants';
 import db from "../../config";
-import sortBy from "lodash";
 
 
 
-const TrustedUser = ({user: {firstName, lastName, userType, username}}, key) => {
+const TrustedUser = ({user: {firstName, lastName, userType, username}}) => {
   return (
-    <View style={styles.row}>
-      <Text style={styles.jobLabel}>{username}</Text>
+    <View style={styles.requestor}>
+        <Text style={styles.mediumText}>{firstName} {lastName}</Text>
+        <Text style={styles.mediumText}>{userType}</Text>
+        <Text style={styles.mediumText}>{username}</Text>
     </View>
   );
 };
@@ -21,7 +22,7 @@ class TrustedRequestors extends Component {
     super();
     this.ref = db.ref('/users');
     this.state = {
-      allUsers: sortBy(this.ref, 'username'),
+      allUsers: [],
     };
   }
 
@@ -30,7 +31,7 @@ class TrustedRequestors extends Component {
       let data = querySnapShot.val() ? querySnapShot.val() : {};
       let userItems = {...data};
       this.setState({
-        allUsers: sortBy(userItems, 'username'),
+        allUsers: userItems, //sortBy(userItems, 'username'),
       });
     }); 
   }
@@ -46,14 +47,16 @@ class TrustedRequestors extends Component {
         <ScrollView style={styles.scrollView}> 
         <View>
           {userKeys.length > 0 ? (
-            userKeys.map(key => (
-              <View>
-                <Text>{this.state.allUsers[key].username}</Text>
-              </View>
-            ))
-          ) : (
-            <Text>No trusted requestors.</Text>
-          )}
+                      userKeys.map(key => (
+                        <TrustedUser
+                          key={key}
+                          id={key}
+                          user={this.state.allUsers[key]}
+                        />
+                      ))
+                    ): (
+                      <Text>No trusted users</Text>
+                    )}
         </View>
         </ScrollView>
       </SafeAreaView>
@@ -92,6 +95,12 @@ const styles = StyleSheet.create({
       borderRadius: 75/2,
       backgroundColor: "#264653",
       padding: 10
+    },
+    requestor: {
+      alignItems: 'center',
+      borderWidth: 2,
+      backgroundColor: '#f9f9f9',
+      borderColor: '#ddd',
     },
     jobLabel: {
       flex: 1,
