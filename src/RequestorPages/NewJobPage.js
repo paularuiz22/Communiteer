@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
 import {Picker} from "@react-native-community/picker";
-import db from "../../config.js"
+import { db } from '../../config';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 //import ToggleSwitch from 'toggle-switch-react-native';
 import jobTypes from "../../jobTypes";

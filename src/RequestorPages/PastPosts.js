@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, View, Text } from "react-native";
-import db from "../../config.js"
+import { db } from '../../config';
 import { sortBy } from 'lodash';
 import { formatTime } from "./NewJobPage";
 // TODO: fix UI of jobs
@@ -8,7 +8,6 @@ import { formatTime } from "./NewJobPage";
 
 const screen = Dimensions.get("screen");
 const today = new Date();
-let todayDay = today.getDate();
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor}}) => {
   let startJSONdate = new Date(startDateTime);

@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, Text, TouchableOpacity } from "react-native";
-import db from "../../config.js"
+import { db } from "../../config.js"
 import { sortBy } from 'lodash';
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { formatDate, formatTime } from "./NewJobPage";
+import { formatTime } from "./NewJobPage";
+import {AuthContext} from "../../AuthContext.js";
 // TODO: fix UI of jobs
 
 const screen = Dimensions.get("screen");
 
 let today = new Date();
-let todayDay = today.getDate();
 
-const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, numVolunteers, onlyForTrusted}}, id) => {
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor}}) => {
     let startJSONdate = new Date(startDateTime);
     let endJSONdate = new Date(endDateTime);
     let startClockTime = formatTime(startJSONdate);
@@ -48,7 +48,6 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
 };
 
 class UpcomingPosts extends Component {
-
     constructor() {
         super();
         this.ref = db.ref('/jobs');
@@ -56,6 +55,9 @@ class UpcomingPosts extends Component {
             jobs: sortBy(this.ref, 'title'),
         };
     }
+
+    static contextType = AuthContext;
+
     componentDidMount() {
       db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
           let data = querySnapShot.val() ? querySnapShot.val() : {};
@@ -68,6 +70,8 @@ class UpcomingPosts extends Component {
 
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
+        let value = this.context;
+        console.log("set username? ", value["username"]);
         return (
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>

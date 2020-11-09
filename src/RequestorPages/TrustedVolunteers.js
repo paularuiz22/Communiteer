@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, TextInput, Text, TouchableOpacity, KeyboardAvoidingView } from "react-native";
-import db from "../../config.js"
+import { db } from '../../config';
 import { sortBy } from 'lodash';
 import userTypes from "../Users/userType"
+import { AuthContext } from "../../AuthContext";
 
 const screen = Dimensions.get("screen");
 
@@ -62,7 +63,8 @@ const ActiveUser = ({user: {userType, username}}) => {
 };
 
 class TrustedVolunteers extends Component {
-
+    static contextType = AuthContext;
+    
     constructor() {
         super();
         this.ref = db.ref('/users');
@@ -114,12 +116,13 @@ class TrustedVolunteers extends Component {
     }
 
     render () {
+      let value = this.context;
       let userKeys = Object.keys(this.state.allUsers);
       let userObjects = Object.values(this.state.allUsers);
       var i = 0;
       for (var i = 0; i < userObjects.length; i++) {
         var curr = userObjects[i];
-        if (curr.username == activeUserName) {
+        if (curr.username == value["username"]) {
           activeUser = curr;
         }
       }

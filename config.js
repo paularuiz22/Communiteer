@@ -7,6 +7,5 @@ var config = {
     storageBucket: "communiteer-2020fall.appspot.com"
 };
 const app = firebase.initializeApp(config);
-let db = app.database();
-
-export default db;
+const db = app.database();
+export { db };

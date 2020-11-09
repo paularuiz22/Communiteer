@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Header } from 'react-native-elements';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
-import db from "../../config";
+import { db } from "../../config";
 import styles from "../../styles";
+import { AuthContext } from "../../AuthContext";
 
+const activeUserName = 'paularuiz22'
 
 const TrustedUser = ({user: {firstName, lastName, userType, username}}) => {
   return (
@@ -15,7 +17,17 @@ const TrustedUser = ({user: {firstName, lastName, userType, username}}) => {
   );
 };
 
+const ActiveUser = ({user: {userType, username}}) => {
+  if (userType == userTypes.REQUESTOR & username == activeUserName) {
+    return null;
+  } else {
+    return null;
+  }
+}
+
 class TrustedRequestors extends Component {
+
+  static contextType = AuthContext;
 
   constructor() {
     super();
@@ -23,6 +35,7 @@ class TrustedRequestors extends Component {
     this.state = {
       allUsers: [],
     };
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
