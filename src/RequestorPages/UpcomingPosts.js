@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
 import {Picker} from "@react-native-community/picker";
-import { db } from '../Stats/BackendTest';
+import { db } from '../../config';
 import { sortBy } from 'lodash';
+import {AuthContext} from "../../AuthContext.js";
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
@@ -40,7 +41,6 @@ const Job = ({job: {job: description, title, jobType, date, startTime, endTime, 
 };
 
 class UpcomingPosts extends Component {
-
     constructor() {
         super();
         this.ref = db.ref('/jobs');
@@ -48,6 +48,9 @@ class UpcomingPosts extends Component {
             jobs: sortBy(this.ref, 'date'),
         };
     }
+
+    static contextType = AuthContext;
+
     componentDidMount() {
         db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
@@ -60,6 +63,8 @@ class UpcomingPosts extends Component {
 
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
+        let value = this.context;
+        console.log("set username? ", value["username"]);
         return (
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>

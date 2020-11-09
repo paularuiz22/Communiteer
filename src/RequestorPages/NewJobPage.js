@@ -1,7 +1,7 @@
 import React, { useState, Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity, TextInput } from "react-native";
 import {Picker} from "@react-native-community/picker";
-import { db } from '../Stats/BackendTest';
+import { db } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
