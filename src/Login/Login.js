@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-import { Image, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native";
-import { Button } from "react-native";
+import { Image, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import {AuthContext} from "../../AuthContext.js";
