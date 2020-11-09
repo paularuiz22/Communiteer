@@ -6,6 +6,7 @@ import { formatTime } from "./NewJobPage";
 // TODO: fix UI of jobs
 
 
+const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 const today = new Date();
 let todayDay = today.getDate();
