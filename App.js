@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
 import index from "./index";
+import {AuthContext} from "./AuthContext.js";
 
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
 import JobBoard from "./src/JobBoard/JobBoard.js";
@@ -20,19 +21,37 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const windowWidth = Dimensions.get("window").width;
 
-export default function App() {
-  //index();
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Registration" component={Registration}/>
-        <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
-        <Stack.Screen name="HomePage" component={HomePage}/>
-        <Stack.Screen name="NewJobPage" component={NewJobPage}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+class App extends React.Component {
+    constructor() {
+        super();
+
+        this.setUsername = (value) => {
+            this.setState(state => ({
+                username: value
+            }));
+        }
+
+        this.state = {
+            username: '',
+            setUsername: this.setUsername,
+        }
+    }
+
+    render () {
+        return (
+            <AuthContext.Provider value={this.state}>
+                <NavigationContainer>
+                    <Stack.Navigator>
+                        <Stack.Screen name="Login" component={Login}/>
+                        <Stack.Screen name="Registration" component={Registration}/>
+                        <Stack.Screen name="VolunteerNavigator" component={VolunteerNavigator}/>
+                        <Stack.Screen name="HomePage" component={HomePage}/>
+                        <Stack.Screen name="NewJobPage" component={NewJobPage}/>
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </AuthContext.Provider>
+        );
+    }
 }
 
 function VolunteerNavigator () {
@@ -50,4 +69,6 @@ function VolunteerNavigator () {
         </Tab.Navigator>
     );
 }
+
+export default App;
 

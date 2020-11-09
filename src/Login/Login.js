@@ -4,6 +4,7 @@ import { Image, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } fro
 import { Button } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
+import {AuthContext} from "../../AuthContext.js";
 
 class Login extends Component {
     constructor () {
@@ -20,6 +21,8 @@ class Login extends Component {
         this.onFooterLinkPress = this.onFooterLinkPress.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
     }
+
+    static contextType = AuthContext;
 
     onFooterLinkPress() {
         this.props.navigation.navigate("Registration");
@@ -40,7 +43,7 @@ class Login extends Component {
         var usersProcessed = 0;
         var verified = false;
         var userType = '';
-        console.log('logins : ', this);
+        //console.log('logins : ', this);
         userKeys.forEach((key) => {
             usersProcessed++;
             if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username) && this.state.users[key].password == this.state.password)
@@ -53,10 +56,12 @@ class Login extends Component {
             {
                 if (verified && userType == 'volunteer')
                 {
+                    this.context.setUsername(this.state.username);
                     this.props.navigation.navigate("VolunteerNavigator");
                 }
                 else if (verified && userType == 'requestor')
                 {
+                    this.context.setUsername(this.state.username);
                     this.props.navigation.navigate("HomePage");
                 }
                 else
