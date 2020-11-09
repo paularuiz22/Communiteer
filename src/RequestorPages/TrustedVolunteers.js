@@ -22,7 +22,7 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
   }
   if (userType == userTypes.VOLUNTEER & trusted) {
     return (
-      <View style={styles.requestor}>
+      <View style={styles.volunteer}>
           <Text style={styles.mediumText}>{firstName} {lastName}</Text>
           <Text style={styles.mediumText}>{userType}</Text>
           <Text style={styles.mediumText}>{username}</Text>
@@ -103,7 +103,6 @@ class TrustedVolunteers extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-        <View><Text>{activeUser.trustedUsers.length}</Text></View>
                   <View>
                     {userKeys.length > 0 ? (
                       userKeys.map(key => (
@@ -182,16 +181,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     backgroundColor: '#262526'
   },
-  volunteer: {
-    margin: 20,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    backgroundColor: '#f9f9f9',
-    borderColor: '#ddd',
-    borderRadius: 10,
-  },
+
   volunteerText: {
     fontSize: 20,
     padding: 20,
@@ -225,7 +215,7 @@ const styles = StyleSheet.create({
     width: screen.width/2,
   },
   scrollView: {
-    maxHeight: '82%',
+    marginHorizontal: 10,
     marginBottom: 100,
     backgroundColor: '#fff'
   },
@@ -263,6 +253,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flexWrap: 'wrap',
     padding: 5
+  },
+  volunteer: {
+    alignItems: 'center',
+    borderWidth: 2,
+    backgroundColor: '#f9f9f9',
+    borderColor: '#ddd',
   },
 });
 export default TrustedVolunteers;
