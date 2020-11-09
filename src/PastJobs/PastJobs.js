@@ -1,49 +1,339 @@
-import React from "react";
+import React, {useState, Component} from "react";
 import { Header } from 'react-native-elements';
-import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
+import * as Animatable from 'react-native-animatable';
+import Collapsible from 'react-native-collapsible';
+import Accordion from 'react-native-collapsible/Accordion';
+import StarRating from 'react-native-star-rating';
 
-function PastJobs() {
-  return (
-    <SafeAreaView style={styles.container}>
-        <Header
-          backgroundColor="#2A9D8F"
-          centerComponent={{text: 'Past Jobs', style: {color: '#fff'}}}
-        />
-        <ScrollView style={styles.scrollView}>
-            <View style={styles.scrollBar}>
-                <Text style={styles.whiteHeadingOne}>Yard Work</Text>
+const data= [
+    {
+        requestor: "Clara",
+        month: "January",
+        day: 27,
+        title: "Pick-up Groceries",
+        time: "4pm - 5pm",
+        type: "Shopping",
+        location: "Woodstock, GA",
+        expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))",
+        starRating: 3,
+    },
+    {
+        requestor: "Charlie",
+        month: "February",
+        day: 30,
+        title: "Walk Dog",
+        time: "3pm - 3:30pm",
+        type: "Pet Care",
+        location: "Downtown Atlanta, GA",
+        expand: "Hey so like I have a dog and I need some help walking it.. thanks", 
+        starRating: 3,
+    },
+    {
+        requestor: "Paula",
+        month: "August",
+        day: 1,
+        title: "Vacuum Main Floor",
+        time: "2pm - 4pm",
+        type: "House Chores",
+        location: "Vinings, GA",
+        expand: "Vacuum goes BRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+        starRating: 3,
+    },
+    {
+        requestor: "Bob",
+        month: "September",
+        day: 2,
+        title: "Water Patio Plants",
+        time: "9am - 9:30am",
+        type: "House Chores",
+        location: "Buckhead, GA",
+        expand: "80 PERCENT OF THE EARTH'S ORIGINAL FORESTS HAVE BEEN CLEARED OR DESTROYED. NUTRITION DOESN'T FACTOR INTO THE CROPS WE DO MASS PRODUCE. THE EARTH HAS MORE THAN 80,000 SPECIES OF EDIBLE PLANTS. 90 PERCENT OF THE FOODS HUMANS EAT COME FROM JUST 30 PLANTS. .70,000 PLANT SPECIES ARE UTILIZED FOR MEDICINE.",
+        starRating: 3,
+    },
+    {
+        requestor: "Clara",
+        month: "September",
+        day: 3,
+        title: "Decorate for Halloween",
+        time: "10am - 12am",
+        type: "House Chores",
+        location: "Buckhead, GA",
+        expand: "its SPOOOOoooooooOOOOOoooooOOOoooOOOOOOky season ",
+        starRating: 3,
+    }
+];
+    
+class PastJobs extends Component {
+    constructor () {
+        super();
+        this.state = {
+            refresh: false,
+            selectedType: "All Jobs",
+            selectedRequestor: "All Requestors",
+            activeSections: [],
+            collapsed: true,
+            multipleSelect: false,
+            starCount: 3
+        };
+    }
+    onStarRatingPress(rating) {
+      this.setState({
+        starCount: rating
+      });
+    }
+    toggleExpanded = () => {
+        this.setState({ collapsed: !this.state.collapsed });
+      };
+    
+      setSections = sections => {
+        this.setState({
+          activeSections: sections.includes(undefined) ? [] : sections,
+        });
+      };
+    
+      renderHeader = (section, _, isActive) => {
+        return (
+          <Animatable.View
+            duration={400}
+            style={[styles.header, isActive ? styles.active : styles.inactive]}
+            transition="backgroundColor"
+          >
+            <View style={styles.row}>
+            <Text style={styles.headerText}>{section.month}</Text>
+            <Text style={styles.headerText}>{section.day}</Text>
+            <Text style={styles.mediumText}>{section.location}</Text>
+            <Text style={styles.mediumText}>{section.requestor}</Text>
             </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Lawn Mowing</Text>
-                <Text style={styles.smallText}>September 7, 2020</Text>
-                <Text style={styles.smallText}>August 16, 2020</Text>
-                <Text style={styles.smallText}>July 23, 2020</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Watering Plants</Text>
-                <Text style={styles.smallText}>September 15, 2020</Text>
-                <Text style={styles.smallText}>August 31, 2020</Text>
-                <Text style={styles.smallText}>August 17, 2020</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Weeding</Text>
-                <Text style={styles.smallText}>September 18, 2020</Text>
-                <Text style={styles.smallText}>August 24, 2020</Text>
-                <Text style={styles.smallText}>August 2, 2020</Text>
-            </View>
-            <View style={styles.scrollBar}>
-                <Text style={styles.whiteHeadingOne}>Pet Care</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Dog Walking</Text>
-                <Text style={styles.smallText}>September 20, 2020</Text>
-                <Text style={styles.smallText}>August 8, 2020</Text>
-                <Text style={styles.smallText}>July 17, 2020</Text>
-            </View>
-        </ScrollView>
-    </SafeAreaView>
-  );
+            
+          </Animatable.View>
+        );
+      };
+    
+      renderContent(section, _, isActive) {
+        return (
+          <Animatable.View
+            duration={400}
+            style={[styles.content, isActive ? styles.active : styles.inactive]}
+            transition="backgroundColor"
+          >
+            <Text>
+              Rate Your Experience: 
+            </Text>
+            <StarRating
+              disabled={false}
+              maxStars={5}
+              rating={section.starCount}
+              selectedStar={(rating) => this.onStarRatingPress(rating)}
+            />
+          </Animatable.View>
+        );
+      }
+
+    FlatListItemSeparator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: "100%",
+                    backgroundColor: "#607D8B",
+                }}
+            />
+        );
+    }
+
+    // JobItem (props) {
+    //     if (props.dataPoint.month == props.month
+    //         && (props.dataPoint.type == props.type || props.type == "All Jobs")
+    //         && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
+    //         return (
+    //             <View style={styles.row}>
+    //                 <View style={styles.circle}>
+    //                     <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
+    //                 </View>
+    //                 <TouchableOpacity style={styles.jobLabel}>
+    //                     <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
+    //                     <View style={styles.row}>
+    //                         <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
+    //                         <View style={styles.typeLabel}>
+    //                             <Text style={styles.smallText}>{props.dataPoint.type}</Text>
+    //                         </View>
+    //                         <Text style={styles.mediumText}>{props.dataPoint.location}</Text>
+    //                     </View>
+    //                 </TouchableOpacity>
+    //             </View>
+    //         );
+    //     }
+    //     return <View style={styles.filler}></View>;
+    // }
+
+    // ItemList (props) {
+    //     const state = props.state;
+
+    //     return (
+    //         <ScrollView style={styles.scrollView}>
+    //             <Text style={styles.headingOne}>January</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>February</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>March</Text>
+    //             <FlatList
+    //                 data={state.data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>April</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>May</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>June</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>July</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>August</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>September</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>October</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>November</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //             <Text style={styles.headingOne}>December</Text>
+    //             <FlatList
+    //                 data={data}
+    //                 width='100%'
+    //                 extraData={state.refresh}
+    //                 keyExtractor={(item) => item.key}
+    //                 ItemSeparatorComponent={props.flatListItemSeparator}
+    //                 renderItem={({ item }) =>
+    //                     <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+    //                 }
+    //             />
+    //         </ScrollView>
+    //     );
+    // }
+
+    render () {
+        const { multipleSelect, activeSections } = this.state;
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.view}>
+                <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
+                    <Accordion
+                        activeSections={activeSections}
+                        sections={data}
+                        touchableComponent={TouchableOpacity}
+                        expandMultiple={multipleSelect}
+                        renderHeader={this.renderHeader}
+                        renderContent={this.renderContent}
+                        duration={400}
+                        onChange={this.setSections}
+                    />
+                    </ScrollView>
+                </View>
+                {/* <this.ItemList 
+                    state={this.state} 
+                    flatListItemSeparator={this.FlatListItemSeparator} 
+                    jobItem={this.JobItem} /> */}
+            </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -51,38 +341,48 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: Constants.statusBarHeight,
   },
+  view: {
+      margin: 10,
+  },
+  loginBtn:{
+    width:"80%",
+    backgroundColor:"#264653",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop:30,
+    marginBottom:10
+  },
   scrollView: {
     marginHorizontal: 20,
   },
-  whiteHeadingOne: {
+  headingOne: {
     fontSize: 30,
-    color: "#fff",
-    padding: 5,
-    paddingLeft: 10
-  },
-  blackHeadingOne: {
-    fontSize: 30,
+    padding: 10
   },
   numberLabel: {
-    fontSize: 42,
-    padding: 10,
+    fontSize: 30,
+    padding: 8,
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: "center"
   },
   circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 100/2,
+    width: 75,
+    height: 75,
+    borderRadius: 75/2,
     backgroundColor: "#264653",
     padding: 10
   },
   jobLabel: {
-    width: "100%",
+    width: 270,
     height: 100,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
-    padding: 10,
-    marginTop: 10
+    padding: 10
   },
   jobLabelTitle: {
     fontSize: 24,
@@ -92,24 +392,37 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 10,
     backgroundColor: "#FF9B21",
-    padding: 10
+    marginLeft: 10,
+    padding: 5
   },
   smallText: {
     fontSize: 12,
+    color: "#fff",
+    textAlign: "center",
+    textAlignVertical: "center"
   },
   mediumText: {
     fontSize: 18,
   },
+  topRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 10,
+    alignItems:"center",
+    justifyContent:"center",
+  },
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10
+    padding: 10,
   },
-  scrollBar: {
-    width: '100%',
-    height: 50,
-    backgroundColor: "#6e6e6e",
-    marginTop: 10,
+  pickerStyle: {
+    height:80,
+    width:"75%",
+    fontSize: 32
+  },
+  filler: {
+    height: 0,
   }
 });
 

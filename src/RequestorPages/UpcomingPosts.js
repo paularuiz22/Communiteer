@@ -11,40 +11,40 @@ const screen = Dimensions.get("screen");
 let today = new Date();
 let todayDay = today.getDate();
 
-const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, numVolunteers, onlyForTrusted}}, id) => {
-    let startJSONdate = new Date(startDateTime);
-    let endJSONdate = new Date(endDateTime);
-    let startClockTime = formatTime(startJSONdate);
-    let endClockTime = formatTime(endJSONdate);
-    if (startJSONdate >= today) {
-        return (
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <View style={styles.column}>
-                        <Text style={styles.jobLabelTitle}>{title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{jobType}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{location}</Text>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{requestor}</Text>
-                        </View>         
-                    </View>
-                </View>
-            </View>
-        )
-    }
-    else {
-        return null
-    }
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor}}) => {
+  let startJSONdate = new Date(startDateTime);
+  let endJSONdate = new Date(endDateTime);
+  let startClockTime = formatTime(startJSONdate);
+  let endClockTime = formatTime(endJSONdate);
+  if (startJSONdate >= today) {
+      return (
+          <View style={styles.row}>
+              <View style={styles.circle}>
+                  <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+              </View>
+              <View style={styles.jobLabel}>
+                  <View style={styles.column}>
+                      <Text style={styles.jobLabelTitle}>{title}</Text>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
+                          <View style={styles.typeLabel}>
+                              <Text style={styles.smallText}>{jobType}</Text>
+                          </View>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{location}</Text>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{requestor}</Text>
+                      </View>         
+                  </View>
+              </View>
+          </View>
+      )
+  }
+  else {
+      return null
+  }
 };
 
 class UpcomingPosts extends Component {
@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 30,
     marginVertical: 20,
     width: screen.width/2,
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     padding: 2
   },
   column: {
-    flexDirection: 'column',
-    flexWrap: 'wrap',
+    flexDirection: "column",
+    flexWrap: "wrap",
     padding: 5
   },
 });
