@@ -68,9 +68,19 @@ class TrustedVolunteers extends Component {
             const volunteers = this.cloneVolunteers();
             volunteers.splice(i, 1);
             this.setState({allUsers: volunteers});
+            var activeUserRef = db.ref('/users').orderByChild('username').equalTo(activeUser.username).ref;
+            activeUserRef.set({
+              trustedUsers: volunteers
+            });
         }
         catch(e) {
         }
+    }
+
+    updateTextInput = (text, field) => {
+      const state = this.state
+      state[field] = text;
+      this.setState(state);
     }
 
     // TODO: integrate backend into implementation to add trusted volunteer
@@ -78,11 +88,14 @@ class TrustedVolunteers extends Component {
         if (this.state.createVolunteer.length <= 0)
             return;
         try {
-            const volunteers = this.cloneVolunteers();
-            this.ref.push(this.state.createVolunteer);
+            const volunteers = activeUser.trustedUsers;
+            volunteers.push(this.state.createVolunteer);
+            var activeUserRef = db.ref('/users').orderByChild('username').equalTo(activeUser.username).ref;
+            activeUserRef.push({
+              trustedUsers: volunteers
+            });
             this.setState({
-                allUsers : volunteers,
-                volunteer: ''
+              createVolunteer: ''
             });
         }
         catch (e) {
@@ -133,7 +146,7 @@ class TrustedVolunteers extends Component {
                             style={styles.textInput}
                             placeholder={'Add Trusted Volunteer'}
                             placeholderTextColor={'rgba(255, 255, 255, .7)'}
-                            onChangeText={(volunteer) => this.setState({volunteer})}
+                            onChangeText={(volunteer) => this.updateTextInput(volunteer, 'createVolunteer')}
                             value={this.state.createVolunteer}
                         />
                     </View>
@@ -181,7 +194,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     backgroundColor: '#262526'
   },
-
   volunteerText: {
     fontSize: 20,
     padding: 20,
