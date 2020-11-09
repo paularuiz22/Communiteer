@@ -1,86 +1,112 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, TextInput, Text, Alert, TouchableOpacity, KeyboardAvoidingView } from "react-native";
-import {Picker} from "@react-native-community/picker";
+import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, TextInput, Text, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import db from "../../config.js"
 import { sortBy } from 'lodash';
+import userTypes from "../Users/userType"
 
-const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
 let today = new Date();
-let todayDay = today.getDate();
+const activeUserName = 'lizBashaw'
+var activeUser;
 
-const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
-    if (date >= todayDay) {
-        return (
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>{date}</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <View style={styles.column}>
-                        <Text style={styles.jobLabelTitle}>{title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{jobType}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{location}</Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        )
+const VolunteerUser = ({user: {firstName, lastName, userType, username}}, key) => {
+  var trusted = false;
+  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+    if (activeUser.trustedUsers[i] == username) {
+      trusted = true;
     }
-    else {
-        return null
-    }
+  }
+  if (userType == userTypes.VOLUNTEER & trusted) {
+
+    return (
+      <TouchableOpacity
+        key={key} style={styles.volunteer}
+        onPress={ () => this.removeVolunteer(key)}
+      >
+        <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
+        <Text style={styles.volunteerText}>{userType}</Text>
+        <Text style={styles.volunteerText}>{username}</Text>
+        <Text style={styles.volunteerText}>trusted? {trusted ? "yes" : "no"}</Text>
+
+
+      </TouchableOpacity>
+    );
+  } else {
+    return null;
+  }
+};
+const ActiveUser = ({user: {firstName, lastName, trustedUsers, userType, username}}, key) => {
+  if (userType == userTypes.REQUESTOR & username == activeUserName) {
+    return null;
+    /*(
+      <TouchableOpacity
+        key={key} style={styles.volunteer}
+        onPress={ () => this.removeVolunteer(key)}
+      >
+      {trustedUsers.length > 0 ? (
+            trustedUsers.forEach(element => {
+              <Text>{element}</Text>
+            })
+          ): (
+            <Text>No trusted users</Text>
+          )}
+        <Text style={styles.volunteerText}>{firstName} {lastName}</Text>
+        <Text style={styles.volunteerText}>{userType}</Text>
+        <Text style={styles.volunteerText}>trusted volunteers: {trustedUsers.map((user)=> {<Text>{user}</Text>})}</Text>
+
+      </TouchableOpacity>
+    );*/
+  } else {
+    return null;
+  }
 };
 
 class TrustedVolunteers extends Component {
 
     constructor() {
         super();
-        this.ref = db.ref('/jobs');
+        this.ref = db.ref('/users');
         this.state = {
-            volunteer: '',
-            volunteers: []
+            createVolunteer: '',
+            allUsers: []
         };
     }
+    
     componentDidMount() {
-        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
-            let jobItems = {...data};
+            let userItems = {...data};
             this.setState({
-                jobs: sortBy(jobItems, 'date'),
+                allUsers: sortBy(userItems, 'username'),
             });
-        });
+        }); 
     }
 
     cloneVolunteers() {
-        return [...this.state.volunteers];
+        return [...this.state.allUsers];
     }
 
+    // TODO: finish implementing removal of trusted
     async removeVolunteer(i) {
         try {
             const volunteers = this.cloneVolunteers();
             volunteers.splice(i, 1);
-            this.setState({volunteers: volunteers});
+            this.setState({allUsers: volunteers});
         }
         catch(e) {
         }
     }
 
+    // TODO: integrate backend into implementation to add trusted volunteer
     async addVolunteer() {
-        if (this.state.volunteer.length <= 0)
+        if (this.state.createVolunteer.length <= 0)
             return;
         try {
             const volunteers = this.cloneVolunteers();
-            volunteers.push(this.state.volunteer);
+            this.ref.push(this.state.createVolunteer);
             this.setState({
-                volunteers: volunteers,
+                allUsers : volunteers,
                 volunteer: ''
             });
         }
@@ -88,24 +114,54 @@ class TrustedVolunteers extends Component {
         }
     }
 
-    renderVolunteers() {
-        return this.state.volunteers.map((volunteer, i) => {
-            return (
-                <TouchableOpacity
-                    key={i} style={styles.volunteer}
-                    onPress={ () => this.removeVolunteer(i)}
-                >
-                    <Text style={styles.volunteerText}>{volunteer}</Text>
-                </TouchableOpacity>
-            );
-        });
-    }
-
     render () {
+      let userKeys = Object.keys(this.state.allUsers);
+      let userObjects = Object.values(this.state.allUsers);
+      var i = 0;
+      for (var i = 0; i < userObjects.length; i++) {
+        var curr = userObjects[i];
+        if (curr.username == activeUserName) {
+          activeUser = curr;
+        }
+      }
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                    {this.renderVolunteers()}
+                <View>
+                    {userKeys.length > 0 ? (
+                      userKeys.map(key => (
+                        <ActiveUser
+                          key={key}
+                          id={key}
+                          user={this.state.allUsers[key]}
+                        />
+                      ))
+                    ): (
+                      <Text>No trusted users</Text>
+                    )}
+                  </View>
+                  <View>
+                    {userKeys.length > 0 ? (
+                      userKeys.map(key => (
+                        <VolunteerUser
+                          key={key}
+                          id={key}
+                          user={this.state.allUsers[key]}
+                        />
+                      ))
+                    ): (
+                      <Text>No trusted users</Text>
+                    )}
+                  </View>
+                  <View>
+                    {activeUser ? (
+                      <VolunteerUser
+                      user={activeUser}
+                      />
+                    ) : (
+                      <Text>No active user</Text>
+                    )}
+                  </View>
                 </ScrollView>
                 <KeyboardAvoidingView
                     style={styles.footer}
@@ -128,7 +184,7 @@ class TrustedVolunteers extends Component {
                             placeholder={'Add Trusted Volunteer'}
                             placeholderTextColor={'rgba(255, 255, 255, .7)'}
                             onChangeText={(volunteer) => this.setState({volunteer})}
-                            value={this.state.volunteer}
+                            value={this.state.createVolunteer}
                         />
                     </View>
                 </KeyboardAvoidingView>
@@ -196,8 +252,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   volunteerText: {
-    fontSize: 14,
-    padding: 20
+    fontSize: 20,
+    padding: 20,
   },
   container: {
     flex: 1,

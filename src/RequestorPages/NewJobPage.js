@@ -1,24 +1,22 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, TouchableOpacity, TextInput, KeyboardAvoidingView } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
 import {Picker} from "@react-native-community/picker";
 import db from "../../config.js"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 // import ToggleSwitch from 'toggle-switch-react-native';
 
 const screen = Dimensions.get("screen");
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-class NewJobPage extends Component {
+export default class NewJobPage extends Component {
   constructor() {
     super();
     this.ref = db.ref('/jobs');
     this.state = {
       title: '',
       description: '',
-      jobType: '',
+      jobType: jobTypes.OTHER,
       startDateTime: '',
       endDateTime: '',
       location: '',
@@ -88,19 +86,14 @@ class NewJobPage extends Component {
     };
     handleStartDatePicked = (date) => {
         console.log('A start date has been picked: ', date);
-        let formattedDate = this.formatDate(date);
+        let formattedDate = formatDate(date);
         console.log('formatted date: ', formattedDate);
         this.setState({ startDateTimeLabel: formattedDate});
-        this.setState({ startDateTime: date });
+        this.setState({ startDateTime: date.toString() });
         this.hideStartDateTimePicker();
     }
 
-    formatDate = (date) => {
-        let time = date.getHours() % 12;
-        let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
-        let formattedDate = weekDayNames[date.getDay()] + ', ' + monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' at ' + time.toString() + ':' + date.getMinutes().toString() + timeLabel;
-        return formattedDate;
-    }
+
 
     showEndDateTimePicker = () => {
         this.setState({ isEndDateTimePickerVisible: true });
@@ -110,9 +103,9 @@ class NewJobPage extends Component {
     };
     handleEndDatePicked = (date) => {
         console.log('An end date has been picked: ', date);
-        let formattedDate = this.formatDate(date);
+        let formattedDate = formatDate(date);
         this.setState({ endDateTimeLabel: formattedDate});
-        this.setState({ endDateTime: date});
+        this.setState({ endDateTime: date.toString()});
         this.hideEndDateTimePicker();
     }
 
@@ -127,13 +120,10 @@ class NewJobPage extends Component {
                             style={styles.picker}
                             onValueChange={this.updateJobType}
                         >
-                            <Picker.Item label="All Jobs" value="alljobs"/>
-                            <Picker.Item label="Beautification" value="beautification"/>
-                            <Picker.Item label="Children" value="children"/>
-                            <Picker.Item label="House Chores" value="housechores"/>
-                            <Picker.Item label="Pet Care" value="petcare"/>
-                            <Picker.Item label="Shopping" value="shopping"/>
-                            <Picker.Item label="Tutoring" value="tutoring"/>
+                            {Object.keys(jobTypes).map((key) => {
+                                return (<Picker.Item label={jobTypes[key]} value={key} key={key}/>);
+                            })}
+
                         </Picker>
                     </View>
                     <View style={styles.row}>
@@ -183,22 +173,7 @@ class NewJobPage extends Component {
                             />
                         )}
                     </View>
-                    <View style={styles.row}>
-                        <Text style={styles.headingOne}>Start Time</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'startTime')}
-                            value={this.state.startTime}
-                        />
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.headingOne}>End Time</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'endTime')}
-                            value={this.state.endTime}
-                        />
-                    </View>
+
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Location</Text>
                         <TextInput
@@ -216,15 +191,17 @@ class NewJobPage extends Component {
                         />
                     </View>
                     <View style={styles.row}>
-                        {/* <ToggleSwitch
-                            isOn={this.state.onlyForTrusted}
-                            onColor='#264653'
-                            offColor='#D3D3D9'
+                        <Text style={styles.smallerHeading}>Only show to trusted volunteers?</Text>
+                        <Switch
+                            trackColor={{ false: '#D3D3D9', true: "#264653" }}
+                            thumbColor={this.state.onlyForTrusted ? "#f5dd4b" : "#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            value={this.state.onlyForTrusted}
                             label="Only show to trusted volunteers?"
                             labelStyle={{color: "black", fontWeight: "4"}}
                             size="large"
-                            onToggle={isOn => this.setState({ onlyForTrusted: isOn})}
-                        /> */}
+                            onValueChange={value => this.setState({ onlyForTrusted: value})}
+                        />
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Requestor</Text>
@@ -257,6 +234,10 @@ const styles = StyleSheet.create({
   headingOne: {
     fontSize: 24,
     padding: 8
+  },
+  smallerHeading: {
+      fontSize: 18,
+      padding: 8,
   },
   scrollView: {
     margin: 10,
@@ -322,4 +303,16 @@ const styles = StyleSheet.create({
      flex: 1
   }
 });
-export default NewJobPage;
+export const formatDate = (date) => {
+    let time = date.getHours() % 12;
+    let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
+    let formattedDate = weekDayNames[date.getDay()] + ', ' + monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' at ' + time.toString() + ':' + date.getMinutes().toString() + timeLabel;
+    return formattedDate;
+}
+
+export const formatTime = (date) => {
+    let time = date.getHours() % 12;
+    let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
+    let formattedTime = time.toString() + ':' + date.getMinutes().toString() + timeLabel;
+    return formattedTime;
+}

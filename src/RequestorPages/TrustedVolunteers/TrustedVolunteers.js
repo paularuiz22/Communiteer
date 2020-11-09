@@ -1,20 +1,10 @@
-import React, {useState} from "react";
+import React, { Component } from "react";
 import { Header } from 'react-native-elements';
 import { StyleSheet, FlatList, Text, SafeAreaView, ScrollView, Picker, View, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import data from './data.js'
+import { sortBy } from "lodash";
 
-// const Item = ({ name }) => (
-//   <View style={styles.row}>
-//     <Text style={styles.jobLabel}>{name}</Text>
-//   </View>
-// );
-
-// const onPress = () => {  
-//   return(
-
-//   )
-// }
 
 const Item = ({ name, onPress}) => (
   <TouchableOpacity onPress={onPress}>
@@ -28,23 +18,37 @@ const renderItem = ({ item }) => (
         iconURL={item.iconURL}/>
 );
 
-function TrustedVolunteers() {
-  return (
-    <SafeAreaView style={styles.container}>
-        <Header
-          backgroundColor="#2A9D8F"
-          centerComponent={{text: 'Trusted Volunteers', style: {color: '#fff'}}}
-        />
-      {/* <ScrollView style={styles.scrollView}> */}
-        <FlatList
-          style={styles.jobLabel}
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
-      {/* </ScrollView> */}
-    </SafeAreaView>
-  );
+class TrustedVolunteers extends Component {
+
+  constructor() {
+    super();
+    // TODO: use actual current user: let user = FirebaseAuth.getInstance().getCurrentUser();
+    this.ref = db.ref('/users' + user.id +'/trustedUsers');
+    let user = db.ref('/users')
+    this.state = {
+      user: user,
+      trustedVolunteers: sortBy(this.ref, 'lastName'),
+    };
+  }
+
+  render () {
+    return (
+      <SafeAreaView style={styles.container}>
+          <Header
+            backgroundColor="#2A9D8F"
+            centerComponent={{text: 'Trusted Volunteers', style: {color: '#fff'}}}
+          />
+        {/* <ScrollView style={styles.scrollView}> */}
+          <FlatList
+            style={styles.jobLabel}
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+        {/* </ScrollView> */}
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
