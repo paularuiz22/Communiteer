@@ -22,11 +22,32 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
   }
   if (userType == userTypes.VOLUNTEER & trusted) {
     return (
-      <View style={styles.volunteer}>
-          <Text style={styles.mediumText}>{firstName} {lastName}</Text>
-          <Text style={styles.mediumText}>{userType}</Text>
-          <Text style={styles.mediumText}>{username}</Text>
-      </View>
+      // add onclick to view below
+      // <View style={styles.volunteer} accessibilityRole={'button'} onAccessibilityAction={
+      //   () => db.ref('/users').orderByChild("username").equalTo(value["username"])
+      // .on('child_added', function(snapshot) {
+      //     snapshot.ref.child("trustedUsers").child("1").remove();
+      // })}>
+      //     <Text style={styles.mediumText}>{firstName} {lastName}</Text>
+      //     <Text style={styles.mediumText}>{userType}</Text>
+      //     <Text style={styles.mediumText}>{username}</Text>
+          
+      // </View>
+
+      <TouchableOpacity style={styles.volunteer} onPress={
+          () => db.ref('/users').orderByChild("username").equalTo(activeUser.username)
+        .on('child_added', function(snapshot) {
+          // snapshot.ref.child("trustedUsers").child(1).remove();
+            snapshot.ref.child("trustedUsers").orderByValue().equalTo(username)
+            .on('child_added', function(snapshot) {
+              snapshot.ref.remove();
+            })
+            // render();
+        })}>
+            <Text style={styles.mediumText}>{firstName} {lastName}</Text>
+            <Text style={styles.mediumText}>{userType}</Text>
+            <Text style={styles.mediumText}>{username}</Text>
+      </TouchableOpacity>
     );
     } else {
       return null;
@@ -123,11 +144,21 @@ class TrustedVolunteers extends Component {
                           key={key}
                           id={key}
                           user={this.state.allUsers[key]}
+                          // render = {this.render.bind(this)}
                         />
                       ))
                     ): (
                     <Text>No trusted users</Text>
                   )}
+                  {/* the below code should add a button to each "trusted volunteer" object and allow for them to delete it
+                  idk how to pull the username from the data because it doesn't appear to be updated with firebase
+                  <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
+                        .on('child_added', function(snapshot) {
+                            snapshot.ref.child("trustedUsers").child("quinten").remove();
+                        })
+                      }>
+                        <Text>delete trusted contact</Text>
+                  </TouchableOpacity> */}
                   </View>
                 </ScrollView>
                 <KeyboardAvoidingView

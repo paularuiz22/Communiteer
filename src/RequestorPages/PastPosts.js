@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, View, Text } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import { formatTime } from "./NewJobPage";
+import { AuthContext } from "../../AuthContext";
 // TODO: fix UI of jobs
 
 
@@ -47,8 +48,11 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
 
 export default class PastPosts extends Component {
 
+  static contextType = AuthContext;
+
     constructor() {
         super();
+        let value = this.context;
         this.ref = db.ref('/jobs');
         this.state = {
          jobs: sortBy(this.ref, 'date'),
@@ -66,6 +70,7 @@ export default class PastPosts extends Component {
     }
 
     render () {
+        let value = this.context;
         let jobsKeys = Object.keys(this.state.jobs);
         return (
             <ScrollView style={styles.scrollView}>
@@ -81,6 +86,14 @@ export default class PastPosts extends Component {
               ) : (
                     <Text>No previous jobs</Text>
               )}
+              {/* this will add a hardcoded user to trusted user of currently signed in person,
+              needs to be duplicated for each job post and pull volunteer info from post */}
+              <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
+                  .on("child_added", function(snapshot) {
+                    snapshot.ref.child("trustedUsers").update({"qcaliendo3":true})
+                  })} style={styles.typeLabel}>
+                    <Text>add trusted user</Text>
+              </TouchableOpacity>
             </View>
             </ScrollView>
         );
