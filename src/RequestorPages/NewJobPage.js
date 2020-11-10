@@ -28,8 +28,8 @@ export default class NewJobPage extends Component {
       onlyForTrusted: false,
       requestor: '',
     };
-      this.updateTextInput = this.updateTextInput.bind(this);
-      this.saveJob = this.saveJob.bind(this);
+    this.updateTextInput = this.updateTextInput.bind(this);
+    this.saveJob = this.saveJob.bind(this);
   }
 
 
@@ -45,9 +45,8 @@ export default class NewJobPage extends Component {
             title: this.state.title,
             jobType: this.state.jobType,
             description: this.state.description,
-            date: parseInt(this.state.date, 10),
-            startTime: this.state.startTime,
-            endTime: this.state.endTime,
+            startDateTime: this.state.startDateTime,
+            endDateTime: this.state.endDateTime,
             location: this.state.location,
             numVolunteers: this.state.numVolunteers,
             onlyForTrusted: this.state.onlyForTrusted,
@@ -57,9 +56,8 @@ export default class NewJobPage extends Component {
             this.setState({
                 title: '',
                 description: '',
-                date: '',
-                startTime: '',
-                endTime: '',
+                startDateTime: '',
+                endDateTime: '',
                 location: '',
                 about: '',
                 numVolunteers: '',
@@ -76,9 +74,9 @@ export default class NewJobPage extends Component {
         });
     }
 
-   updateJobType = (jobType) => {
+    updateJobType = (jobType) => {
       this.setState({ jobType: jobType })
-   }
+    };
 
     showStartDateTimePicker = () => {
         this.setState({ isStartDateTimePickerVisible: true});
@@ -112,7 +110,6 @@ export default class NewJobPage extends Component {
     }
 
     render () {
-       var dateVisible = false;
         return (
             <KeyboardAvoidingView style={styles.container}>
                 <ScrollView style={styles.scrollView}>

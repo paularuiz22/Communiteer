@@ -2,73 +2,7 @@ import React, {Component} from "react";
 import { Header } from 'react-native-elements';
 import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
-import * as Animatable from 'react-native-animatable';
-import Collapsible from 'react-native-collapsible';
-import Accordion from 'react-native-collapsible/Accordion';
 
-const data= [
-    {
-        requestor: "Clara",
-        month: "January",
-        day: 27,
-        title: "Pick-up Groceries",
-        time: "4pm - 5pm",
-        type: "Shopping",
-        location: "Woodstock, GA",
-        expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))"
-    },
-    {
-        requestor: "Clara",
-        month: "January",
-        day: 28,
-        title: "Pick-up Groceries",
-        time: "4pm - 5pm",
-        type: "Shopping",
-        location: "Woodstock, GA",
-        expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))"
-    },
-    {
-        requestor: "Charlie",
-        month: "February",
-        day: 30,
-        title: "Walk Dog",
-        time: "3pm - 3:30pm",
-        type: "Pet Care",
-        location: "Downtown Atlanta, GA",
-        expand: "Hey so like I have a dog and I need some help walking it.. thanks"
-    },
-    {
-        requestor: "Paula",
-        month: "August",
-        day: 1,
-        title: "Vacuum Main Floor",
-        time: "2pm - 4pm",
-        type: "House Chores",
-        location: "Vinings, GA",
-        expand: "Vacuum goes BRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
-    },
-    {
-        requestor: "Bob",
-        month: "September",
-        day: 2,
-        title: "Water Patio Plants",
-        time: "9am - 9:30am",
-        type: "House Chores",
-        location: "Buckhead, GA",
-        expand: "80 PERCENT OF THE EARTH'S ORIGINAL FORESTS HAVE BEEN CLEARED OR DESTROYED. NUTRITION DOESN'T FACTOR INTO THE CROPS WE DO MASS PRODUCE. THE EARTH HAS MORE THAN 80,000 SPECIES OF EDIBLE PLANTS. 90 PERCENT OF THE FOODS HUMANS EAT COME FROM JUST 30 PLANTS. .70,000 PLANT SPECIES ARE UTILIZED FOR MEDICINE."
-    },
-    {
-        requestor: "Clara",
-        month: "September",
-        day: 3,
-        title: "Decorate for Halloween",
-        time: "10am - 12am",
-        type: "House Chores",
-        location: "Buckhead, GA",
-        expand: "its SPOOOOoooooooOOOOOoooooOOOoooOOOOOOky season "
-    }
-];
-    
 class JobBoard extends Component {
     constructor () {
         super();
@@ -76,65 +10,55 @@ class JobBoard extends Component {
             refresh: false,
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
-            activeSections: [],
-            collapsed: true,
-            multipleSelect: false,
+            data: [
+            {
+                requestor: "Clara",
+                month: "January",
+                day: 27,
+                title: "Pick-up Groceries",
+                time: "4pm - 5pm",
+                type: "Shopping",
+                location: "Woodstock, GA"
+            },
+            {
+                requestor: "Charlie",
+                month: "February",
+                day: 30,
+                title: "Walk Dog",
+                time: "3pm - 3:30pm",
+                type: "Pet Care",
+                location: "Downtown Atlanta, GA"
+            },
+            {
+                requestor: "Paula",
+                month: "August",
+                day: 1,
+                title: "Vacuum Main Floor",
+                time: "2pm - 4pm",
+                type: "House Chores",
+                location: "Vinings, GA"
+            },
+            {
+                requestor: "Bob",
+                month: "September",
+                day: 2,
+                title: "Water Patio Plants",
+                time: "9am - 9:30am",
+                type: "House Chores",
+                location: "Buckhead, GA"
+            },
+            {
+                requestor: "Clara",
+                month: "September",
+                day: 3,
+                title: "Decorate for Halloween",
+                time: "10am - 12am",
+                type: "House Chores",
+                location: "Buckhead, GA"
+            }
+            ]
         };
     }
-    toggleExpanded = () => {
-        this.setState({ collapsed: !this.state.collapsed });
-      };
-    
-      setSections = sections => {
-        this.setState({
-          activeSections: sections.includes(undefined) ? [] : sections,
-        });
-      };
-    
-      renderHeader = (section, _, isActive) => {
-        return (
-          <Animatable.View
-            duration={400}
-            style={[styles.header, isActive ? styles.active : styles.inactive]}
-            transition="backgroundColor"
-          >
-            <Text style={styles.headerText}>{section.month}</Text>
-            <View style={styles.row}>
-                    <View style={styles.circle}>
-                        <Text style={styles.numberLabel}>{section.day}</Text>
-                    </View>
-                    <TouchableOpacity style={styles.jobLabel}>
-                        <Text style={styles.jobLabelTitle}>{section.title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{section.time}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{section.type}</Text>
-                            </View>
-                            <Text style={styles.mediumText}>{section.location}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            
-          </Animatable.View>
-        );
-      };
-    
-      renderContent(section, _, isActive) {
-        return (
-          <Animatable.View
-            duration={400}
-            style={[styles.content, isActive ? styles.active : styles.inactive]}
-            transition="backgroundColor"
-          >
-            <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
-              {section.expand}
-            </Animatable.Text>
-            <TouchableOpacity style={styles.loginBtn}>
-            <Text style={{color: "white"}}> Request Opportunity </Text>
-          </TouchableOpacity>
-          </Animatable.View>
-        );
-      }
 
     FlatListItemSeparator = () => {
         return (
@@ -180,7 +104,7 @@ class JobBoard extends Component {
             <ScrollView style={styles.scrollView}>
                 <Text style={styles.headingOne}>January</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -191,7 +115,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>February</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -213,7 +137,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>April</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -224,7 +148,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>May</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -235,7 +159,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>June</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -246,7 +170,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>July</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -257,7 +181,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>August</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -268,7 +192,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>September</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -279,7 +203,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>October</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -290,7 +214,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>November</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -301,7 +225,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>December</Text>
                 <FlatList
-                    data={data}
+                    data={state.data}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -315,14 +239,13 @@ class JobBoard extends Component {
     }
 
     render () {
-        const { multipleSelect, activeSections } = this.state;
         return (
             <SafeAreaView style={styles.container}>
-                {/* <Header
+                <Header
                     backgroundColor="#2A9D8F"
-                    centerComponent={{text: 'Job Board', style: {color: '#fff'}}}
-                /> */}
-                <View style={styles.view}>
+                    centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 35}}}
+                />
+                <View style={styles.topRow}>
                     <Text style={styles.headingOne}>Job Type</Text>
                     <Picker
                         selectedValue={this.state.selectedType}
@@ -342,7 +265,7 @@ class JobBoard extends Component {
                         <Picker.Item label="Tutoring" value="Tutoring"/>
                     </Picker>
                 </View>
-                <View style={styles.view}>
+                <View style={styles.topRow}>
                     <Text style={styles.headingOne}>Requestors</Text>
                     <Picker
                         selectedValue={this.state.selectedRequestor}
@@ -359,24 +282,7 @@ class JobBoard extends Component {
                         <Picker.Item label="Paula" value="Paula" />
                     </Picker>
                 </View>
-                <View style={styles.view}>
-                <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
-                    <Accordion
-                        activeSections={activeSections}
-                        sections={data}
-                        touchableComponent={TouchableOpacity}
-                        expandMultiple={multipleSelect}
-                        renderHeader={this.renderHeader}
-                        renderContent={this.renderContent}
-                        duration={400}
-                        onChange={this.setSections}
-                    />
-                    </ScrollView>
-                </View>
-                {/* <this.ItemList 
-                    state={this.state} 
-                    flatListItemSeparator={this.FlatListItemSeparator} 
-                    jobItem={this.JobItem} /> */}
+                <this.ItemList state={this.state} flatListItemSeparator={this.FlatListItemSeparator} jobItem={this.JobItem} />
             </SafeAreaView>
         );
     }
@@ -386,19 +292,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: Constants.statusBarHeight,
-  },
-  view: {
-      margin: 10,
-  },
-  loginBtn:{
-    width:"80%",
-    backgroundColor:"#264653",
-    borderRadius:25,
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:30,
-    marginBottom:10
   },
   scrollView: {
     marginHorizontal: 20,
