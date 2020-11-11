@@ -1,21 +1,28 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, View, Text } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, View, Text, Button } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import { formatTime } from "./NewJobPage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Entypo, Ionicons } from "@expo/vector-icons";
+import { AuthContext } from "../../AuthContext";
 // TODO: fix UI of jobs
 
 
 const screen = Dimensions.get("screen");
 const today = new Date();
+var activeUser  = {
+  username: '',
+};
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
   let endJSONdate = new Date(endDateTime);
   let startClockTime = formatTime(startJSONdate);
   let endClockTime = formatTime(endJSONdate);
-  if (startJSONdate < today) {
+
+  // TOOD: check if volunteer is already trusted before displaying the "add" button
+  if (startJSONdate < today & requestor == activeUser.username) {
       return (
           <View style={styles.row}>
               <View style={styles.circle}>
@@ -34,8 +41,15 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                           <Text style={styles.mediumText}>{location}</Text>
                       </View>
                       <View style={styles.row}>
-                          <Text style={styles.mediumText}>{requestor}</Text>
-                      </View>         
+                          <Text style={styles.mediumText}>{volunteer}</Text>
+                          <Entypo 
+                          //onPress={this.onButtonPress} 
+                          //title = "Add volunteer as trusted volunteer" 
+                          name="add-user"
+                          size={32}
+                          color="#264653"
+                          />  
+                      </View>
                   </View>
               </View>
           </View>
@@ -46,6 +60,8 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
   }
 };
 
+
+
 export default class PastPosts extends Component {
 
     constructor() {
@@ -54,7 +70,10 @@ export default class PastPosts extends Component {
         this.state = {
          jobs: sortBy(this.ref, 'date'),
         };
+        this.addTrustedVolunteer = this.addTrustedVolunteer.bind(this);
       }
+
+    static contextType = AuthContext;
 
     componentDidMount() {
         db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
@@ -66,8 +85,27 @@ export default class PastPosts extends Component {
         });
     }
 
+    addTrustedVolunteer(username) {
+      var activeUserRef = db.ref('/users').orderByChild('username').equalTo(this.context["username"]).ref;
+      var trustedVolunteers = [];
+      activeUserRef.on("value", function(snap) {
+        trustedVolunteers = snap.val()["trustedUsers"];
+      });
+      trustedVolunteers.push(username);
+      activeUserRef.update({
+        trustedUsers: trustedVolunteers,
+      });
+    }
+
     render () {
+        let value = this.context;
         let jobsKeys = Object.keys(this.state.jobs);
+        for (var i = 0; i < jobsKeys.length; i++) {
+          var curr = this.state.jobs[jobsKeys[i]];
+          if (curr.requestor == value["username"]) {
+            activeUser.username = curr.requestor;
+          }
+        }
         return (
           <SafeAreaView style={styles.safeContainer}>
             <ScrollView style={styles.scrollView}>
@@ -78,6 +116,7 @@ export default class PastPosts extends Component {
                       key={key}
                       id={key}
                       job={this.state.jobs[key]}
+                      //onButtonPress={this.addTrustedVolunteer(this.state.jobs[key]["volunteer"])}
                     />
                   ))
                 ) : (
