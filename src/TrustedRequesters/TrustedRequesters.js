@@ -61,7 +61,6 @@ class TrustedRequestors extends Component {
   render () {
     let value = this.context;
     let userKeys = Object.keys(this.state.allUsers);
-    var i = 0;
     for (var i = 0; i < userKeys.length; i++) {
       var curr = this.state.allUsers[userKeys[i]];
       if (curr.username == value["username"]) {
