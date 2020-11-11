@@ -7,7 +7,6 @@ import { AuthContext } from "../../AuthContext";
 
 const screen = Dimensions.get("screen");
 
-//const activeUserName = 'jessica'
 var activeUser  = {
   username: '',
   trustedUsers: [],
@@ -102,10 +101,8 @@ class TrustedVolunteers extends Component {
         }
     }
 
-    render () {
+    getActiveUser(userKeys) {
       let value = this.context;
-      let userKeys = Object.keys(this.state.allUsers);
-      var i = 0;
       for (var i = 0; i < userKeys.length; i++) {
         var curr = this.state.allUsers[userKeys[i]];
         if (curr.username == value["username"]) {
@@ -113,9 +110,15 @@ class TrustedVolunteers extends Component {
           activeUser.trustedUsers = curr.trustedUsers;
         }
       }
+    }
+
+    render () {
+      let userKeys = Object.keys(this.state.allUsers);
+      this.getActiveUser(userKeys);
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
+                  <Text>trusted users: {[activeUser.trustedUsers]}</Text>
                   <View>
                     {userKeys.length > 0 ? (
                       userKeys.map(key => (
