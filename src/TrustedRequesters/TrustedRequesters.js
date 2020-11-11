@@ -15,13 +15,7 @@ var activeUser  = {
 };
 
 const TrustedUser = ({user: {firstName, lastName, userType, username}}) => {
-  var trusted = false;
-  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
-    if (activeUser.trustedUsers[i] == username) {
-      trusted = true;
-    }
-  }
-  if (userType == userTypes.REQUESTOR & trusted) {
+  if (userType == userTypes.REQUESTOR & contained(username, activeUser.trustedUsers)) {
     return (
       <View style={styles.requestor}>
           <Text style={styles.mediumText}>{firstName} {lastName}</Text>
@@ -33,6 +27,15 @@ const TrustedUser = ({user: {firstName, lastName, userType, username}}) => {
       return null;
     }
 };
+
+function contained(needle, haystack) {
+  var length = haystack.length;
+  for(var i = 0; i < length; i++) {
+      if(haystack[i] == needle)
+          return true;
+  }
+  return false;
+}
 
 
 class TrustedRequestors extends Component {
@@ -58,7 +61,7 @@ class TrustedRequestors extends Component {
     }); 
   }
 
-  render () {
+  getActiveUser() {
     let value = this.context;
     let userKeys = Object.keys(this.state.allUsers);
     for (var i = 0; i < userKeys.length; i++) {
@@ -68,6 +71,11 @@ class TrustedRequestors extends Component {
         activeUser.trustedUsers = curr.trustedUsers;
       }
     }
+  }
+
+  render () {
+    let userKeys = Object.keys(this.state.allUsers);
+    this.getActiveUser();
     return (
       <SafeAreaView style={styles.container}>
         <Header

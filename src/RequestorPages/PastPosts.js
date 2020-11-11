@@ -84,6 +84,17 @@ export default class PastPosts extends Component {
             });
         });
     }
+    
+    getActiveUser() {
+      let value = this.context;
+      let jobsKeys = Object.keys(this.state.jobs);
+        for (var i = 0; i < jobsKeys.length; i++) {
+          var curr = this.state.jobs[jobsKeys[i]];
+          if (curr.requestor == value["username"]) {
+            activeUser.username = curr.requestor;
+          }
+        }
+    }
 
     addTrustedVolunteer(username) {
       var activeUserRef = db.ref('/users').orderByChild('username').equalTo(this.context["username"]).ref;
@@ -98,14 +109,8 @@ export default class PastPosts extends Component {
     }
 
     render () {
-        let value = this.context;
         let jobsKeys = Object.keys(this.state.jobs);
-        for (var i = 0; i < jobsKeys.length; i++) {
-          var curr = this.state.jobs[jobsKeys[i]];
-          if (curr.requestor == value["username"]) {
-            activeUser.username = curr.requestor;
-          }
-        }
+        this.getActiveUser();
         return (
           <SafeAreaView style={styles.safeContainer}>
             <ScrollView style={styles.scrollView}>
