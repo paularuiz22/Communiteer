@@ -10,7 +10,7 @@ import { AuthContext } from "../../AuthContext";
 const screen = Dimensions.get("screen");
 const today = new Date();
 
-const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor}}) => {
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
   let endJSONdate = new Date(endDateTime);
   let startClockTime = formatTime(startJSONdate);
@@ -38,6 +38,16 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       </View>         
                   </View>
               </View>
+              <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(requestor)
+                  .on("child_added", function(snapshot) {
+                    // snapshot.ref.child("trustedUsers").update(["bob"])
+                    var temp = snapshot.child("trustedUsers").val()
+                    //temp.push("bobby2")
+                    temp.push(volunteer)
+                    snapshot.ref.child("trustedUsers").update(temp)
+                  })} style={styles.typeLabel}>
+                    <Text>add trusted user</Text>
+              </TouchableOpacity>
           </View>
       )
   }
@@ -88,15 +98,16 @@ export default class PastPosts extends Component {
               )}
               {/* this will add a hardcoded user to trusted user of currently signed in person,
               needs to be duplicated for each job post and pull volunteer info from post */}
-              <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
+              {/* <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
                   .on("child_added", function(snapshot) {
                     // snapshot.ref.child("trustedUsers").update(["bob"])
                     var temp = snapshot.child("trustedUsers").val()
-                    temp.push("bobby2")
+                    //temp.push("bobby2")
+                    temp.push(volunteer)
                     snapshot.ref.child("trustedUsers").update(temp)
                   })} style={styles.typeLabel}>
                     <Text>add trusted user</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             </ScrollView>
         );
