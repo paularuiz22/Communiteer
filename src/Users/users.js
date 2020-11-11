@@ -58,6 +58,7 @@ export default function Users() {
             zipCode: 28791,
             userType: userTypes.REQUESTOR,
             trustedUsers: ['paularuiz22'],
+            // 0: paula
             password: 'test4'
         },
     ];

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, View, Text, Button } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import { formatTime } from "./NewJobPage";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../../AuthContext";
 // TODO: fix UI of jobs
 
@@ -43,8 +43,6 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       <View style={styles.row}>
                           <Text style={styles.mediumText}>{volunteer}</Text>
                           <Entypo 
-                          //onPress={this.onButtonPress} 
-                          //title = "Add volunteer as trusted volunteer" 
                           name="add-user"
                           size={32}
                           color="#264653"
@@ -52,6 +50,16 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       </View>
                   </View>
               </View>
+              <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(requestor)
+                  .on("child_added", function(snapshot) {
+                    // snapshot.ref.child("trustedUsers").update(["bob"])
+                    var temp = snapshot.child("trustedUsers").val()
+                    //temp.push("bobby2")
+                    temp.push(volunteer)
+                    snapshot.ref.child("trustedUsers").update(temp)
+                  })} style={styles.typeLabel}>
+                    <Text>add trusted user</Text>
+              </TouchableOpacity>
           </View>
       )
   }
@@ -63,6 +71,8 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
 
 
 export default class PastPosts extends Component {
+
+  static contextType = AuthContext;
 
     constructor() {
         super();
@@ -114,20 +124,31 @@ export default class PastPosts extends Component {
         return (
           <SafeAreaView style={styles.safeContainer}>
             <ScrollView style={styles.scrollView}>
-              <View style={styles.container}>
-                {jobsKeys.length > 0 ? (
-                  jobsKeys.map(key => (
-                    <Job
-                      key={key}
-                      id={key}
-                      job={this.state.jobs[key]}
-                      //onButtonPress={this.addTrustedVolunteer(this.state.jobs[key]["volunteer"])}
-                    />
-                  ))
-                ) : (
-                      <Text>No previous jobs</Text>
-                )}
-              </View>
+            <View style={styles.container}>
+              {jobsKeys.length > 0 ? (
+                jobsKeys.map(key => (
+                  <Job
+                    key={key}
+                    id={key}
+                    job={this.state.jobs[key]}
+                  />
+                ))
+              ) : (
+                    <Text>No previous jobs</Text>
+              )}
+              {/* this will add a hardcoded user to trusted user of currently signed in person,
+              needs to be duplicated for each job post and pull volunteer info from post */}
+              {/* <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
+                  .on("child_added", function(snapshot) {
+                    // snapshot.ref.child("trustedUsers").update(["bob"])
+                    var temp = snapshot.child("trustedUsers").val()
+                    //temp.push("bobby2")
+                    temp.push(volunteer)
+                    snapshot.ref.child("trustedUsers").update(temp)
+                  })} style={styles.typeLabel}>
+                    <Text>add trusted user</Text>
+              </TouchableOpacity> */}
+            </View>
             </ScrollView>
           </SafeAreaView>
         );
@@ -145,39 +166,8 @@ const styles = StyleSheet.create({
     padding: 5,
     justifyContent: "center",
   },
-  dropdown_container: {
-    flex: 1,
-  },
     scrollView: {
       marginHorizontal: 20,
-    },
-  dropdown: {
-    height: 50,
-    width: screen.width/2,
-    marginVertical: 10,
-  },
-  title_container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 30,
-    marginVertical: 20,
-    width: screen.width/2,
-  },
-  graph_container: {
-    flex: 6, 
-    width: screen.width/2,
-  },
-  scrollView: {
-      marginHorizontal: 20,
-    },
-    headingOne: {
-      fontSize: 30,
-      padding: 10
     },
     numberLabel: {
       fontSize: 30,
