@@ -3,13 +3,14 @@ import { Dimensions, StyleSheet, ScrollView, View, Text } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import { formatTime } from "./NewJobPage";
+import { SafeAreaView } from "react-native-safe-area-context";
 // TODO: fix UI of jobs
 
 
 const screen = Dimensions.get("screen");
 const today = new Date();
 
-const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor}}) => {
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
   let endJSONdate = new Date(endDateTime);
   let startClockTime = formatTime(startJSONdate);
@@ -68,26 +69,32 @@ export default class PastPosts extends Component {
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
         return (
+          <SafeAreaView style={styles.safeContainer}>
             <ScrollView style={styles.scrollView}>
-            <View>
-              {jobsKeys.length > 0 ? (
-                jobsKeys.map(key => (
-                  <Job
-                    key={key}
-                    id={key}
-                    job={this.state.jobs[key]}
-                  />
-                ))
-              ) : (
-                    <Text>No previous jobs</Text>
-              )}
-            </View>
+              <View style={styles.container}>
+                {jobsKeys.length > 0 ? (
+                  jobsKeys.map(key => (
+                    <Job
+                      key={key}
+                      id={key}
+                      job={this.state.jobs[key]}
+                    />
+                  ))
+                ) : (
+                      <Text>No previous jobs</Text>
+                )}
+              </View>
             </ScrollView>
+          </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -143,7 +150,7 @@ const styles = StyleSheet.create({
     },
     jobLabel: {
       width: 270,
-      height: 100,
+      height: 200,
       borderRadius: 10,
       backgroundColor: "#EEEEEE",
       padding: 10
@@ -176,6 +183,6 @@ const styles = StyleSheet.create({
     column: {
       flexDirection: 'column',
       flexWrap: 'wrap',
-      padding: 5
+      padding: 10
     },
 });

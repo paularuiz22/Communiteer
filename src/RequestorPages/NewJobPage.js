@@ -2,15 +2,18 @@ import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
 import {Picker} from "@react-native-community/picker";
 import { db } from '../../config';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 //import ToggleSwitch from 'toggle-switch-react-native';
 import jobTypes from "../../jobTypes";
+import { AuthContext } from "../../AuthContext";
 
 const screen = Dimensions.get("screen");
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+var now = new Date();
+var plusOneHour = new Date();
+plusOneHour.setHours(now.getHours() + 1);
 export default class NewJobPage extends Component {
   constructor() {
     super();
@@ -19,8 +22,8 @@ export default class NewJobPage extends Component {
       title: '',
       description: '',
       jobType: jobTypes.OTHER,
-      startDateTime: '',
-      endDateTime: '',
+      startDateTime: now,
+      endDateTime: plusOneHour,
       location: '',
       numVolunteers: '',
       isStartDateTimePickerVisible: false,
@@ -28,11 +31,12 @@ export default class NewJobPage extends Component {
       startDateTimeLabel: 'Select Start Date/Time',
       endDateTimeLabel: 'Select End Date/Time',
       onlyForTrusted: false,
-      requestor: '',
     };
     this.updateTextInput = this.updateTextInput.bind(this);
     this.saveJob = this.saveJob.bind(this);
   }
+
+  static contextType = AuthContext;
 
 
     updateTextInput = (text, field) => {
@@ -52,14 +56,13 @@ export default class NewJobPage extends Component {
             location: this.state.location,
             numVolunteers: this.state.numVolunteers,
             onlyForTrusted: this.state.onlyForTrusted,
-            requestor: this.state.requestor,
-
+            requestor: this.context["username"],
         }).then(() => {
             this.setState({
                 title: '',
                 description: '',
-                startDateTime: '',
-                endDateTime: '',
+                startDateTime: now,
+                endDateTime: plusOneHour,
                 location: '',
                 about: '',
                 numVolunteers: '',
@@ -68,7 +71,6 @@ export default class NewJobPage extends Component {
                 startDateTimeLabel: 'Select Start Date/Time',
                 endDateTimeLabel: 'Select End Date/Time',
                 onlyForTrusted: false,
-                requestor: '',
             });
             this.props.navigation.goBack();
         }).catch((error) => {
@@ -203,14 +205,6 @@ export default class NewJobPage extends Component {
                             labelStyle={{color: "black", fontWeight: "4"}}
                             size="large"
                             onValueChange={value => this.setState({ onlyForTrusted: value})}
-                        />
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.headingOne}>Requestor</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'requestor')}
-                            value={this.state.requestor}
                         />
                     </View>
                     <TouchableOpacity style={styles.saveBtn}>
