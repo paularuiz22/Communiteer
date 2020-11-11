@@ -90,7 +90,10 @@ export default class PastPosts extends Component {
               needs to be duplicated for each job post and pull volunteer info from post */}
               <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
                   .on("child_added", function(snapshot) {
-                    snapshot.ref.child("trustedUsers").update({"qcaliendo3":true})
+                    // snapshot.ref.child("trustedUsers").update(["bob"])
+                    var temp = snapshot.child("trustedUsers").val()
+                    temp.push("bobby2")
+                    snapshot.ref.child("trustedUsers").update(temp)
                   })} style={styles.typeLabel}>
                     <Text>add trusted user</Text>
               </TouchableOpacity>

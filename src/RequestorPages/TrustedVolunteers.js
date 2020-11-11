@@ -42,7 +42,6 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
             .on('child_added', function(snapshot) {
               snapshot.ref.remove();
             })
-            // render();
         })}>
             <Text style={styles.mediumText}>{firstName} {lastName}</Text>
             <Text style={styles.mediumText}>{userType}</Text>
