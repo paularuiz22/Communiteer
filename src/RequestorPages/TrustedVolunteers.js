@@ -23,25 +23,26 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
   if (userType == userTypes.VOLUNTEER & trusted) {
     return (
       <View style={styles.row}>
-        <View style={styles.jobLabel}>
+        <View style={{padding: 10}}>
           <Text style={styles.jobLabelTitle}>{firstName} {lastName}</Text>
           <Text style={styles.mediumText}>{username}</Text>
         </View>
-
-      <Entypo 
-        name="trash"
-        color="#264653"
-        size={32}
-        style={styles.volunteer} 
-        onPress={
-          () => db.ref('/users').orderByChild("username").equalTo(activeUser.username)
-        .on('child_added', function(snapshot) {
-            snapshot.ref.child("trustedUsers").orderByValue().equalTo(username)
+        <View style={styles.column}>
+          <Entypo 
+            name="trash"
+            color="#264653"
+            size={40}
+            style={styles.volunteer} 
+            onPress={
+              () => db.ref('/users').orderByChild("username").equalTo(activeUser.username)
             .on('child_added', function(snapshot) {
-              snapshot.ref.remove();
-            })
-        })}>
-      </Entypo>
+                snapshot.ref.child("trustedUsers").orderByValue().equalTo(username)
+                .on('child_added', function(snapshot) {
+                  snapshot.ref.remove();
+                })
+            })}>
+          </Entypo>
+        </View>
       </View>
     );
     } else {
@@ -133,9 +134,9 @@ class TrustedVolunteers extends Component {
       let userKeys = Object.keys(this.state.allUsers);
       this.getActiveUser(userKeys);
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.safeContainer}>
                 <ScrollView style={styles.scrollView}>
-                  <View>
+                  <View style={styles.container}>
                     {userKeys.length > 0 ? (
                       userKeys.map(key => (
                         <VolunteerUser
@@ -148,17 +149,9 @@ class TrustedVolunteers extends Component {
                     ): (
                     <Text>No trusted users</Text>
                   )}
-                  {/* the below code should add a button to each "trusted volunteer" object and allow for them to delete it
-                  idk how to pull the username from the data because it doesn't appear to be updated with firebase
-                  <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
-                        .on('child_added', function(snapshot) {
-                            snapshot.ref.child("trustedUsers").child("quinten").remove();
-                        })
-                      }>
-                        <Text>delete trusted contact</Text>
-                  </TouchableOpacity> */}
                   </View>
                 </ScrollView>
+                {/*
                 <KeyboardAvoidingView
                     style={styles.footer}
                     behavior="position"
@@ -179,40 +172,19 @@ class TrustedVolunteers extends Component {
                             value={this.state.createVolunteer}
                         />
                     </View>
-                </KeyboardAvoidingView>
+                </KeyboardAvoidingView>*/}
             </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-  footer: {
-    position: 'absolute',
-    width: '100%',
-    height: 100,
-    bottom: 0,
-  },
-  footerInner: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
   },
   jobLabelTitle: {
-    fontSize: 20,
-  },
-  btn: {
-    zIndex: 1,
-    position: 'absolute',
-    right: 20,
-    top: -50,
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#fff',
-    backgroundColor: "#264653"
+    fontSize: 30,
   },
   typeLabel: {
     width: 100,
@@ -222,33 +194,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     padding: 5,
   },
-  btnText: {
-    color: '#fff',
-    fontSize: 40,
-  },
-  textInput: {
-    zIndex: 0,
-    flex: 1,
-    padding: 20,
-    fontSize: 16,
-    color: '#fff',
-    backgroundColor: '#262526'
-  },
-  volunteerText: {
-    fontSize: 20,
-    padding: 20,
-  },
   container: {
     flex: 1,
     alignItems: "center",
-  },
-  dropdown_container: {
-    flex: 1,
-  },
-  dropdown: {
-    height: 50,
-    width: screen.width/2,
-    marginVertical: 10,
+    padding: 5, 
+    justifyContent: 'center'
   },
   title_container: {
     flex: 1,
@@ -262,18 +212,10 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: screen.width/2,
   },
-  graph_container: {
-    flex: 6, 
-    width: screen.width/2,
-  },
   scrollView: {
-    marginHorizontal: 10,
-    marginBottom: 100,
+    //marginHorizontal: 10,
+    //marginBottom: 100,
     backgroundColor: '#fff'
-  },
-  headingOne: {
-    fontSize: 30,
-    padding: 10
   },
   numberLabel: {
     fontSize: 30,
@@ -282,17 +224,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   jobLabel: {
-    width: 270,
-    flex: 1,
+    flex: 3,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
-    padding: 10
-  },
-  circle: {
-    width: 75,
-    height: 75,
-    borderRadius: 75/2,
-    backgroundColor: "#264653",
     padding: 10
   },
   typeLabel: {
@@ -307,8 +241,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 2,
-    alignContent: 'center',
-    alignItems: 'center'
+    //alignContent: 'center',
+    //alignItems: 'center'
   },
   column: {
     flexDirection: 'column',

@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   jobLabel: {
     width: 270,
-    height: 100,
+    flex: 1,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
     padding: 10
