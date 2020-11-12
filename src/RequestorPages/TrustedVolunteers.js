@@ -4,6 +4,7 @@ import { db } from '../../config';
 import { sortBy } from 'lodash';
 import userTypes from "../Users/userType"
 import { AuthContext } from "../../AuthContext";
+import { Entypo } from "@expo/vector-icons";
 
 const screen = Dimensions.get("screen");
 
@@ -21,7 +22,18 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
   }
   if (userType == userTypes.VOLUNTEER & trusted) {
     return (
-      <TouchableOpacity style={styles.volunteer} onPress={
+      <View style={styles.row}>
+        <View style={styles.jobLabel}>
+          <Text style={styles.jobLabelTitle}>{firstName} {lastName}</Text>
+          <Text style={styles.mediumText}>{username}</Text>
+        </View>
+
+      <Entypo 
+        name="trash"
+        color="#264653"
+        size={32}
+        style={styles.volunteer} 
+        onPress={
           () => db.ref('/users').orderByChild("username").equalTo(activeUser.username)
         .on('child_added', function(snapshot) {
             snapshot.ref.child("trustedUsers").orderByValue().equalTo(username)
@@ -29,10 +41,8 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
               snapshot.ref.remove();
             })
         })}>
-            <Text style={styles.mediumText}>{firstName} {lastName}</Text>
-            <Text style={styles.mediumText}>{userType}</Text>
-            <Text style={styles.mediumText}>{username}</Text>
-      </TouchableOpacity>
+      </Entypo>
+      </View>
     );
     } else {
       return null;
@@ -187,6 +197,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  jobLabelTitle: {
+    fontSize: 20,
+  },
   btn: {
     zIndex: 1,
     position: 'absolute',
@@ -200,6 +213,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#fff',
     backgroundColor: "#264653"
+  },
+  typeLabel: {
+    width: 100,
+    height: 25,
+    borderRadius: 10,
+    backgroundColor: "#FF9B21",
+    marginLeft: 10,
+    padding: 5,
   },
   btnText: {
     color: '#fff',
@@ -260,6 +281,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center'
   },
+  jobLabel: {
+    width: 270,
+    flex: 1,
+    borderRadius: 10,
+    backgroundColor: "#EEEEEE",
+    padding: 10
+  },
   circle: {
     width: 75,
     height: 75,
@@ -278,7 +306,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 2
+    padding: 2,
+    alignContent: 'center',
+    alignItems: 'center'
   },
   column: {
     flexDirection: 'column',
@@ -287,9 +317,7 @@ const styles = StyleSheet.create({
   },
   volunteer: {
     alignItems: 'center',
-    borderWidth: 2,
     backgroundColor: '#f9f9f9',
-    borderColor: '#ddd',
   },
 });
 export default TrustedVolunteers;
