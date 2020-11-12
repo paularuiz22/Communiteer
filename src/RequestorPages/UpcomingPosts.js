@@ -45,6 +45,9 @@ class UpcomingPosts extends Component {
         super();
         this.ref = db.ref('/jobs');
         this.state = {
+            refresh: false,
+            selectedType: "All Jobs",
+            itemKey: -1,
             jobs: sortBy(this.ref, 'date'),
         };
     }
