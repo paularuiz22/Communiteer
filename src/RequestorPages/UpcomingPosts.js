@@ -11,7 +11,7 @@ const screen = Dimensions.get("screen");
 
 let today = new Date();
 
-const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor}}) => {
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
     let startJSONdate = new Date(startDateTime);
     let endJSONdate = new Date(endDateTime);
     let startClockTime = formatTime(startJSONdate);
@@ -22,7 +22,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                 <View style={styles.circle}>
                     <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                 </View>
-                <View style={styles.jobLabel}>
+                <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
                     <View style={styles.column}>
                         <Text style={styles.jobLabelTitle}>{title}</Text>
                         <View style={styles.row}>
@@ -35,7 +35,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                             <Text style={styles.mediumText}>{location}</Text>
                         </View>
                         <View style={styles.row}>
-                            <Text style={styles.mediumText}>{requestor}</Text>
+                            <Text style={styles.mediumText}>{volunteer}</Text>
                         </View>         
                     </View>
                 </View>
@@ -73,7 +73,7 @@ class UpcomingPosts extends Component {
         let value = this.context;
         console.log("set username? ", value["username"]);
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.safeContainer}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
                   <Icon name="add-box" size={30} style={{color:'white'}}/>
                 </TouchableOpacity>
@@ -98,9 +98,15 @@ class UpcomingPosts extends Component {
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     alignItems: "center",
+    padding: 5,
+    justifyContent: "center",
   },
   dropdown_container: {
     flex: 1,
@@ -114,17 +120,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 30,
-    marginVertical: 20,
-    width: screen.width/2,
-  },
-  graph_container: {
-    flex: 6, 
-    width: screen.width/2,
   },
   newJobBtn:{
     width:"25%",

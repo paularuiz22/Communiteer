@@ -23,7 +23,7 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
   if (userType == userTypes.VOLUNTEER & trusted) {
     return (
       <View style={styles.row}>
-        <View style={{padding: 10}}>
+        <View style={{padding: 10, backgroundColor: "ECECEC"}}>
           <Text style={styles.jobLabelTitle}>{firstName} {lastName}</Text>
           <Text style={styles.mediumText}>{username}</Text>
         </View>

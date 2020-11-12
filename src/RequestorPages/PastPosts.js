@@ -43,7 +43,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
               <View style={styles.circle}>
                   <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
               </View>
-              <View style={styles.jobLabel}>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
                   <View style={styles.column}>
                       <Text style={styles.jobLabelTitle}>{title}</Text>
                       <View style={styles.row}>
@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
     },
     jobLabel: {
       width: 270,
-      height: 200,
       borderRadius: 10,
       backgroundColor: "#EEEEEE",
       padding: 10
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      padding: 3
+      padding: 2
     },
     column: {
       flexDirection: 'column',
