@@ -9,17 +9,32 @@ import { AuthContext } from "../../AuthContext";
 // TODO: fix UI of jobs
 
 
-const screen = Dimensions.get("screen");
 const today = new Date();
 var activeUser  = {
   username: '',
+  trustedUsers: [],
 };
+
+function contained(needle, haystack) {
+  var length = haystack.length;
+  for(var i = 0; i < length; i++) {
+      if(haystack[i] == needle)
+          return true;
+  }
+  return false;
+}
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
   let endJSONdate = new Date(endDateTime);
   let startClockTime = formatTime(startJSONdate);
   let endClockTime = formatTime(endJSONdate);
+  var trusted = false;
+  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+    if (activeUser.trustedUsers[i] == volunteer) {
+      trusted = true;
+    }
+  }
 
   // TOOD: check if volunteer is already trusted before displaying the "add" button
   if (startJSONdate < today & requestor == activeUser.username) {
@@ -42,24 +57,24 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       </View>
                       <View style={styles.row}>
                           <Text style={styles.mediumText}>{volunteer}</Text>
-                          <Entypo 
-                          name="add-user"
-                          size={32}
-                          color="#264653"
-                          />  
+                          { trusted ?  (
+                            <Text></Text>
+                          ) : (
+                            <Entypo 
+                            name="add-user"
+                            size={32}
+                            color="#264653"
+                            onPress={
+                              () => db.ref('/users').orderByChild("username").equalTo(requestor).on("child_added", function(snapshot) {
+                                var temp = snapshot.child("trustedUsers").val()
+                                temp.push(volunteer)
+                                snapshot.ref.child("trustedUsers").update(temp)
+                            })} 
+                            />  
+                          )}
                       </View>
                   </View>
               </View>
-              <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(requestor)
-                  .on("child_added", function(snapshot) {
-                    // snapshot.ref.child("trustedUsers").update(["bob"])
-                    var temp = snapshot.child("trustedUsers").val()
-                    //temp.push("bobby2")
-                    temp.push(volunteer)
-                    snapshot.ref.child("trustedUsers").update(temp)
-                  })} style={styles.typeLabel}>
-                    <Text>add trusted user</Text>
-              </TouchableOpacity>
           </View>
       )
   }
@@ -77,10 +92,14 @@ export default class PastPosts extends Component {
     constructor() {
         super();
         this.ref = db.ref('/jobs');
+        this.userRef = db.ref('/users');
         this.state = {
          jobs: sortBy(this.ref, 'date'),
+         allUsers: sortBy(this.userRef, 'username'),
         };
         this.addTrustedVolunteer = this.addTrustedVolunteer.bind(this);
+        this.getTrustedVoluntneers = this.getTrustedVoluntneers.bind(this);
+        this.getActiveUser = this.getActiveUser.bind(this);
       }
 
     static contextType = AuthContext;
@@ -93,18 +112,34 @@ export default class PastPosts extends Component {
             jobs: sortBy(jobItems, 'date'),
             });
         });
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+          let data = querySnapShot.val() ? querySnapShot.val() : {};
+          let userItems = {...data};
+          this.setState({
+              allUsers: sortBy(userItems, 'username'),
+          });
+      }); 
     }
-    
-    getActiveUser() {
+
+    getActiveUser(userKeys) {
       let value = this.context;
-      let jobsKeys = Object.keys(this.state.jobs);
-        for (var i = 0; i < jobsKeys.length; i++) {
-          var curr = this.state.jobs[jobsKeys[i]];
-          if (curr.requestor == value["username"]) {
-            activeUser.username = curr.requestor;
-          }
+      for (var i = 0; i < userKeys.length; i++) {
+        var curr = this.state.allUsers[userKeys[i]];
+        if (curr.username == value["username"]) {
+          activeUser.username = curr.username;
+          activeUser.trustedUsers = curr.trustedUsers;
         }
+      }
     }
+
+    getTrustedVoluntneers() {
+      db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+        let data = querySnapShot.val()["trustedUsers"];
+        let userItems = {...data};
+        activeUser.trustedUsers = userItems;
+      });
+    }
+     
 
     addTrustedVolunteer(username) {
       var activeUserRef = db.ref('/users').orderByChild('username').equalTo(this.context["username"]).ref;
@@ -116,11 +151,12 @@ export default class PastPosts extends Component {
       activeUserRef.update({
         trustedUsers: trustedVolunteers,
       });
+      activeUser.trustedUsers = trustedVolunteers;
     }
 
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
-        this.getActiveUser();
+        this.getActiveUser(Object.keys(this.state.allUsers));
         return (
           <SafeAreaView style={styles.safeContainer}>
             <ScrollView style={styles.scrollView}>
@@ -136,18 +172,6 @@ export default class PastPosts extends Component {
               ) : (
                     <Text>No previous jobs</Text>
               )}
-              {/* this will add a hardcoded user to trusted user of currently signed in person,
-              needs to be duplicated for each job post and pull volunteer info from post */}
-              {/* <TouchableOpacity onPress={() => db.ref('/users').orderByChild("username").equalTo(value["username"])
-                  .on("child_added", function(snapshot) {
-                    // snapshot.ref.child("trustedUsers").update(["bob"])
-                    var temp = snapshot.child("trustedUsers").val()
-                    //temp.push("bobby2")
-                    temp.push(volunteer)
-                    snapshot.ref.child("trustedUsers").update(temp)
-                  })} style={styles.typeLabel}>
-                    <Text>add trusted user</Text>
-              </TouchableOpacity> */}
             </View>
             </ScrollView>
           </SafeAreaView>

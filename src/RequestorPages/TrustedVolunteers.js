@@ -21,22 +21,9 @@ const VolunteerUser = ({user: {firstName, lastName, userType, username}}) => {
   }
   if (userType == userTypes.VOLUNTEER & trusted) {
     return (
-      // add onclick to view below
-      // <View style={styles.volunteer} accessibilityRole={'button'} onAccessibilityAction={
-      //   () => db.ref('/users').orderByChild("username").equalTo(value["username"])
-      // .on('child_added', function(snapshot) {
-      //     snapshot.ref.child("trustedUsers").child("1").remove();
-      // })}>
-      //     <Text style={styles.mediumText}>{firstName} {lastName}</Text>
-      //     <Text style={styles.mediumText}>{userType}</Text>
-      //     <Text style={styles.mediumText}>{username}</Text>
-          
-      // </View>
-
       <TouchableOpacity style={styles.volunteer} onPress={
           () => db.ref('/users').orderByChild("username").equalTo(activeUser.username)
         .on('child_added', function(snapshot) {
-          // snapshot.ref.child("trustedUsers").child(1).remove();
             snapshot.ref.child("trustedUsers").orderByValue().equalTo(username)
             .on('child_added', function(snapshot) {
               snapshot.ref.remove();
@@ -138,7 +125,6 @@ class TrustedVolunteers extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                  <Text>trusted users: {[activeUser.trustedUsers]}</Text>
                   <View>
                     {userKeys.length > 0 ? (
                       userKeys.map(key => (
