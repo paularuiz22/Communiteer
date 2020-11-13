@@ -2,63 +2,52 @@ import React, {Component} from "react";
 import { Header } from 'react-native-elements';
 import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
+import { db } from "../../config";
 
 class JobBoard extends Component {
     constructor () {
         super();
+        this.ref = db.ref('/jobs');
         this.state = {
             refresh: false,
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
-            data: [
-            {
-                requestor: "Clara",
-                month: "January",
-                day: 27,
-                title: "Pick-up Groceries",
-                time: "4pm - 5pm",
-                type: "Shopping",
-                location: "Woodstock, GA"
-            },
-            {
-                requestor: "Charlie",
-                month: "February",
-                day: 30,
-                title: "Walk Dog",
-                time: "3pm - 3:30pm",
-                type: "Pet Care",
-                location: "Downtown Atlanta, GA"
-            },
-            {
-                requestor: "Paula",
-                month: "August",
-                day: 1,
-                title: "Vacuum Main Floor",
-                time: "2pm - 4pm",
-                type: "House Chores",
-                location: "Vinings, GA"
-            },
-            {
-                requestor: "Bob",
-                month: "September",
-                day: 2,
-                title: "Water Patio Plants",
-                time: "9am - 9:30am",
-                type: "House Chores",
-                location: "Buckhead, GA"
-            },
-            {
-                requestor: "Clara",
-                month: "September",
-                day: 3,
-                title: "Decorate for Halloween",
-                time: "10am - 12am",
-                type: "House Chores",
-                location: "Buckhead, GA"
-            }
-            ]
+            jobs: [],
         };
     }
+
+    componentDidMount() {
+        db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let jobItems = {...data};
+            this.setState({
+              jobs: jobItems,
+            });
+        });
+    }
+
+    sortJobsByDate(jsonObjects, prop, direction) {
+        var objArray = [];
+        var keys = Object.keys(jsonObjects);
+        for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+
+            var job = {
+            };
+        }
+        var direct = arguments.length > 2 ? arguments[2] : 1;
+        if (objArray) {
+            objArray.sort(function(a,b) {
+                if(a[prop] && b[prop]) {
+                    var aDate = new Date(a[prop]);
+                    var bDatte = new Date(b[prop]);
+                }
+                return ( (a < b) ? -1*direction : ((a > b) ? 1*direction : 0) );
+            });
+        }
+    }
+
+
 
     FlatListItemSeparator = () => {
         return (
@@ -76,15 +65,20 @@ class JobBoard extends Component {
         if (props.dataPoint.month == props.month
             && (props.dataPoint.type == props.type || props.type == "All Jobs")
             && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
+            
+                let startJSONdate = new Date(props.dataPoint.startDateTime);
+                let endJSONdate = new Date(props.dataPoint.endDateTime);
+                let startClockTime = formatTime(startJSONdate);
+                let endClockTime = formatTime(endJSONdate);
             return (
                 <View style={styles.row}>
                     <View style={styles.circle}>
-                        <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
+                        <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                     </View>
                     <TouchableOpacity style={styles.jobLabel}>
                         <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
                         <View style={styles.row}>
-                            <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
+                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
                             <View style={styles.typeLabel}>
                                 <Text style={styles.smallText}>{props.dataPoint.type}</Text>
                             </View>
@@ -246,6 +240,7 @@ class JobBoard extends Component {
                     centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 35}}}
                 />
                 <View style={styles.topRow}>
+                <Text>{this.state.jobs.length}</Text>
                     <Text style={styles.headingOne}>Job Type</Text>
                     <Picker
                         selectedValue={this.state.selectedType}
@@ -278,8 +273,6 @@ class JobBoard extends Component {
                     >
                         <Picker.Item label="All Requestors" value="All Requestors"/>
                         <Picker.Item label="Only Trusted Requestors" value="Only Trusted Requestors" />
-                        <Picker.Item label="Clara" value="Clara" />
-                        <Picker.Item label="Paula" value="Paula" />
                     </Picker>
                 </View>
                 <this.ItemList state={this.state} flatListItemSeparator={this.FlatListItemSeparator} jobItem={this.JobItem} />
@@ -298,7 +291,6 @@ const styles = StyleSheet.create({
   },
   headingOne: {
     fontSize: 30,
-    //padding: 5
   },
   numberLabel: {
     fontSize: 30,
