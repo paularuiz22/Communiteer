@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { Header } from 'react-native-elements';
-import { Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { Text, StyleSheet, SafeAreaView, ScrollView, View } from 'react-native';
 import { db } from "../../config";
-import styles from "../../styles";
 import { AuthContext } from "../../AuthContext";
 import { sortBy } from "lodash";
 import userTypes from "../Users/userType"
+import { Entypo } from "@expo/vector-icons";
 
-
-//const activeUserName = 'paularuiz22';
 var activeUser  = {
   username: '',
   trustedUsers: [],
@@ -17,10 +15,27 @@ var activeUser  = {
 const TrustedUser = ({user: {firstName, lastName, userType, username}}) => {
   if (userType == userTypes.REQUESTOR & contained(username, activeUser.trustedUsers)) {
     return (
-      <View style={styles.requestor}>
-          <Text style={styles.mediumText}>{firstName} {lastName}</Text>
-          <Text style={styles.mediumText}>{userType}</Text>
+      <View style={styles.row}>
+        <View style={{padding: 10, backgroundColor: "ECECEC"}}>
+          <Text style={styles.jobLabelTitle}>{firstName} {lastName}</Text>
           <Text style={styles.mediumText}>{username}</Text>
+        </View>
+        <View style={styles.column}>
+          <Entypo 
+            name="trash"
+            color="#264653"
+            size={40}
+            style={styles.volunteer} 
+            onPress={
+              () => db.ref('/users').orderByChild("username").equalTo(activeUser.username)
+            .on('child_added', function(snapshot) {
+                snapshot.ref.child("trustedUsers").orderByValue().equalTo(username)
+                .on('child_added', function(snapshot) {
+                  snapshot.ref.remove();
+                })
+            })}>
+          </Entypo>
+        </View>
       </View>
     );
     } else {
@@ -98,5 +113,79 @@ class TrustedRequestors extends Component {
   }
 }
 
+const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  jobLabelTitle: {
+    fontSize: 30,
+  },
+  typeLabel: {
+    width: 100,
+    height: 25,
+    borderRadius: 10,
+    backgroundColor: "#FF9B21",
+    marginLeft: 10,
+    padding: 5,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    padding: 5, 
+    justifyContent: 'center'
+  },
+  title_container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginVertical: 20,
+    width: screen.width/2,
+  },
+  scrollView: {
+    //marginHorizontal: 10,
+    //marginBottom: 100,
+    backgroundColor: '#fff'
+  },
+  numberLabel: {
+    fontSize: 30,
+    padding: 8,
+    color: '#fff',
+    textAlign: 'center'
+  },
+  jobLabel: {
+    flex: 3,
+    borderRadius: 10,
+    backgroundColor: "#EEEEEE",
+    padding: 10
+  },
+  typeLabel: {
+    width: 100,
+    height: 25,
+    borderRadius: 10,
+    backgroundColor: "#FF9B21",
+    marginLeft: 10,
+    padding: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 2,
+  },
+  column: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    padding: 5
+  },
+  volunteer: {
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+  },
+});
 
 export default TrustedRequestors;

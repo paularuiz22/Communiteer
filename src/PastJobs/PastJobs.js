@@ -1,359 +1,164 @@
-import React, {useState, Component} from "react";
+import React, { Component } from "react";
 import { Header } from 'react-native-elements';
 import { Dimensions, SectionList, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
-import * as Animatable from 'react-native-animatable';
-import Collapsible from 'react-native-collapsible';
-import Accordion from 'react-native-collapsible/Accordion';
+import { Entypo } from "@expo/vector-icons";
+import { AuthContext } from "../../AuthContext";
+import { db } from '../../config';
+import { sortBy } from 'lodash';
+import { formatTime } from "../RequestorPages/NewJobPage";
 
-const data= [
-    {
-        requestor: "Clara",
-        month: "January",
-        day: 27,
-        title: "Pick-up Groceries",
-        time: "4pm - 5pm",
-        type: "Shopping",
-        location: "Woodstock, GA",
-        expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))",
-    },
-    {
-        requestor: "Charlie",
-        month: "February",
-        day: 30,
-        title: "Walk Dog",
-        time: "3pm - 3:30pm",
-        type: "Pet Care",
-        location: "Downtown Atlanta, GA",
-        expand: "Hey so like I have a dog and I need some help walking it.. thanks", 
-    },
-    {
-        requestor: "Paula",
-        month: "August",
-        day: 1,
-        title: "Vacuum Main Floor",
-        time: "2pm - 4pm",
-        type: "House Chores",
-        location: "Vinings, GA",
-        expand: "Vacuum goes BRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
-    },
-    {
-        requestor: "Bob",
-        month: "September",
-        day: 2,
-        title: "Water Patio Plants",
-        time: "9am - 9:30am",
-        type: "House Chores",
-        location: "Buckhead, GA",
-        expand: "80 PERCENT OF THE EARTH'S ORIGINAL FORESTS HAVE BEEN CLEARED OR DESTROYED. NUTRITION DOESN'T FACTOR INTO THE CROPS WE DO MASS PRODUCE. THE EARTH HAS MORE THAN 80,000 SPECIES OF EDIBLE PLANTS. 90 PERCENT OF THE FOODS HUMANS EAT COME FROM JUST 30 PLANTS. .70,000 PLANT SPECIES ARE UTILIZED FOR MEDICINE.",
-    },
-    {
-        requestor: "Clara",
-        month: "September",
-        day: 3,
-        title: "Decorate for Halloween",
-        time: "10am - 12am",
-        type: "House Chores",
-        location: "Buckhead, GA",
-        expand: "its SPOOOOoooooooOOOOOoooooOOOoooOOOOOOky season ",
+
+
+const today = new Date();
+var activeUser  = {
+  username: '',
+  trustedUsers: [],
+};
+
+
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
+  let startJSONdate = new Date(startDateTime);
+  let endJSONdate = new Date(endDateTime);
+  let startClockTime = formatTime(startJSONdate);
+  let endClockTime = formatTime(endJSONdate);
+
+  var trusted = false;
+  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+    if (activeUser.trustedUsers[i] == requestor) {
+      trusted = true;
     }
-];
-    
-class PastJobs extends Component {
-    constructor () {
-        super();
-        this.state = {
-            refresh: false,
-            selectedType: "All Jobs",
-            selectedRequestor: "All Requestors",
-            activeSections: [],
-            collapsed: true,
-            multipleSelect: false,
-        };
-    }
-    toggleExpanded = () => {
-        this.setState({ collapsed: !this.state.collapsed });
-      };
-    
-      setSections = sections => {
-        this.setState({
-          activeSections: sections.includes(undefined) ? [] : sections,
-        });
-      };
-    
-      renderHeader = (section, _, isActive) => {
-        return (
-          <Animatable.View
-            duration={400}
-            style={[styles.header, isActive ? styles.active : styles.inactive]}
-            transition="backgroundColor"
-          >
-            <View style={styles.box}>
-              <View style={styles.row}>
-              <Text style={styles.mediumText}>{section.month}</Text>
-              <Text style={styles.mediumText}>{section.day}</Text>
-              </View>
-              <View style={styles.row}>
-              <Text style={styles.mediumText}>{section.title}</Text>
-              <Text style={styles.mediumText}> with </Text>
-              <Text style={styles.mediumText}>{section.requestor}</Text>
-              </View>
-            </View>
-            
-          </Animatable.View>
-        );
-      };
-    
-      renderContent(section, _, isActive) {
-        return (
-          <Animatable.View
-            duration={400}
-            style={[styles.content, isActive ? styles.active : styles.inactive]}
-            transition="backgroundColor"
-          >
-            <View style={styles.row}>
-            <Text style={styles.smallText}>Review: </Text>
-            </View>
-          </Animatable.View>
-        );
-      }
-
-    FlatListItemSeparator = () => {
-        return (
-            <View
-                style={{
-                    height: 1,
-                    width: "100%",
-                    backgroundColor: "#607D8B",
-                }}
-            />
-        );
-    }
-
-    // JobItem (props) {
-    //     if (props.dataPoint.month == props.month
-    //         && (props.dataPoint.type == props.type || props.type == "All Jobs")
-    //         && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
-    //         return (
-    //             <View style={styles.row}>
-    //                 <View style={styles.circle}>
-    //                     <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
-    //                 </View>
-    //                 <TouchableOpacity style={styles.jobLabel}>
-    //                     <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
-    //                     <View style={styles.row}>
-    //                         <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
-    //                         <View style={styles.typeLabel}>
-    //                             <Text style={styles.smallText}>{props.dataPoint.type}</Text>
-    //                         </View>
-    //                         <Text style={styles.mediumText}>{props.dataPoint.location}</Text>
-    //                     </View>
-    //                 </TouchableOpacity>
-    //             </View>
-    //         );
-    //     }
-    //     return <View style={styles.filler}></View>;
-    // }
-
-    // ItemList (props) {
-    //     const state = props.state;
-
-    //     return (
-    //         <ScrollView style={styles.scrollView}>
-    //             <Text style={styles.headingOne}>January</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>February</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>March</Text>
-    //             <FlatList
-    //                 data={state.data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>April</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>May</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>June</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>July</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>August</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>September</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>October</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>November</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //             <Text style={styles.headingOne}>December</Text>
-    //             <FlatList
-    //                 data={data}
-    //                 width='100%'
-    //                 extraData={state.refresh}
-    //                 keyExtractor={(item) => item.key}
-    //                 ItemSeparatorComponent={props.flatListItemSeparator}
-    //                 renderItem={({ item }) =>
-    //                     <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-    //                 }
-    //             />
-    //         </ScrollView>
-    //     );
-    // }
-
-    renderAccordians=()=> {
-      const items = [];
-      for (item of data) {
-          items.push(
-              <Accordian 
-                  title = {item.title}
-                  data = {item.data}
-              />
-          );
-      }
-      return items;
   }
-    render () {
-        const { multipleSelect, activeSections } = this.state;
-        return (
-            <SafeAreaView style={styles.container}>
-                <View style={styles.view}>
-                    <Text style={styles.headingOne}>Past</Text>
-                    <Picker
-                        selectedValue={this.state.selectedRequestor}
-                        style={styles.pickerStyle}
-                        itemStyle={{height: 44}}
-                        onValueChange={(value) => {
-                            this.setState({ selectedRequestor: value});
-                            this.setState({ refresh: !this.state.refresh });
-                        }}
-                    >
-                        <Picker.Item label="1 week ago" value="1 week ago"/>
-                        <Picker.Item label="1 month ago" value="1 month ago" />
-                        <Picker.Item label="1 year ago" value="1 year ago" />
-                        <Picker.Item label="All time" value="All Time" />
-                    </Picker>
-                </View>
-                <ScrollView>
-                    <Accordion
-                        activeSections={activeSections}
-                        sections={data}
-                        touchableComponent={TouchableOpacity}
-                        expandMultiple={multipleSelect}
-                        renderHeader={this.renderHeader}
-                        renderContent={this.renderContent}
-                        duration={400}
-                        onChange={this.setSections}
-                    />
-                    </ScrollView>
-                {/* <this.ItemList 
-                    state={this.state} 
-                    flatListItemSeparator={this.FlatListItemSeparator} 
-                    jobItem={this.JobItem} /> */}
-            </SafeAreaView>
-        );
+
+  if (startJSONdate < today & volunteer == activeUser.username) {
+      return (
+          <View style={styles.row}>
+              <View style={styles.circle}>
+                  <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+              </View>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+                  <View style={styles.column}>
+                      <Text style={styles.jobLabelTitle}>{title}</Text>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
+                          <View style={styles.typeLabel}>
+                              <Text style={styles.smallText}>{jobType}</Text>
+                          </View>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{location}</Text>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{requestor}</Text>
+                          { trusted ?  (
+                            <Text></Text>
+                          ) : (
+                            <Entypo 
+                            name="add-user"
+                            size={32}
+                            color="#264653"
+                            onPress={
+                              () => db.ref('/users').orderByChild("username").equalTo(volunteer).on("child_added", function(snapshot) {
+                                var temp = snapshot.child("trustedUsers").val();
+                                temp.push(requestor);
+                                snapshot.ref.child("trustedUsers").update(temp);
+                            })} 
+                            />  
+                          )}
+                      </View>
+                  </View>
+              </View>
+          </View>
+      )
+  }
+  else {
+      return null
+  }
+};
+
+
+
+class PastJobs extends Component {
+
+  static contextType = AuthContext;
+
+    constructor() {
+        super();
+        this.ref = db.ref('/jobs');
+        this.userRef = db.ref('/users');
+        this.state = {
+         jobs: sortBy(this.ref, 'date'),
+         allUsers: sortBy(this.userRef, 'username'),
+        };
+        this.getActiveUser = this.getActiveUser.bind(this);
+      }
+
+
+      componentDidMount() {
+        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let jobItems = {...data};
+            this.setState({
+            jobs: sortBy(jobItems, 'date'),
+            });
+        });
+        
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+          let data = querySnapShot.val() ? querySnapShot.val() : {};
+          let userItems = {...data};
+          this.setState({
+              allUsers: sortBy(userItems, 'username'),
+          });
+      }); 
     }
+
+    getActiveUser(userKeys) {
+      let value = this.context;
+      for (var i = 0; i < userKeys.length; i++) {
+        var curr = this.state.allUsers[userKeys[i]];
+        if (curr.username == value["username"]) {
+          activeUser.username = curr.username;
+          activeUser.trustedUsers = curr.trustedUsers;
+        }
+      }
+    } 
+
+      render() {
+        let jobsKeys = Object.keys(this.state.jobs);
+        this.getActiveUser(Object.keys(this.state.allUsers));
+      
+        return (
+          <SafeAreaView style={styles.safeContainer}>
+              <ScrollView style={styles.scrollView}>
+              <View style={styles.container}>
+              {jobsKeys.length > 0 ? (
+                jobsKeys.map(key => (
+                  <Job
+                    key={key}
+                    id={key}
+                    job={this.state.jobs[key]}
+                  />
+                ))
+              ) : (
+                    <Text>No previous jobs</Text>
+              )}
+            </View>
+              </ScrollView>
+          </SafeAreaView>
+        );
+      }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    alignItems: "center",
+    padding: 5,
+    justifyContent: "center",
+  },
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
   },
   view: {
       margin: 10,
