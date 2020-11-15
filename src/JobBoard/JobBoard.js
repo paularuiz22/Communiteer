@@ -6,9 +6,14 @@ import { db } from "../../config";
 import { sortBy } from "lodash";
 import { formatTime } from "../RequestorPages/NewJobPage";
 import { Ionicons } from "@expo/vector-icons"
+import { AuthContext } from "../../AuthContext";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
+var activeUser  = {
+    username: '',
+    trustedUsers: [],
+  };
+  
 
 class JobBoard extends Component {
     constructor () {
@@ -19,8 +24,12 @@ class JobBoard extends Component {
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
             jobs: sortBy(this.ref, 'title'),
+            allUsers: sortBy(this.userRef, 'username'),
         };
+        this.getActiveUser = this.getActiveUser.bind(this);
     }
+    
+    static contextType = AuthContext;
 
     componentDidMount() {
         db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
@@ -30,6 +39,25 @@ class JobBoard extends Component {
               jobs: sortBy(jobItems, 'title'),
             });
         });
+
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let userItems = {...data};
+            this.setState({
+                allUsers: sortBy(userItems, 'username'),
+            });
+        }); 
+    }
+
+    getActiveUser(userKeys) {
+        let value = this.context;
+        for (var i = 0; i < userKeys.length; i++) {
+          var curr = this.state.allUsers[userKeys[i]];
+          if (curr.username == value["username"]) {
+            activeUser.username = curr.username;
+            activeUser.trustedUsers = curr.trustedUsers;
+          }
+        }
     }
 
     sortJobsByDate(jsonObjects, prop, direction) {
@@ -72,9 +100,15 @@ class JobBoard extends Component {
         let endJSONdate = new Date(props.dataPoint.endDateTime);
         let startClockTime = formatTime(startJSONdate);
         let endClockTime = formatTime(endJSONdate);
+        var trusted = false;
+        for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+          if (activeUser.trustedUsers[i] == props.dataPoint.requestor) {
+            trusted = true;
+          }
+        }
         if (monthNames[startJSONdate.getMonth()] == props.month
             && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
-            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors")) { // TODO: || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
+            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {
 
             return (
                 <View style={styles.row}>
@@ -249,16 +283,15 @@ class JobBoard extends Component {
     }
 
     render () {
-        console.log('jobs length in job board', this.state.jobs.length);
-        let jobsKeys = Object.keys(this.state.jobs);
-        
-        console.log(this.state.jobs[jobsKeys[0]]);
+        this.getActiveUser(Object.keys(this.state.allUsers));
         return (
             <SafeAreaView style={styles.container}>
                 <Header
                     backgroundColor="#2A9D8F"
                     centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 35}}}
                 />
+                <Text>active user: {activeUser.username}</Text>
+                <Text>trusted users: {activeUser.trustedUsers}</Text>
                 <View style={styles.topRow}>
                     <Text style={styles.headingOne}>Job Type</Text>
                     <Picker
