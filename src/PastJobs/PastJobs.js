@@ -1,6 +1,6 @@
 import React, {useState, Component} from "react";
 import { Header } from 'react-native-elements';
-import { Dimensions, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
+import { Dimensions, SectionList, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import * as Animatable from 'react-native-animatable';
 import Collapsible from 'react-native-collapsible';
@@ -103,6 +103,8 @@ class PastJobs extends Component {
             <View style={styles.row}>
             <Text style={styles.headerText}>{section.month}</Text>
             <Text style={styles.headerText}>{section.day}</Text>
+            </View>
+            <View style={styles.row}>
             <Text style={styles.mediumText}>{section.location}</Text>
             <Text style={styles.mediumText}>{section.requestor}</Text>
             </View>
@@ -119,14 +121,8 @@ class PastJobs extends Component {
             transition="backgroundColor"
           >
             <Text>
-              Rate Your Experience: 
+              Review: 
             </Text>
-            <StarRating
-              disabled={false}
-              maxStars={5}
-              rating={section.starCount}
-              selectedStar={(rating) => this.onStarRatingPress(rating)}
-            />
           </Animatable.View>
         );
       }
@@ -309,11 +305,35 @@ class PastJobs extends Component {
     //     );
     // }
 
+    renderAccordians=()=> {
+      const items = [];
+      for (item of data) {
+          items.push(
+              <Accordian 
+                  title = {item.title}
+                  data = {item.data}
+              />
+          );
+      }
+      return items;
+  }
     render () {
         const { multipleSelect, activeSections } = this.state;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.view}>
+                <SectionList
+                    sections={[
+                      {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
+                      {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
+                    ]}
+                    renderItem={({item}) => 
+                      // <Text style={styles.item}>{item}</Text>
+                      { this.renderAccordians() }
+                    }
+                    renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
+                    keyExtractor={(item, index) => index}
+                  />
                 <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
                     <Accordion
                         activeSections={activeSections}
