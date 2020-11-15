@@ -35,8 +35,11 @@ class JobBoard extends Component {
         db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
+            var key = Object.keys(querySnapShot.val())[0];
+            //console.log('key: ', key);
+            //console.log('data: ', data);
             this.setState({
-              jobs: sortBy(jobItems, 'title'),
+              jobs: jobItems,
             });
         });
 
@@ -81,8 +84,6 @@ class JobBoard extends Component {
         }
     }
 
-
-
     FlatListItemSeparator = () => {
         return (
             <View
@@ -106,7 +107,7 @@ class JobBoard extends Component {
             trusted = true;
           }
         }
-        if (monthNames[startJSONdate.getMonth()] == props.month
+        if (props.dataPoint.volunteer == "" && monthNames[startJSONdate.getMonth()] == props.month
             && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
             && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {
 
@@ -116,6 +117,7 @@ class JobBoard extends Component {
                         <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                     </View>
                     <TouchableOpacity style={styles.jobLabel}>
+                        <Text>key: {props.key}</Text>
                         <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
@@ -133,6 +135,15 @@ class JobBoard extends Component {
                             name="md-add"
                             color="#264653"
                             size={40}
+                            onPress= {
+                                () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
+                                    var temp = snapshot.child("volunteer").val();
+                                    console.log(temp);
+                                    snapshot.ref.update({
+                                        volunteer: activeUser.username
+                                    });
+                                })
+                            }
                         />
                     </View>
                 </View>
@@ -143,12 +154,14 @@ class JobBoard extends Component {
 
     ItemList (props) {
         const state = props.state;
-
+        let jobKeys = Object.keys(state.jobs);
+        let values = Object.values(state.jobs);
+        
         return (
             <ScrollView style={styles.scrollView}>
                 <Text style={styles.headingOne}>January</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -159,7 +172,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>February</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -170,7 +183,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>March</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -181,7 +194,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>April</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -192,7 +205,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>May</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -203,7 +216,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>June</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -214,7 +227,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>July</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -225,7 +238,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>August</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -236,7 +249,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>September</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -247,7 +260,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>October</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -258,7 +271,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>November</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -269,7 +282,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>December</Text>
                 <FlatList
-                    data={state.jobs}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -284,6 +297,8 @@ class JobBoard extends Component {
 
     render () {
         this.getActiveUser(Object.keys(this.state.allUsers));
+        var keys = Object.keys(this.state.jobs);
+        //console.log('number of jobs: ', this.state.jobs.length)
         return (
             <SafeAreaView style={styles.container}>
                 <Header
