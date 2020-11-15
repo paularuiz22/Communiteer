@@ -1,87 +1,151 @@
-import React, {useState} from "react";
-import { Header } from 'react-native-elements';
-import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View } from 'react-native';
-import Constants from 'expo-constants';
+import React, {Component} from "react";
+import { StyleSheet, Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { AuthContext } from "../../AuthContext";
+import { db } from "../../config";
+import { sortBy } from "lodash";
+import { Entypo } from "@expo/vector-icons";
+import { formatTime } from "../RequestorPages/NewJobPage";
 
-function AssignedJobs() {
-  const [selectedValue, setSelectedValue] = useState("alljobs");
-  return (
+const today = new Date();
+var activeUser  = {
+  username: '',
+  trustedUsers: [],
+};
+
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
+  let startJSONdate = new Date(startDateTime);
+  let endJSONdate = new Date(endDateTime);
+  let startClockTime = formatTime(startJSONdate);
+  let endClockTime = formatTime(endJSONdate);
+
+  if (startJSONdate > today & volunteer == activeUser.username) {
+      return (
+          <View style={styles.row}>
+              <View style={styles.circle}>
+                  <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+              </View>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+                  <View style={styles.column}>
+                      <Text style={styles.jobLabelTitle}>{title}</Text>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
+                          <View style={styles.typeLabel}>
+                              <Text style={styles.smallText}>{jobType}</Text>
+                          </View>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{location}</Text>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{requestor}</Text>
+                          
+                      </View>
+                  </View>
+              </View>
+              <View style={styles.column}>
+                <Entypo 
+                  name="trash"
+                  color="#264653"
+                  size={40}
+                  style={styles.volunteer} 
+                  onPress={
+                    () => db.ref('/jobs').orderByChild("title").equalTo(title)
+                  .on('child_added', function(snapshot) {
+                      snapshot.ref.update({
+                        volunteer: "",
+                      });
+                  })}>
+                </Entypo>
+              </View>
+          </View>
+      )
+  }
+  else {
+      return null
+  }
+};
+
+
+class AssignedJobs extends Component {
+  static contextType = AuthContext;
+
+    constructor() {
+        super();
+        this.ref = db.ref('/jobs');
+        this.userRef = db.ref('/users');
+        this.state = {
+         jobs: sortBy(this.ref, 'date'),
+         allUsers: sortBy(this.userRef, 'username'),
+        };
+        this.getActiveUser = this.getActiveUser.bind(this);
+      }
+      
+      componentDidMount() {
+        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let jobItems = {...data};
+            this.setState({
+            jobs: sortBy(jobItems, 'date'),
+            });
+        });
+
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+          let data = querySnapShot.val() ? querySnapShot.val() : {};
+          let userItems = {...data};
+          this.setState({
+              allUsers: sortBy(userItems, 'username'),
+          });
+      }); 
+    }
+
+    getActiveUser(userKeys) {
+      let value = this.context;
+      for (var i = 0; i < userKeys.length; i++) {
+        var curr = this.state.allUsers[userKeys[i]];
+        if (curr.username == value["username"]) {
+          activeUser.username = curr.username;
+          activeUser.trustedUsers = curr.trustedUsers;
+        }
+      }
+    }
+
+      render () {
+        let jobsKeys = Object.keys(this.state.jobs);
+        this.getActiveUser(Object.keys(this.state.allUsers));
+        
+        return (
     <SafeAreaView style={styles.container}>
-        <Header
-            backgroundColor="#2A9D8F"
-            centerComponent={{text: 'Assigned Jobs', style: {color: '#fff'}}}
-        />
+
         <ScrollView style={styles.scrollView}>
-            <Text style={styles.headingOne}>September</Text>
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>26</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <Text style={styles.jobLabelTitle}>Mow Catherine's Lawn</Text>
-                    <Text style={styles.mediumText}>3pm - 5pm</Text>
-                </View>
-            </View>
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>27</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <Text style={styles.jobLabelTitle}>Walk Paula's Dog</Text>
-                    <Text style={styles.mediumText}>3pm - 5pm</Text>
-                </View>
-            </View>
-            <Text style={styles.headingOne}>October</Text>
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>7</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <Text style={styles.jobLabelTitle}>Organize Clara's Books</Text>
-                    <Text style={styles.mediumText}>2pm - 3pm</Text>
-                </View>
-            </View>
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>15</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <Text style={styles.jobLabelTitle}>Clean Quinten's Patio</Text>
-                    <Text style={styles.mediumText}>4:30pm - 5:30pm</Text>
-                </View>
-            </View>
-            <Text style={styles.headingOne}>November</Text>
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>9</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <Text style={styles.jobLabelTitle}>Buy Dog Food for Paula</Text>
-                    <Text style={styles.mediumText}>3pm - 3:30pm</Text>
-                </View>
-            </View>
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>17</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <Text style={styles.jobLabelTitle}>Sweep Quinten's Porch</Text>
-                    <Text style={styles.mediumText}>5pm - 5:45pm</Text>
-                </View>
-            </View>
-            <View style={styles.magnifyingGlass}>
-                <View style={styles.magnifyingGlassCircle}/>
-                <View style={styles.magnifyingGlassStick} />
+        <View style={styles.container}>
+              {jobsKeys.length > 0 ? (
+                jobsKeys.map(key => (
+                  <Job
+                    key={key}
+                    id={key}
+                    job={this.state.jobs[key]}
+                  />
+                ))
+              ) : (
+                    <Text>No assigned, upcoming jobs</Text>
+              )}
             </View>
         </ScrollView>
     </SafeAreaView>
   );
+        }
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    alignItems: "center",
+    padding: 5,
+    justifyContent: "center",
   },
   scrollView: {
     marginHorizontal: 20,

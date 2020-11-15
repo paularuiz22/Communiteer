@@ -1,55 +1,164 @@
-import React from "react";
+import React, { Component } from "react";
 import { Header } from 'react-native-elements';
 import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View } from 'react-native';
 import Constants from 'expo-constants';
+import { Entypo } from "@expo/vector-icons";
+import { AuthContext } from "../../AuthContext";
+import { db } from '../../config';
+import { sortBy } from 'lodash';
+import { formatTime } from "../RequestorPages/NewJobPage";
 
-function PastJobs() {
-  return (
-    <SafeAreaView style={styles.container}>
-        <Header
-          backgroundColor="#2A9D8F"
-          centerComponent={{text: 'Past Jobs', style: {color: '#fff'}}}
-        />
-        <ScrollView style={styles.scrollView}>
-            <View style={styles.scrollBar}>
-                <Text style={styles.whiteHeadingOne}>Yard Work</Text>
+
+
+const today = new Date();
+var activeUser  = {
+  username: '',
+  trustedUsers: [],
+};
+
+
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
+  let startJSONdate = new Date(startDateTime);
+  let endJSONdate = new Date(endDateTime);
+  let startClockTime = formatTime(startJSONdate);
+  let endClockTime = formatTime(endJSONdate);
+
+  var trusted = false;
+  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+    if (activeUser.trustedUsers[i] == requestor) {
+      trusted = true;
+    }
+  }
+
+  if (startJSONdate < today & volunteer == activeUser.username) {
+      return (
+          <View style={styles.row}>
+              <View style={styles.circle}>
+                  <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+              </View>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+                  <View style={styles.column}>
+                      <Text style={styles.jobLabelTitle}>{title}</Text>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
+                          <View style={styles.typeLabel}>
+                              <Text style={styles.smallText}>{jobType}</Text>
+                          </View>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{location}</Text>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{requestor}</Text>
+                          { trusted ?  (
+                            <Text></Text>
+                          ) : (
+                            <Entypo 
+                            name="add-user"
+                            size={32}
+                            color="#264653"
+                            onPress={
+                              () => db.ref('/users').orderByChild("username").equalTo(volunteer).on("child_added", function(snapshot) {
+                                var temp = snapshot.child("trustedUsers").val();
+                                temp.push(requestor);
+                                snapshot.ref.child("trustedUsers").update(temp);
+                            })} 
+                            />  
+                          )}
+                      </View>
+                  </View>
+              </View>
+          </View>
+      )
+  }
+  else {
+      return null
+  }
+};
+
+
+
+class PastJobs extends Component {
+
+  static contextType = AuthContext;
+
+    constructor() {
+        super();
+        this.ref = db.ref('/jobs');
+        this.userRef = db.ref('/users');
+        this.state = {
+         jobs: sortBy(this.ref, 'date'),
+         allUsers: sortBy(this.userRef, 'username'),
+        };
+        this.getActiveUser = this.getActiveUser.bind(this);
+      }
+
+
+      componentDidMount() {
+        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let jobItems = {...data};
+            this.setState({
+            jobs: sortBy(jobItems, 'date'),
+            });
+        });
+        
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+          let data = querySnapShot.val() ? querySnapShot.val() : {};
+          let userItems = {...data};
+          this.setState({
+              allUsers: sortBy(userItems, 'username'),
+          });
+      }); 
+    }
+
+    getActiveUser(userKeys) {
+      let value = this.context;
+      for (var i = 0; i < userKeys.length; i++) {
+        var curr = this.state.allUsers[userKeys[i]];
+        if (curr.username == value["username"]) {
+          activeUser.username = curr.username;
+          activeUser.trustedUsers = curr.trustedUsers;
+        }
+      }
+    } 
+
+      render() {
+        let jobsKeys = Object.keys(this.state.jobs);
+        this.getActiveUser(Object.keys(this.state.allUsers));
+      
+        return (
+          <SafeAreaView style={styles.safeContainer}>
+              <ScrollView style={styles.scrollView}>
+              <View style={styles.container}>
+              {jobsKeys.length > 0 ? (
+                jobsKeys.map(key => (
+                  <Job
+                    key={key}
+                    id={key}
+                    job={this.state.jobs[key]}
+                  />
+                ))
+              ) : (
+                    <Text>No previous jobs</Text>
+              )}
             </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Lawn Mowing</Text>
-                <Text style={styles.smallText}>September 7, 2020</Text>
-                <Text style={styles.smallText}>August 16, 2020</Text>
-                <Text style={styles.smallText}>July 23, 2020</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Watering Plants</Text>
-                <Text style={styles.smallText}>September 15, 2020</Text>
-                <Text style={styles.smallText}>August 31, 2020</Text>
-                <Text style={styles.smallText}>August 17, 2020</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Weeding</Text>
-                <Text style={styles.smallText}>September 18, 2020</Text>
-                <Text style={styles.smallText}>August 24, 2020</Text>
-                <Text style={styles.smallText}>August 2, 2020</Text>
-            </View>
-            <View style={styles.scrollBar}>
-                <Text style={styles.whiteHeadingOne}>Pet Care</Text>
-            </View>
-            <View style={styles.jobLabel}>
-                <Text style={styles.blackHeadingOne}>Dog Walking</Text>
-                <Text style={styles.smallText}>September 20, 2020</Text>
-                <Text style={styles.smallText}>August 8, 2020</Text>
-                <Text style={styles.smallText}>July 17, 2020</Text>
-            </View>
-        </ScrollView>
-    </SafeAreaView>
-  );
+              </ScrollView>
+          </SafeAreaView>
+        );
+      }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    alignItems: "center",
+    padding: 5,
+    justifyContent: "center",
+  },
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
   },
   scrollView: {
     marginHorizontal: 20,

@@ -2,62 +2,83 @@ import React, {Component} from "react";
 import { Header } from 'react-native-elements';
 import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
+import { db } from "../../config";
+import { sortBy } from "lodash";
+import { formatTime } from "../RequestorPages/NewJobPage";
+import { Ionicons } from "@expo/vector-icons"
+import { AuthContext } from "../../AuthContext";
+
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var activeUser  = {
+    username: '',
+    trustedUsers: [],
+  };
+  
 
 class JobBoard extends Component {
     constructor () {
         super();
+        this.ref = db.ref('/jobs');
         this.state = {
             refresh: false,
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
-            data: [
-            {
-                requestor: "Clara",
-                month: "January",
-                day: 27,
-                title: "Pick-up Groceries",
-                time: "4pm - 5pm",
-                type: "Shopping",
-                location: "Woodstock, GA"
-            },
-            {
-                requestor: "Charlie",
-                month: "February",
-                day: 30,
-                title: "Walk Dog",
-                time: "3pm - 3:30pm",
-                type: "Pet Care",
-                location: "Downtown Atlanta, GA"
-            },
-            {
-                requestor: "Paula",
-                month: "August",
-                day: 1,
-                title: "Vacuum Main Floor",
-                time: "2pm - 4pm",
-                type: "House Chores",
-                location: "Vinings, GA"
-            },
-            {
-                requestor: "Bob",
-                month: "September",
-                day: 2,
-                title: "Water Patio Plants",
-                time: "9am - 9:30am",
-                type: "House Chores",
-                location: "Buckhead, GA"
-            },
-            {
-                requestor: "Clara",
-                month: "September",
-                day: 3,
-                title: "Decorate for Halloween",
-                time: "10am - 12am",
-                type: "House Chores",
-                location: "Buckhead, GA"
-            }
-            ]
+            jobs: sortBy(this.ref, 'title'),
+            allUsers: sortBy(this.userRef, 'username'),
         };
+        this.getActiveUser = this.getActiveUser.bind(this);
+    }
+    
+    static contextType = AuthContext;
+
+    componentDidMount() {
+        db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let jobItems = {...data};
+            this.setState({
+              jobs: jobItems,
+            });
+        });
+
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let userItems = {...data};
+            this.setState({
+                allUsers: sortBy(userItems, 'username'),
+            });
+        }); 
+    }
+
+    getActiveUser(userKeys) {
+        let value = this.context;
+        for (var i = 0; i < userKeys.length; i++) {
+          var curr = this.state.allUsers[userKeys[i]];
+          if (curr.username == value["username"]) {
+            activeUser.username = curr.username;
+            activeUser.trustedUsers = curr.trustedUsers;
+          }
+        }
+    }
+
+    sortJobsByDate(jsonObjects, prop, direction) {
+        var objArray = [];
+        var keys = Object.keys(jsonObjects);
+        for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+
+            var job = {
+            };
+        }
+        var direct = arguments.length > 2 ? arguments[2] : 1;
+        if (objArray) {
+            objArray.sort(function(a,b) {
+                if(a[prop] && b[prop]) {
+                    var aDate = new Date(a[prop]);
+                    var bDatte = new Date(b[prop]);
+                }
+                return ( (a < b) ? -1*direction : ((a > b) ? 1*direction : 0) );
+            });
+        }
     }
 
     FlatListItemSeparator = () => {
@@ -73,24 +94,55 @@ class JobBoard extends Component {
     }
 
     JobItem (props) {
-        if (props.dataPoint.month == props.month
-            && (props.dataPoint.type == props.type || props.type == "All Jobs")
-            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
+        let startJSONdate = new Date(props.dataPoint.startDateTime);
+        let endJSONdate = new Date(props.dataPoint.endDateTime);
+        let startClockTime = formatTime(startJSONdate);
+        let endClockTime = formatTime(endJSONdate);
+        var trusted = false;
+        for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+          if (activeUser.trustedUsers[i] == props.dataPoint.requestor) {
+            trusted = true;
+          }
+        }
+        if (props.dataPoint.volunteer == "" && monthNames[startJSONdate.getMonth()] == props.month
+            && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
+            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {
+
             return (
                 <View style={styles.row}>
                     <View style={styles.circle}>
-                        <Text style={styles.numberLabel}>{props.dataPoint.day}</Text>
+                        <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                     </View>
                     <TouchableOpacity style={styles.jobLabel}>
+                        <Text>key: {props.key}</Text>
                         <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
                         <View style={styles.row}>
-                            <Text style={styles.mediumText}>{props.dataPoint.time}</Text>
+                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
                             <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{props.dataPoint.type}</Text>
+                                <Text style={styles.smallText}>{props.dataPoint.jobType }</Text>
                             </View>
-                            <Text style={styles.mediumText}>{props.dataPoint.location}</Text>
+                            <Text style={styles.mediumText, {marginLeft: 2}}>{props.dataPoint.location}</Text>
+                        </View>
+                        <View>
+                            <Text>Requestor: {props.dataPoint.requestor}</Text>
                         </View>
                     </TouchableOpacity>
+                    <View style={styles.column}>
+                        <Ionicons
+                            name="md-add"
+                            color="#264653"
+                            size={40}
+                            onPress= {
+                                () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
+                                    var temp = snapshot.child("volunteer").val();
+                                    console.log(temp);
+                                    snapshot.ref.update({
+                                        volunteer: activeUser.username
+                                    });
+                                })
+                            }
+                        />
+                    </View>
                 </View>
             );
         }
@@ -99,12 +151,14 @@ class JobBoard extends Component {
 
     ItemList (props) {
         const state = props.state;
-
+        let jobKeys = Object.keys(state.jobs);
+        let values = Object.values(state.jobs);
+        
         return (
             <ScrollView style={styles.scrollView}>
                 <Text style={styles.headingOne}>January</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -115,7 +169,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>February</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -126,7 +180,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>March</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -137,7 +191,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>April</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -148,7 +202,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>May</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -159,7 +213,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>June</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -170,7 +224,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>July</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -181,7 +235,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>August</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -192,7 +246,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>September</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -203,7 +257,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>October</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -214,7 +268,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>November</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -225,7 +279,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>December</Text>
                 <FlatList
-                    data={state.data}
+                    data={Object.values(state.jobs)}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -239,6 +293,8 @@ class JobBoard extends Component {
     }
 
     render () {
+        this.getActiveUser(Object.keys(this.state.allUsers));
+        var keys = Object.keys(this.state.jobs);
         return (
             <SafeAreaView style={styles.container}>
                 <Header
@@ -278,8 +334,6 @@ class JobBoard extends Component {
                     >
                         <Picker.Item label="All Requestors" value="All Requestors"/>
                         <Picker.Item label="Only Trusted Requestors" value="Only Trusted Requestors" />
-                        <Picker.Item label="Clara" value="Clara" />
-                        <Picker.Item label="Paula" value="Paula" />
                     </Picker>
                 </View>
                 <this.ItemList state={this.state} flatListItemSeparator={this.FlatListItemSeparator} jobItem={this.JobItem} />
@@ -298,7 +352,6 @@ const styles = StyleSheet.create({
   },
   headingOne: {
     fontSize: 30,
-    //padding: 5
   },
   numberLabel: {
     fontSize: 30,
@@ -318,7 +371,6 @@ const styles = StyleSheet.create({
   },
   jobLabel: {
     width: 270,
-    height: 100,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
     padding: 10
@@ -362,7 +414,14 @@ const styles = StyleSheet.create({
   },
   filler: {
     height: 0,
-  }
+  },
+  column: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    padding: 10,
+    alignContent: 'center',
+    textAlignVertical: 'center',
+  },
 });
 
 export default JobBoard;
