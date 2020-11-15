@@ -4,6 +4,9 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, Tou
 import Constants from 'expo-constants';
 import { db } from "../../config";
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+
 class JobBoard extends Component {
     constructor () {
         super();
@@ -62,14 +65,15 @@ class JobBoard extends Component {
     }
 
     JobItem (props) {
-        if (props.dataPoint.month == props.month
-            && (props.dataPoint.type == props.type || props.type == "All Jobs")
-            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
+        let startJSONdate = new Date(props.dataPoint.startDateTime);
+        let endJSONdate = new Date(props.dataPoint.endDateTime);
+        let startClockTime = formatTime(startJSONdate);
+        let endClockTime = formatTime(endJSONdate);
+        if (monthNames[startJSONdate.getMonth()] == props.month
+            && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
+            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors")) { // TODO: || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
             
-                let startJSONdate = new Date(props.dataPoint.startDateTime);
-                let endJSONdate = new Date(props.dataPoint.endDateTime);
-                let startClockTime = formatTime(startJSONdate);
-                let endClockTime = formatTime(endJSONdate);
+
             return (
                 <View style={styles.row}>
                     <View style={styles.circle}>
