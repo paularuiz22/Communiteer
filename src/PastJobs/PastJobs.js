@@ -23,6 +23,13 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
   let startClockTime = formatTime(startJSONdate);
   let endClockTime = formatTime(endJSONdate);
 
+  var trusted = false;
+  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+    if (activeUser.trustedUsers[i] == requestor) {
+      trusted = true;
+    }
+  }
+
   if (startJSONdate < today & volunteer == activeUser.username) {
       return (
           <View style={styles.row}>
@@ -43,7 +50,21 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       </View>
                       <View style={styles.row}>
                           <Text style={styles.mediumText}>{requestor}</Text>
-                          
+                          { trusted ?  (
+                            <Text></Text>
+                          ) : (
+                            <Entypo 
+                            name="add-user"
+                            size={32}
+                            color="#264653"
+                            onPress={
+                              () => db.ref('/users').orderByChild("username").equalTo(volunteer).on("child_added", function(snapshot) {
+                                var temp = snapshot.child("trustedUsers").val();
+                                temp.push(requestor);
+                                snapshot.ref.child("trustedUsers").update(temp);
+                            })} 
+                            />  
+                          )}
                       </View>
                   </View>
               </View>
