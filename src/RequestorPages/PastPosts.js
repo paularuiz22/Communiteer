@@ -86,7 +86,6 @@ export default class PastPosts extends Component {
          jobs: sortBy(this.ref, 'date'),
          allUsers: sortBy(this.userRef, 'username'),
         };
-        this.addTrustedVolunteer = this.addTrustedVolunteer.bind(this);
         this.getActiveUser = this.getActiveUser.bind(this);
       }
 
@@ -100,7 +99,7 @@ export default class PastPosts extends Component {
             jobs: sortBy(jobItems, 'date'),
             });
         });
-        
+
         db.ref('/users').orderByChild('username').on('value', querySnapShot => {
           let data = querySnapShot.val() ? querySnapShot.val() : {};
           let userItems = {...data};
@@ -120,19 +119,6 @@ export default class PastPosts extends Component {
         }
       }
     }     
-
-    addTrustedVolunteer(username) {
-      var activeUserRef = db.ref('/users').orderByChild('username').equalTo(this.context["username"]).ref;
-      var trustedVolunteers = [];
-      activeUserRef.on("value", function(snap) {
-        trustedVolunteers = snap.val()["trustedUsers"];
-      });
-      trustedVolunteers.push(username);
-      activeUserRef.update({
-        trustedUsers: trustedVolunteers,
-      });
-      activeUser.trustedUsers = trustedVolunteers;
-    }
 
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
