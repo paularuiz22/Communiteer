@@ -3,6 +3,7 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, View } from 'react-native';
 import { AuthContext } from "../../AuthContext";
 import { db } from "../../config";
 import { sortBy } from "lodash";
+import { Entypo } from "@expo/vector-icons";
 import { formatTime } from "../RequestorPages/NewJobPage";
 
 const today = new Date();
@@ -40,6 +41,21 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                           
                       </View>
                   </View>
+              </View>
+              <View style={styles.column}>
+                <Entypo 
+                  name="trash"
+                  color="#264653"
+                  size={40}
+                  style={styles.volunteer} 
+                  onPress={
+                    () => db.ref('/jobs').orderByChild("title").equalTo(title)
+                  .on('child_added', function(snapshot) {
+                      snapshot.ref.update({
+                        volunteer: "",
+                      });
+                  })}>
+                </Entypo>
               </View>
           </View>
       )
