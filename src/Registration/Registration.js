@@ -3,7 +3,6 @@ import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from "reac
 import * as firebase from "firebase";
 import { db } from '../../config';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from "react-native-simple-radio-button";
-import RadioGroup from 'react-native-radio-button-group';
 
 class Registration extends Component {
     constructor() {
