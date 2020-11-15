@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Header } from 'react-native-elements';
-import { Text, StyleSheet, SafeAreaView, ScrollView, View } from 'react-native';
+import { Dimensions, Text, StyleSheet, SafeAreaView, ScrollView, View } from 'react-native';
 import { db } from "../../config";
 import { AuthContext } from "../../AuthContext";
 import { sortBy } from "lodash";
 import userTypes from "../Users/userType"
 import { Entypo } from "@expo/vector-icons";
+const screen = Dimensions.get("screen");
 
 var activeUser  = {
   username: '',
