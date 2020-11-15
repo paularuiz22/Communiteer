@@ -1,9 +1,8 @@
 import * as React from "react";
-import { NavigationContainer, StackActions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Text, Dimensions, View, SafeAreaView, StyleSheet } from "react-native";
-import index from "./index";
+import { Dimensions } from "react-native";
 import {AuthContext} from "./AuthContext.js";
 
 import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
@@ -14,7 +13,6 @@ import Login from "./src/Login/Login.js";
 import HomePage from "./src/RequestorPages/HomePage.js";
 import NewJobPage from "./src/RequestorPages/NewJobPage.js";
 import TrustedRequestor from "./src/TrustedRequesters/TrustedRequesters.js";
-import TrustedVolunteers from "./src/RequestorPages/TrustedVolunteers/TrustedVolunteers.js";
 import Registration from "./src/Registration/Registration.js";
 
 const Tab = createBottomTabNavigator();
@@ -26,7 +24,7 @@ class App extends React.Component {
         super();
 
         this.setUsername = (value) => {
-            this.setState(state => ({
+            this.setState(() => ({
                 username: value
             }));
         }

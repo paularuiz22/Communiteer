@@ -1,6 +1,6 @@
-import React, {useState, Component} from "react";
+import React, {Component} from "react";
 import { Header } from 'react-native-elements';
-import { Dimensions, StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 
 class JobBoard extends Component {
@@ -243,14 +243,14 @@ class JobBoard extends Component {
             <SafeAreaView style={styles.container}>
                 <Header
                     backgroundColor="#2A9D8F"
-                    centerComponent={{text: 'Job Board', style: {color: '#fff'}}}
+                    centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 35}}}
                 />
                 <View style={styles.topRow}>
                     <Text style={styles.headingOne}>Job Type</Text>
                     <Picker
                         selectedValue={this.state.selectedType}
                         style={styles.pickerStyle}
-                        itemStyle={{height: 44}}
+                        itemStyle={{height: 45}}
                         onValueChange={(value) => {
                             this.setState({ selectedType: value });
                             this.setState({ refresh: !this.state.refresh });
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   },
   headingOne: {
     fontSize: 30,
-    padding: 10
+    //padding: 5
   },
   numberLabel: {
     fontSize: 30,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
+    padding: 3,
     alignItems:"center",
     justifyContent:"center",
   },

@@ -1,28 +1,32 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity } from "react-native";
-import {Picker} from "@react-native-community/picker";
-import { db } from '../../config';
+import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, Text, TouchableOpacity } from "react-native";
+import { db } from "../../config.js"
 import { sortBy } from 'lodash';
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { formatTime } from "./NewJobPage";
 import {AuthContext} from "../../AuthContext.js";
+// TODO: fix UI of jobs
 
-const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
 
 let today = new Date();
-let todayDay = today.getDate();
 
-const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
-    if (date >= todayDay) {
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
+    let startJSONdate = new Date(startDateTime);
+    let endJSONdate = new Date(endDateTime);
+    let startClockTime = formatTime(startJSONdate);
+    let endClockTime = formatTime(endJSONdate);
+    if (startJSONdate >= today) {
         return (
             <View style={styles.row}>
                 <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>{date}</Text>
+                    <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                 </View>
-                <View style={styles.jobLabel}>
+                <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
                     <View style={styles.column}>
                         <Text style={styles.jobLabelTitle}>{title}</Text>
                         <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
+                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
                             <View style={styles.typeLabel}>
                                 <Text style={styles.smallText}>{jobType}</Text>
                             </View>
@@ -30,6 +34,9 @@ const Job = ({job: {job: description, title, jobType, date, startTime, endTime, 
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{location}</Text>
                         </View>
+                        <View style={styles.row}>
+                            <Text style={styles.mediumText}>{volunteer}</Text>
+                        </View>         
                     </View>
                 </View>
             </View>
@@ -45,20 +52,20 @@ class UpcomingPosts extends Component {
         super();
         this.ref = db.ref('/jobs');
         this.state = {
-            jobs: sortBy(this.ref, 'date'),
+            jobs: sortBy(this.ref, 'title'),
         };
     }
 
     static contextType = AuthContext;
 
     componentDidMount() {
-        db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
-            let data = querySnapShot.val() ? querySnapShot.val() : {};
-            let jobItems = {...data};
-            this.setState({
-                jobs: sortBy(jobItems, 'date'),
-            });
-        });
+      db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
+          let data = querySnapShot.val() ? querySnapShot.val() : {};
+          let jobItems = {...data};
+          this.setState({
+            jobs: sortBy(jobItems, 'title'),
+          });
+      });
     }
 
     render () {
@@ -66,9 +73,9 @@ class UpcomingPosts extends Component {
         let value = this.context;
         console.log("set username? ", value["username"]);
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.safeContainer}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
-                    <Text style={{color: 'white'}}>ADD NEW JOB</Text>
+                  <Icon name="add-box" size={30} style={{color:'white'}}/>
                 </TouchableOpacity>
                 <ScrollView style={styles.scrollView}>
                 <View>
@@ -91,9 +98,15 @@ class UpcomingPosts extends Component {
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     alignItems: "center",
+    padding: 5,
+    justifyContent: "center",
   },
   dropdown_container: {
     flex: 1,
@@ -107,17 +120,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 30,
-    marginVertical: 20,
-    width: screen.width/2,
-  },
-  graph_container: {
-    flex: 6, 
-    width: screen.width/2,
   },
   newJobBtn:{
     width:"25%",
@@ -140,18 +142,26 @@ const styles = StyleSheet.create({
     fontSize: 30,
     padding: 8,
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
+    alignItems: "center",
+    alignContent: "center",
+    textAlignVertical: "center"
   },
   circle: {
-    width: 75,
-    height: 75,
-    borderRadius: 75/2,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: "#264653",
-    padding: 10
+    padding: 10,
+    alignContent: "center",
+    alignItems: "center",
+    textAlignVertical: "center",
+    textAlign: "center",
+    alignSelf: "center"
   },
   jobLabel: {
     width: 270,
-    height: 100,
+    flex: 1,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
     padding: 10

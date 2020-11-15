@@ -1,55 +1,108 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
-import {Picker} from "@react-native-community/picker";
+import { Dimensions, StyleSheet, ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
+import { formatTime } from "./NewJobPage";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Entypo } from "@expo/vector-icons";
+import { AuthContext } from "../../AuthContext";
+// TODO: fix UI of jobs
 
-const window = Dimensions.get("window");
-const screen = Dimensions.get("screen");
+
 const today = new Date();
-let todayDay = today.getDate();
-
-const Job = ({job: {job: description, title, jobType, date, startTime, endTime, location, numVolunteers}, id}) => {
-    if (date < todayDay) {
-        return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.row}>
-                <View style={styles.circle}>
-                    <Text style={styles.numberLabel}>{date}</Text>
-                </View>
-                <View style={styles.jobLabel}>
-                    <View style={styles.column}>
-                        <Text style={styles.jobLabelTitle}>{title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{jobType}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{location}</Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-         </SafeAreaView>
-        )
-    }
-    else {
-        return null
-    }
+var activeUser  = {
+  username: '',
+  trustedUsers: [],
 };
+
+function contained(needle, haystack) {
+  var length = haystack.length;
+  for(var i = 0; i < length; i++) {
+      if(haystack[i] == needle)
+          return true;
+  }
+  return false;
+}
+
+const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
+  let startJSONdate = new Date(startDateTime);
+  let endJSONdate = new Date(endDateTime);
+  let startClockTime = formatTime(startJSONdate);
+  let endClockTime = formatTime(endJSONdate);
+  var trusted = false;
+  for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+    if (activeUser.trustedUsers[i] == volunteer) {
+      trusted = true;
+    }
+  }
+
+  // TOOD: check if volunteer is already trusted before displaying the "add" button
+  if (startJSONdate < today & requestor == activeUser.username) {
+      return (
+          <View style={styles.row}>
+              <View style={styles.circle}>
+                  <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+              </View>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+                  <View style={styles.column}>
+                      <Text style={styles.jobLabelTitle}>{title}</Text>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
+                          <View style={styles.typeLabel}>
+                              <Text style={styles.smallText}>{jobType}</Text>
+                          </View>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{location}</Text>
+                      </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>{volunteer}</Text>
+                          { trusted ?  (
+                            <Text></Text>
+                          ) : (
+                            <Entypo 
+                            name="add-user"
+                            size={32}
+                            color="#264653"
+                            onPress={
+                              () => db.ref('/users').orderByChild("username").equalTo(requestor).on("child_added", function(snapshot) {
+                                var temp = snapshot.child("trustedUsers").val()
+                                temp.push(volunteer)
+                                snapshot.ref.child("trustedUsers").update(temp)
+                            })} 
+                            />  
+                          )}
+                      </View>
+                  </View>
+              </View>
+          </View>
+      )
+  }
+  else {
+      return null
+  }
+};
+
 
 
 export default class PastPosts extends Component {
 
+  static contextType = AuthContext;
+
     constructor() {
         super();
         this.ref = db.ref('/jobs');
+        this.userRef = db.ref('/users');
         this.state = {
          jobs: sortBy(this.ref, 'date'),
+         allUsers: sortBy(this.userRef, 'username'),
         };
+        this.addTrustedVolunteer = this.addTrustedVolunteer.bind(this);
+        this.getTrustedVoluntneers = this.getTrustedVoluntneers.bind(this);
+        this.getActiveUser = this.getActiveUser.bind(this);
       }
+
+    static contextType = AuthContext;
 
     componentDidMount() {
         db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
@@ -59,13 +112,55 @@ export default class PastPosts extends Component {
             jobs: sortBy(jobItems, 'date'),
             });
         });
+        db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+          let data = querySnapShot.val() ? querySnapShot.val() : {};
+          let userItems = {...data};
+          this.setState({
+              allUsers: sortBy(userItems, 'username'),
+          });
+      }); 
+    }
+
+    getActiveUser(userKeys) {
+      let value = this.context;
+      for (var i = 0; i < userKeys.length; i++) {
+        var curr = this.state.allUsers[userKeys[i]];
+        if (curr.username == value["username"]) {
+          activeUser.username = curr.username;
+          activeUser.trustedUsers = curr.trustedUsers;
+        }
+      }
+    }
+
+    getTrustedVoluntneers() {
+      db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+        let data = querySnapShot.val()["trustedUsers"];
+        let userItems = {...data};
+        activeUser.trustedUsers = userItems;
+      });
+    }
+     
+
+    addTrustedVolunteer(username) {
+      var activeUserRef = db.ref('/users').orderByChild('username').equalTo(this.context["username"]).ref;
+      var trustedVolunteers = [];
+      activeUserRef.on("value", function(snap) {
+        trustedVolunteers = snap.val()["trustedUsers"];
+      });
+      trustedVolunteers.push(username);
+      activeUserRef.update({
+        trustedUsers: trustedVolunteers,
+      });
+      activeUser.trustedUsers = trustedVolunteers;
     }
 
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
+        this.getActiveUser(Object.keys(this.state.allUsers));
         return (
+          <SafeAreaView style={styles.safeContainer}>
             <ScrollView style={styles.scrollView}>
-            <View>
+            <View style={styles.container}>
               {jobsKeys.length > 0 ? (
                 jobsKeys.map(key => (
                   <Job
@@ -79,50 +174,24 @@ export default class PastPosts extends Component {
               )}
             </View>
             </ScrollView>
+          </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     alignItems: "center",
     padding: 5,
     justifyContent: "center",
   },
-  dropdown_container: {
-    flex: 1,
-  },
     scrollView: {
       marginHorizontal: 20,
-    },
-  dropdown: {
-    height: 50,
-    width: screen.width/2,
-    marginVertical: 10,
-  },
-  title_container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 30,
-    marginVertical: 20,
-    width: screen.width/2,
-  },
-  graph_container: {
-    flex: 6, 
-    width: screen.width/2,
-  },
-  scrollView: {
-      marginHorizontal: 20,
-    },
-    headingOne: {
-      fontSize: 30,
-      padding: 10
     },
     numberLabel: {
       fontSize: 30,
@@ -139,7 +208,6 @@ const styles = StyleSheet.create({
     },
     jobLabel: {
       width: 270,
-      height: 100,
       borderRadius: 10,
       backgroundColor: "#EEEEEE",
       padding: 10
@@ -167,11 +235,11 @@ const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      padding: 3
+      padding: 2
     },
     column: {
       flexDirection: 'column',
       flexWrap: 'wrap',
-      padding: 5
+      padding: 10
     },
 });
