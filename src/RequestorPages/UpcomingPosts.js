@@ -5,7 +5,6 @@ import { sortBy } from 'lodash';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { formatTime } from "./NewJobPage";
 import {AuthContext} from "../../AuthContext.js";
-// TODO: fix UI of jobs
 
 const screen = Dimensions.get("screen");
 

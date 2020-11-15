@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, TextInput, Text, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, Text } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import userTypes from "../Users/userType"
@@ -241,8 +241,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 2,
-    //alignContent: 'center',
-    //alignItems: 'center'
   },
   column: {
     flexDirection: 'column',

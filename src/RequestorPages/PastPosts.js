@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, ScrollView, View, Text } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import { formatTime } from "./NewJobPage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../../AuthContext";
-// TODO: fix UI of jobs
-
 
 const today = new Date();
 var activeUser  = {
@@ -15,14 +13,6 @@ var activeUser  = {
   trustedUsers: [],
 };
 
-function contained(needle, haystack) {
-  var length = haystack.length;
-  for(var i = 0; i < length; i++) {
-      if(haystack[i] == needle)
-          return true;
-  }
-  return false;
-}
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
@@ -36,7 +26,6 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
     }
   }
 
-  // TOOD: check if volunteer is already trusted before displaying the "add" button
   if (startJSONdate < today & requestor == activeUser.username) {
       return (
           <View style={styles.row}>
