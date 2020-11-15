@@ -35,9 +35,6 @@ class JobBoard extends Component {
         db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
-            var key = Object.keys(querySnapShot.val())[0];
-            //console.log('key: ', key);
-            //console.log('data: ', data);
             this.setState({
               jobs: jobItems,
             });
@@ -298,15 +295,12 @@ class JobBoard extends Component {
     render () {
         this.getActiveUser(Object.keys(this.state.allUsers));
         var keys = Object.keys(this.state.jobs);
-        //console.log('number of jobs: ', this.state.jobs.length)
         return (
             <SafeAreaView style={styles.container}>
                 <Header
                     backgroundColor="#2A9D8F"
                     centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 35}}}
                 />
-                <Text>active user: {activeUser.username}</Text>
-                <Text>trusted users: {activeUser.trustedUsers}</Text>
                 <View style={styles.topRow}>
                     <Text style={styles.headingOne}>Job Type</Text>
                     <Picker
