@@ -19,6 +19,7 @@ class JobBoard extends Component {
     constructor () {
         super();
         this.ref = db.ref('/jobs');
+        this.userRef = db.ref('/users');
         this.state = {
             refresh: false,
             selectedType: "All Jobs",
