@@ -39,6 +39,13 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                         </View>         
                     </View>
                 </View>
+                <TouchableOpacity onPress={() => db.ref('/users').orderByChild("title").equalTo(title)
+                  .on("child_added", function(snapshot) {
+                    snapshot.ref.remove();
+                  })
+                }>
+                  <Text>delete job post</Text>
+                </TouchableOpacity>
             </View>
         )
     }
