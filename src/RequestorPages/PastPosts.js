@@ -89,8 +89,6 @@ export default class PastPosts extends Component {
         this.getActiveUser = this.getActiveUser.bind(this);
       }
 
-    static contextType = AuthContext;
-
     componentDidMount() {
         db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
