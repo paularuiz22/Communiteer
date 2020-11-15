@@ -3,6 +3,9 @@ import { Header } from 'react-native-elements';
 import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import { db } from "../../config";
+import { sortBy } from "lodash";
+import { formatTime } from "../RequestorPages/NewJobPage";
+import { Ionicons } from "@expo/vector-icons"
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -15,7 +18,7 @@ class JobBoard extends Component {
             refresh: false,
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
-            jobs: [],
+            jobs: sortBy(this.ref, 'title'),
         };
     }
 
@@ -24,7 +27,7 @@ class JobBoard extends Component {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
             this.setState({
-              jobs: jobItems,
+              jobs: sortBy(jobItems, 'title'),
             });
         });
     }
@@ -72,7 +75,6 @@ class JobBoard extends Component {
         if (monthNames[startJSONdate.getMonth()] == props.month
             && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
             && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors")) { // TODO: || (props.requestor == "Only Trusted Requestors" && (props.dataPoint.requestor == "Clara" || props.dataPoint.requestor == "Paula")))) {
-            
 
             return (
                 <View style={styles.row}>
@@ -84,11 +86,21 @@ class JobBoard extends Component {
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
                             <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{props.dataPoint.type}</Text>
+                                <Text style={styles.smallText}>{props.dataPoint.jobType }</Text>
                             </View>
-                            <Text style={styles.mediumText}>{props.dataPoint.location}</Text>
+                            <Text style={styles.mediumText, {marginLeft: 2}}>{props.dataPoint.location}</Text>
+                        </View>
+                        <View>
+                            <Text>Requestor: {props.dataPoint.requestor}</Text>
                         </View>
                     </TouchableOpacity>
+                    <View style={styles.column}>
+                        <Ionicons
+                            name="md-add"
+                            color="#264653"
+                            size={40}
+                        />
+                    </View>
                 </View>
             );
         }
@@ -102,7 +114,7 @@ class JobBoard extends Component {
             <ScrollView style={styles.scrollView}>
                 <Text style={styles.headingOne}>January</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -113,7 +125,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>February</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -124,7 +136,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>March</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -135,7 +147,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>April</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -146,7 +158,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>May</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -157,7 +169,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>June</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -168,7 +180,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>July</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -179,7 +191,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>August</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -190,7 +202,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>September</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -201,7 +213,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>October</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -212,7 +224,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>November</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -223,7 +235,7 @@ class JobBoard extends Component {
                 />
                 <Text style={styles.headingOne}>December</Text>
                 <FlatList
-                    data={state.data}
+                    data={state.jobs}
                     width='100%'
                     extraData={state.refresh}
                     keyExtractor={(item) => item.key}
@@ -237,6 +249,10 @@ class JobBoard extends Component {
     }
 
     render () {
+        console.log('jobs length in job board', this.state.jobs.length);
+        let jobsKeys = Object.keys(this.state.jobs);
+        
+        console.log(this.state.jobs[jobsKeys[0]]);
         return (
             <SafeAreaView style={styles.container}>
                 <Header
@@ -244,7 +260,6 @@ class JobBoard extends Component {
                     centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 35}}}
                 />
                 <View style={styles.topRow}>
-                <Text>{this.state.jobs.length}</Text>
                     <Text style={styles.headingOne}>Job Type</Text>
                     <Picker
                         selectedValue={this.state.selectedType}
@@ -314,7 +329,6 @@ const styles = StyleSheet.create({
   },
   jobLabel: {
     width: 270,
-    height: 100,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
     padding: 10
@@ -358,7 +372,14 @@ const styles = StyleSheet.create({
   },
   filler: {
     height: 0,
-  }
+  },
+  column: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    padding: 10,
+    alignContent: 'center',
+    textAlignVertical: 'center',
+  },
 });
 
 export default JobBoard;
