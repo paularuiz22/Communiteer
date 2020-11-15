@@ -75,48 +75,10 @@ class TrustedVolunteers extends Component {
         }); 
     }
 
-    cloneVolunteers() {
-        return [...this.state.allUsers];
-    }
-
-    // TODO: finish implementing removal of trusted
-    async removeVolunteer(i) {
-        try {
-            const volunteers = this.cloneVolunteers();
-            volunteers.splice(i, 1);
-            this.setState({allUsers: volunteers});
-            var activeUserRef = db.ref('/users').orderByChild('username').equalTo(activeUser.username).ref;
-            activeUserRef.set({
-              trustedUsers: volunteers
-            });
-        }
-        catch(e) {
-        }
-    }
-
     updateTextInput = (text, field) => {
       const state = this.state
       state[field] = text;
       this.setState(state);
-    }
-
-    // TODO: integrate backend into implementation to add trusted volunteer
-    async addVolunteer() {
-        if (this.state.createVolunteer.length <= 0)
-            return;
-        try {
-            const volunteers = activeUser.trustedUsers;
-            volunteers.push(this.state.createVolunteer);
-            var activeUserRef = db.ref('/users').orderByChild('username').equalTo(activeUser.username).ref;
-            activeUserRef.push({
-              trustedUsers: volunteers
-            });
-            this.setState({
-              createVolunteer: ''
-            });
-        }
-        catch (e) {
-        }
     }
 
     getActiveUser(userKeys) {
@@ -151,28 +113,6 @@ class TrustedVolunteers extends Component {
                   )}
                   </View>
                 </ScrollView>
-                {/*
-                <KeyboardAvoidingView
-                    style={styles.footer}
-                    behavior="position"
-                    enabled={true}
-                >
-                    <View style={styles.footerInner}>
-                        <TouchableOpacity
-                            style={styles.btn}
-                            onPress={() => this.addVolunteer()}
-                        >
-                            <Text style={styles.btnText}>+</Text>
-                        </TouchableOpacity>
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder={'Add Trusted Volunteer'}
-                            placeholderTextColor={'rgba(255, 255, 255, .7)'}
-                            onChangeText={(volunteer) => this.updateTextInput(volunteer, 'createVolunteer')}
-                            value={this.state.createVolunteer}
-                        />
-                    </View>
-                </KeyboardAvoidingView>*/}
             </SafeAreaView>
         );
     }
