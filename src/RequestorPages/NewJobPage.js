@@ -57,6 +57,7 @@ export default class NewJobPage extends Component {
             numVolunteers: this.state.numVolunteers,
             onlyForTrusted: this.state.onlyForTrusted,
             requestor: this.context["username"],
+            volunteer: "",
         }).then(() => {
             this.setState({
                 title: '',
