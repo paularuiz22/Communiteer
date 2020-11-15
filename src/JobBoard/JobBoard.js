@@ -158,23 +158,30 @@ class JobBoard extends Component {
       };
     
       renderHeader = (section, _, isActive) => {
+        let startJSONdate = new Date(section.startDateTime);
+        let endJSONdate = new Date(section.endDateTime);
+        let startClockTime = formatTime(startJSONdate);
+        let endClockTime = formatTime(endJSONdate);
+        // if (section.volunteer == "") {
+            
+        // }
         return (
           <Animatable.View
             duration={400}
             style={[styles.header, isActive ? styles.active : styles.inactive]}
             transition="backgroundColor"
           >
-            <Text style={styles.headerText}>{section.month}</Text>
+            <Text style={styles.headerText}>{monthNames[startJSONdate.getMonth()]}</Text>
             <View style={styles.row}>
                     <View style={styles.circle}>
-                        <Text style={styles.numberLabel}>{section.day}</Text>
+                        <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                     </View>
                     <TouchableOpacity style={styles.jobLabel}>
                         <Text style={styles.jobLabelTitle}>{section.title}</Text>
                         <View style={styles.row}>
-                            <Text style={styles.mediumText}>{section.time}</Text>
+                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
                             <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{section.type}</Text>
+                                <Text style={styles.smallText}>{section.jobType}</Text>
                             </View>
                             <Text style={styles.mediumText}>{section.location}</Text>
                         </View>
@@ -193,11 +200,20 @@ class JobBoard extends Component {
             transition="backgroundColor"
           >
             <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
-              {section.expand}
+              {section.description}
             </Animatable.Text>
-            <TouchableOpacity style={styles.loginBtn}>
-            <Text style={{color: "white"}}> Request Opportunity </Text>
-          </TouchableOpacity>
+            <TouchableOpacity 
+                style={styles.loginBtn} 
+                onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(section.title).on('child_added', function(snapshot) {
+                        var temp = snapshot.child("volunteer").val();
+                        console.log(temp);
+                        snapshot.ref.update({
+                            volunteer: activeUser.username
+                        });
+                    })
+                            }>
+                <Text style={{color: "white"}}> Request Opportunity </Text>
+            </TouchableOpacity>
           </Animatable.View>
         );
       }
@@ -457,7 +473,8 @@ class JobBoard extends Component {
                 <ScrollView>
                     <Accordion
                             activeSections={activeSections}
-                            sections={data}
+                            sections={Object.values(this.state.jobs)}
+                            // sections={data}
                             touchableComponent={TouchableOpacity}
                             expandMultiple={multipleSelect}
                             renderHeader={this.renderHeader}
