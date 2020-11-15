@@ -4,7 +4,8 @@ const jobTypes = {
     HOUSEWORK: 'house work',
     SHOPPING: 'shopping',
     ORGANIZING: 'organizing',
-    TECHNOLOGY: 'technology support'
+    TECHNOLOGY: 'technology support',
+    OTHER: 'other'
 }
 
 export default jobTypes;

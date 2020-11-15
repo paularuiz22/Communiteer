@@ -1,32 +1,42 @@
-import React, { useState, Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert, TouchableOpacity, TextInput } from "react-native";
+import React, { Component } from "react";
+import { Dimensions, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
 import {Picker} from "@react-native-community/picker";
-import { db } from '../Stats/BackendTest';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { db } from '../../config';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+//import ToggleSwitch from 'toggle-switch-react-native';
+import jobTypes from "../../jobTypes";
+import { AuthContext } from "../../AuthContext";
 
-
-const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-class NewJobPage extends Component {
-
+var now = new Date();
+var plusOneHour = new Date();
+plusOneHour.setHours(now.getHours() + 1);
+export default class NewJobPage extends Component {
   constructor() {
     super();
     this.ref = db.ref('/jobs');
     this.state = {
       title: '',
       description: '',
-      jobType: '',
-      date: '',
-      startTime: '',
-      endTime: '',
+      jobType: jobTypes.OTHER,
+      startDateTime: now,
+      endDateTime: plusOneHour,
       location: '',
       numVolunteers: '',
+      isStartDateTimePickerVisible: false,
+      isEndDateTimePickerVisible: false,
+      startDateTimeLabel: 'Select Start Date/Time',
+      endDateTimeLabel: 'Select End Date/Time',
+      onlyForTrusted: false,
     };
       this.updateTextInput = this.updateTextInput.bind(this);
       this.saveJob = this.saveJob.bind(this);
   }
+
+  static contextType = AuthContext;
 
 
     updateTextInput = (text, field) => {
@@ -36,6 +46,7 @@ class NewJobPage extends Component {
     }
 
     saveJob() {
+        // TODO: verify the input fields (that they're not empty, time is formatted correctly, etc) before pushing
         this.ref.push({
             title: this.state.title,
             jobType: this.state.jobType,
@@ -45,16 +56,22 @@ class NewJobPage extends Component {
             endTime: this.state.endTime,
             location: this.state.location,
             numVolunteers: this.state.numVolunteers,
-        }).then((docRef) => {
+            onlyForTrusted: this.state.onlyForTrusted,
+            requestor: this.context["username"],
+        }).then(() => {
             this.setState({
                 title: '',
                 description: '',
-                date: '',
-                startTime: '',
-                endTime: '',
+                startDateTime: now,
+                endDateTime: plusOneHour,
                 location: '',
                 about: '',
                 numVolunteers: '',
+                isStartDateTimePickerVisible: false,
+                isEndDateTimePickerVisible: false,
+                startDateTimeLabel: 'Select Start Date/Time',
+                endDateTimeLabel: 'Select End Date/Time',
+                onlyForTrusted: false,
             });
             this.props.navigation.goBack();
         }).catch((error) => {
@@ -66,19 +83,41 @@ class NewJobPage extends Component {
       this.setState({ jobType: jobType })
    }
 
+    showStartDateTimePicker = () => {
+        this.setState({ isStartDateTimePickerVisible: true});
+    };
+    hideStartDateTimePicker = () => {
+        this.setState({ isStartDateTimePickerVisible: false});
+    };
+    handleStartDatePicked = (date) => {
+        console.log('A start date has been picked: ', date);
+        let formattedDate = formatDate(date);
+        console.log('formatted date: ', formattedDate);
+        this.setState({ startDateTimeLabel: formattedDate});
+        this.setState({ startDateTime: date.toString() });
+        this.hideStartDateTimePicker();
+    }
 
-   showDatePicker = () => {
-        dateVisible = true;
-     };
 
-   hideDatePicker = () => {
-        dateVisible = false;
-   };
+
+    showEndDateTimePicker = () => {
+        this.setState({ isEndDateTimePickerVisible: true });
+    };
+    hideEndDateTimePicker = () => {
+        this.setState({ isEndDateTimePickerVisible: false });
+    };
+    handleEndDatePicked = (date) => {
+        console.log('An end date has been picked: ', date);
+        let formattedDate = formatDate(date);
+        this.setState({ endDateTimeLabel: formattedDate});
+        this.setState({ endDateTime: date.toString()});
+        this.hideEndDateTimePicker();
+    }
 
     render () {
        var dateVisible = false;
         return (
-            <SafeAreaView style={styles.container}>
+            <KeyboardAvoidingView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Job Type</Text>
@@ -87,13 +126,10 @@ class NewJobPage extends Component {
                             style={styles.picker}
                             onValueChange={this.updateJobType}
                         >
-                            <Picker.Item label="All Jobs" value="alljobs"/>
-                            <Picker.Item label="Beautification" value="beautification"/>
-                            <Picker.Item label="Children" value="children"/>
-                            <Picker.Item label="House Chores" value="housechores"/>
-                            <Picker.Item label="Pet Care" value="petcare"/>
-                            <Picker.Item label="Shopping" value="shopping"/>
-                            <Picker.Item label="Tutoring" value="tutoring"/>
+                            {Object.keys(jobTypes).map((key) => {
+                                return (<Picker.Item label={jobTypes[key]} value={key} key={key}/>);
+                            })}
+
                         </Picker>
                     </View>
                     <View style={styles.row}>
@@ -105,43 +141,51 @@ class NewJobPage extends Component {
                         />
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.headingOne}>Date</Text>
-                      <TextInput
-                              style={styles.input}
-                              onChangeText={(text) => this.updateTextInput(text, 'date')}
-                              value={this.state.date}
-                        />
+                        <Text style={styles.headingOne}>About</Text>
+                        <View style ={{ flex: 1}}>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => this.updateTextInput(text, 'description')}
+                                value={this.state.description}
+                            />
+                        </View>
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.headingOne}>Start Time</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'startTime')}
-                            value={this.state.startTime}
-                        />
+                        <Text style={styles.headingOne}>Start Date/Time</Text>
+                        <View>
+                            <Button onPress={this.showStartDateTimePicker} title = {this.state.startDateTimeLabel} />
+                        </View>
+                        {this.state.isStartDateTimePickerVisible && (
+                            <DateTimePickerModal
+                                isVisible={true}
+                                mode={'datetime'}
+                                onConfirm={this.handleStartDatePicked}
+                                onCancel={this.hideStartDateTimePicker}
+                                style={{alignContent: 'center', alignItems: 'center'}}
+                            />
+                        )}
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.headingOne}>End Time</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'endTime')}
-                            value={this.state.endTime}
-                        />
+                        <Text style={styles.headingOne}>End Date/Time</Text>
+                        <View>
+                            <Button onPress={this.showEndDateTimePicker} title = {this.state.endDateTimeLabel} />
+                        </View>
+                        {this.state.isEndDateTimePickerVisible && (
+                            <DateTimePickerModal
+                                isVisible={true}
+                                mode={'datetime'}
+                                onConfirm={this.handleEndDatePicked}
+                                onCancel={this.hideEndDateTimePicker}
+                            />
+                        )}
                     </View>
+
                     <View style={styles.row}>
                         <Text style={styles.headingOne}>Location</Text>
                         <TextInput
                             style={styles.input}
                             onChangeText={(text) => this.updateTextInput(text, 'location')}
                             value={this.state.location}
-                        />
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.headingOne}>About</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.updateTextInput(text, 'description')}
-                            value={this.state.description}
                         />
                     </View>
                     <View style={styles.row}>
@@ -152,14 +196,27 @@ class NewJobPage extends Component {
                             value={this.state.numVolunteers}
                         />
                     </View>
+                    <View style={styles.row}>
+                        <Text style={styles.smallerHeading}>Only show to trusted volunteers?</Text>
+                        <Switch
+                            trackColor={{ false: '#D3D3D9', true: "#264653" }}
+                            thumbColor={this.state.onlyForTrusted ? "#f5dd4b" : "#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            value={this.state.onlyForTrusted}
+                            label="Only show to trusted volunteers?"
+                            labelStyle={{color: "black", fontWeight: "4"}}
+                            size="large"
+                            onValueChange={value => this.setState({ onlyForTrusted: value})}
+                        />
+                    </View>
                     <TouchableOpacity style={styles.saveBtn}>
                         <Button
                             title="SAVE"
-                            color="#264653"
+                            color="white"
                             onPress={() => this.saveJob()} />
                     </TouchableOpacity>
                 </ScrollView>
-            </SafeAreaView>
+            </KeyboardAvoidingView>
         );
      }
 }
@@ -169,14 +226,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: 'column',
+    flexWrap: 'wrap'
   },
   headingOne: {
     fontSize: 24,
-    padding: 10
+    padding: 8
+  },
+  smallerHeading: {
+      fontSize: 18,
+      padding: 8,
   },
   scrollView: {
-      marginHorizontal: 20,
-      marginTop: 20
+    margin: 10,
+    alignSelf: 'center',
   },
   dropdown_container: {
     flex: 1,
@@ -209,16 +272,16 @@ const styles = StyleSheet.create({
     height:50,
     alignItems:"center",
     justifyContent:"center",
-    marginTop:30,
+    alignSelf: 'center',
+    marginTop:15,
     marginBottom:10
   },
   row: {
-    width: 500,
+    //width: '90%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
-    alignItems:"center",
-    justifyContent:"center",
+    padding: 2,
+    justifyContent:"flex-start",
   },
   picker: {
     height: 150,
@@ -228,13 +291,26 @@ const styles = StyleSheet.create({
   },
   input: {
      height: 40,
-     width: "60%",
+     //width: "50%",
      backgroundColor:"#D3D3D3",
      borderRadius: 10,
      borderColor: '#D3D3D3',
      borderWidth: 1,
      alignItems:"center",
      justifyContent:"center",
+     flex: 1
   }
 });
-export default NewJobPage;
+export const formatDate = (date) => {
+    let time = date.getHours() % 12;
+    let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
+    let formattedDate = weekDayNames[date.getDay()] + ', ' + monthNames[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' at ' + time.toString() + ':' + date.getMinutes().toString() + timeLabel;
+    return formattedDate;
+}
+
+export const formatTime = (date) => {
+    let time = date.getHours() % 12;
+    let timeLabel = date.getHours() < 12 ? 'am' : 'pm';
+    let formattedTime = time.toString() + ':' + date.getMinutes().toString() + timeLabel;
+    return formattedTime;
+}

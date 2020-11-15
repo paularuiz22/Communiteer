@@ -5,7 +5,6 @@ import Constants from 'expo-constants';
 import * as Animatable from 'react-native-animatable';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
-import StarRating from 'react-native-star-rating';
 
 const data= [
     {
@@ -17,7 +16,6 @@ const data= [
         type: "Shopping",
         location: "Woodstock, GA",
         expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))",
-        starRating: 3,
     },
     {
         requestor: "Charlie",
@@ -28,7 +26,6 @@ const data= [
         type: "Pet Care",
         location: "Downtown Atlanta, GA",
         expand: "Hey so like I have a dog and I need some help walking it.. thanks", 
-        starRating: 3,
     },
     {
         requestor: "Paula",
@@ -39,7 +36,6 @@ const data= [
         type: "House Chores",
         location: "Vinings, GA",
         expand: "Vacuum goes BRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
-        starRating: 3,
     },
     {
         requestor: "Bob",
@@ -50,7 +46,6 @@ const data= [
         type: "House Chores",
         location: "Buckhead, GA",
         expand: "80 PERCENT OF THE EARTH'S ORIGINAL FORESTS HAVE BEEN CLEARED OR DESTROYED. NUTRITION DOESN'T FACTOR INTO THE CROPS WE DO MASS PRODUCE. THE EARTH HAS MORE THAN 80,000 SPECIES OF EDIBLE PLANTS. 90 PERCENT OF THE FOODS HUMANS EAT COME FROM JUST 30 PLANTS. .70,000 PLANT SPECIES ARE UTILIZED FOR MEDICINE.",
-        starRating: 3,
     },
     {
         requestor: "Clara",
@@ -61,7 +56,6 @@ const data= [
         type: "House Chores",
         location: "Buckhead, GA",
         expand: "its SPOOOOoooooooOOOOOoooooOOOoooOOOOOOky season ",
-        starRating: 3,
     }
 ];
     
@@ -75,13 +69,7 @@ class PastJobs extends Component {
             activeSections: [],
             collapsed: true,
             multipleSelect: false,
-            starCount: 3
         };
-    }
-    onStarRatingPress(rating) {
-      this.setState({
-        starCount: rating
-      });
     }
     toggleExpanded = () => {
         this.setState({ collapsed: !this.state.collapsed });
@@ -100,13 +88,16 @@ class PastJobs extends Component {
             style={[styles.header, isActive ? styles.active : styles.inactive]}
             transition="backgroundColor"
           >
-            <View style={styles.row}>
-            <Text style={styles.headerText}>{section.month}</Text>
-            <Text style={styles.headerText}>{section.day}</Text>
-            </View>
-            <View style={styles.row}>
-            <Text style={styles.mediumText}>{section.location}</Text>
-            <Text style={styles.mediumText}>{section.requestor}</Text>
+            <View style={styles.box}>
+              <View style={styles.row}>
+              <Text style={styles.mediumText}>{section.month}</Text>
+              <Text style={styles.mediumText}>{section.day}</Text>
+              </View>
+              <View style={styles.row}>
+              <Text style={styles.mediumText}>{section.title}</Text>
+              <Text style={styles.mediumText}> with </Text>
+              <Text style={styles.mediumText}>{section.requestor}</Text>
+              </View>
             </View>
             
           </Animatable.View>
@@ -120,9 +111,9 @@ class PastJobs extends Component {
             style={[styles.content, isActive ? styles.active : styles.inactive]}
             transition="backgroundColor"
           >
-            <Text>
-              Review: 
-            </Text>
+            <View style={styles.row}>
+            <Text style={styles.smallText}>Review: </Text>
+            </View>
           </Animatable.View>
         );
       }
@@ -322,19 +313,23 @@ class PastJobs extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.view}>
-                <SectionList
-                    sections={[
-                      {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
-                      {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
-                    ]}
-                    renderItem={({item}) => 
-                      // <Text style={styles.item}>{item}</Text>
-                      { this.renderAccordians() }
-                    }
-                    renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
-                    keyExtractor={(item, index) => index}
-                  />
-                <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
+                    <Text style={styles.headingOne}>Past</Text>
+                    <Picker
+                        selectedValue={this.state.selectedRequestor}
+                        style={styles.pickerStyle}
+                        itemStyle={{height: 44}}
+                        onValueChange={(value) => {
+                            this.setState({ selectedRequestor: value});
+                            this.setState({ refresh: !this.state.refresh });
+                        }}
+                    >
+                        <Picker.Item label="1 week ago" value="1 week ago"/>
+                        <Picker.Item label="1 month ago" value="1 month ago" />
+                        <Picker.Item label="1 year ago" value="1 year ago" />
+                        <Picker.Item label="All time" value="All Time" />
+                    </Picker>
+                </View>
+                <ScrollView>
                     <Accordion
                         activeSections={activeSections}
                         sections={data}
@@ -346,7 +341,6 @@ class PastJobs extends Component {
                         onChange={this.setSections}
                     />
                     </ScrollView>
-                </View>
                 {/* <this.ItemList 
                     state={this.state} 
                     flatListItemSeparator={this.FlatListItemSeparator} 
@@ -424,6 +418,9 @@ const styles = StyleSheet.create({
   mediumText: {
     fontSize: 18,
   },
+  smallText: {
+    fontSize: 12,
+  },
   topRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -443,6 +440,9 @@ const styles = StyleSheet.create({
   },
   filler: {
     height: 0,
+  },
+  box: {
+    marginTop:20
   }
 });
 
