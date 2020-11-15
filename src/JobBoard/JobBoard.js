@@ -114,7 +114,6 @@ class JobBoard extends Component {
                         <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                     </View>
                     <TouchableOpacity style={styles.jobLabel}>
-                        <Text>key: {props.key}</Text>
                         <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
