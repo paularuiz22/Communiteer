@@ -5,6 +5,7 @@ import { sortBy } from 'lodash';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { formatTime } from "./NewJobPage";
 import {AuthContext} from "../../AuthContext.js";
+import { Entypo } from "@expo/vector-icons";
 // TODO: fix UI of jobs
 
 const screen = Dimensions.get("screen");
@@ -39,13 +40,19 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                         </View>         
                     </View>
                 </View>
-                <TouchableOpacity onPress={() => db.ref('/users').orderByChild("title").equalTo(title)
+                <View style={styles.column}>
+                  <Entypo 
+                    name="trash"
+                    color="#264653"
+                    size={40}
+                    style={styles.volunteer} 
+                    onPress={() => db.ref('/jobs').orderByChild("title").equalTo(title)
                   .on("child_added", function(snapshot) {
                     snapshot.ref.remove();
                   })
-                }>
-                  <Text>delete job post</Text>
-                </TouchableOpacity>
+                    }>
+                  </Entypo>
+              </View>
             </View>
         )
     }
