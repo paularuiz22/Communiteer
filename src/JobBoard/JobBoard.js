@@ -15,71 +15,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June", "Jul
 var activeUser  = {
     username: '',
     trustedUsers: [],
-  };
-  
-
-const data= [
-    {
-        requestor: "Clara",
-        month: "January",
-        day: 27,
-        title: "Pick-up Groceries",
-        time: "4pm - 5pm",
-        type: "Shopping",
-        location: "Woodstock, GA",
-        expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))"
-    },
-    {
-        requestor: "Clara",
-        month: "January",
-        day: 28,
-        title: "Pick-up Groceries",
-        time: "4pm - 5pm",
-        type: "Shopping",
-        location: "Woodstock, GA",
-        expand: "Help me pick up some Groceries! I hope you have some reusable bag because we are heading over to Trader Joes! I'll let you pick out a frozen food for yourself as a tip/thank you :)))"
-    },
-    {
-        requestor: "Charlie",
-        month: "February",
-        day: 30,
-        title: "Walk Dog",
-        time: "3pm - 3:30pm",
-        type: "Pet Care",
-        location: "Downtown Atlanta, GA",
-        expand: "Hey so like I have a dog and I need some help walking it.. thanks"
-    },
-    {
-        requestor: "Paula",
-        month: "August",
-        day: 1,
-        title: "Vacuum Main Floor",
-        time: "2pm - 4pm",
-        type: "House Chores",
-        location: "Vinings, GA",
-        expand: "Vacuum goes BRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
-    },
-    {
-        requestor: "Bob",
-        month: "September",
-        day: 2,
-        title: "Water Patio Plants",
-        time: "9am - 9:30am",
-        type: "House Chores",
-        location: "Buckhead, GA",
-        expand: "80 PERCENT OF THE EARTH'S ORIGINAL FORESTS HAVE BEEN CLEARED OR DESTROYED. NUTRITION DOESN'T FACTOR INTO THE CROPS WE DO MASS PRODUCE. THE EARTH HAS MORE THAN 80,000 SPECIES OF EDIBLE PLANTS. 90 PERCENT OF THE FOODS HUMANS EAT COME FROM JUST 30 PLANTS. .70,000 PLANT SPECIES ARE UTILIZED FOR MEDICINE."
-    },
-    {
-        requestor: "Clara",
-        month: "September",
-        day: 3,
-        title: "Decorate for Halloween",
-        time: "10am - 12am",
-        type: "House Chores",
-        location: "Buckhead, GA",
-        expand: "its SPOOOOoooooooOOOOOoooooOOOoooOOOOOOky season "
-    }
-];
+};
     
 class JobBoard extends Component {
     constructor () {
@@ -90,7 +26,7 @@ class JobBoard extends Component {
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
             activeSections: [],
-            jobs: sortBy(this.ref, 'title'),
+            jobs: sortBy(this.ref, 'startDateTime'),
             allUsers: sortBy(this.userRef, 'username'),
         };
         this.getActiveUser = this.getActiveUser.bind(this);
@@ -102,8 +38,18 @@ class JobBoard extends Component {
         db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
+            var jobArray = [];
+            Object.keys(jobItems).forEach((key) => {
+                jobArray.push({ ["job"]: jobItems[key]});
+            });
             this.setState({
-              jobs: jobItems,
+                jobs: jobArray.sort(function compare(a, b) {
+                    var jobA = a["job"];
+                    var jobB = b["job"];
+                    var dateA = new Date(jobA.startDateTime);
+                    var dateB = new Date(jobB.startDateTime);
+                    return dateA - dateB;
+                }),
             });
         });
 
@@ -119,11 +65,11 @@ class JobBoard extends Component {
     getActiveUser(userKeys) {
         let value = this.context;
         for (var i = 0; i < userKeys.length; i++) {
-          var curr = this.state.allUsers[userKeys[i]];
-          if (curr.username == value["username"]) {
-            activeUser.username = curr.username;
-            activeUser.trustedUsers = curr.trustedUsers;
-          }
+            var curr = this.state.allUsers[userKeys[i]];
+            if (curr.username == value["username"]) {
+                activeUser.username = curr.username;
+                activeUser.trustedUsers = curr.trustedUsers;
+            }
         }
     }
 
@@ -149,283 +95,83 @@ class JobBoard extends Component {
     }
     toggleExpanded = () => {
         this.setState({ collapsed: !this.state.collapsed });
-      };
+    };
     
-      setSections = sections => {
+    setSections = sections => {
         this.setState({
           activeSections: sections.includes(undefined) ? [] : sections,
         });
-      };
+    };
     
-      renderHeader = (section, _, isActive) => {
-        let startJSONdate = new Date(section.startDateTime);
-        let endJSONdate = new Date(section.endDateTime);
-        let startClockTime = formatTime(startJSONdate);
-        let endClockTime = formatTime(endJSONdate);
-        // if (section.volunteer == "") {
-            
-        // }
-        return (
-          <Animatable.View
-            duration={400}
-            style={[styles.header, isActive ? styles.active : styles.inactive]}
-            transition="backgroundColor"
-          >
-            <Text style={styles.headerText}>{monthNames[startJSONdate.getMonth()]}</Text>
-            <View style={styles.row}>
-                    <View style={styles.circle}>
-                        <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
-                    </View>
-                    <TouchableOpacity style={styles.jobLabel}>
-                        <Text style={styles.jobLabelTitle}>{section.title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{section.jobType}</Text>
-                            </View>
-                            <Text style={styles.mediumText}>{section.location}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            
-          </Animatable.View>
-        );
-      };
-    
-      renderContent(section, _, isActive) {
-        return (
-          <Animatable.View
-            duration={400}
-            style={[styles.content, isActive ? styles.active : styles.inactive]}
-            transition="backgroundColor"
-          >
-            <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
-              {section.description}
-            </Animatable.Text>
-            <TouchableOpacity 
-                style={styles.loginBtn} 
-                onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(section.title).on('child_added', function(snapshot) {
-                        var temp = snapshot.child("volunteer").val();
-                        console.log(temp);
-                        snapshot.ref.update({
-                            volunteer: activeUser.username
-                        });
-                    })
-                            }>
-                <Text style={{color: "white"}}> Request Opportunity </Text>
-            </TouchableOpacity>
-          </Animatable.View>
-        );
-      }
+    renderHeader = (section, _, isActive) => {
+        var currentJob = section["job"];
+        if (currentJob != null)
+        {
+            let startDate = new Date(currentJob["startDateTime"]);
+            let endDate = new Date(currentJob["endDateTime"]);
+            let startTime = formatTime(startDate);
+            let endTime = formatTime(endDate);
 
-    FlatListItemSeparator = () => {
-        return (
-            <View
-                style={{
-                    height: 1,
-                    width: "100%",
-                    backgroundColor: "#607D8B",
-                }}
-            />
-        );
-    }
-
-    JobItem (props) {
-        let startJSONdate = new Date(props.dataPoint.startDateTime);
-        let endJSONdate = new Date(props.dataPoint.endDateTime);
-        let startClockTime = formatTime(startJSONdate);
-        let endClockTime = formatTime(endJSONdate);
-        var trusted = false;
-        for(var i = 0; i < activeUser.trustedUsers.length; i++) {
-          if (activeUser.trustedUsers[i] == props.dataPoint.requestor) {
-            trusted = true;
-          }
-        }
-        if (props.dataPoint.volunteer == "" && monthNames[startJSONdate.getMonth()] == props.month
-            && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
-            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {
+            //console.log("start date", startDate);
+            //console.log("end date", endDate);
+            //console.log("start time", startTime);
+            //console.log("end time", endTime);
 
             return (
-                <View style={styles.row}>
-                    <View style={styles.circle}>
-                        <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
-                    </View>
-                    <TouchableOpacity style={styles.jobLabel}>
-                        <Text style={styles.jobLabelTitle}>{props.dataPoint.title}</Text>
-                        <View style={styles.row}>
-                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{props.dataPoint.jobType }</Text>
+                <Animatable.View
+                    duration={400}
+                    style={[styles.header, isActive ? styles.active : styles.inactive]}
+                    transition="backgroundColor"
+                >
+                    <Text style={styles.headerText}>{monthNames[startDate.getMonth()]}</Text>
+                    <View style={styles.row}>
+                        <View style={styles.circle}>
+                            <Text style={styles.numberLabel}>{startDate.getDate()}</Text>
+                        </View>
+                        <TouchableOpacity style={styles.jobLabel}>
+                            <Text style={styles.jobLabelTitle}>{currentJob.title}</Text>
+                            <View style={styles.row}>
+                                <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
+                                <View style={styles.typeLabel}>
+                                    <Text style={styles.smallText}>{currentJob.jobType}</Text>
+                                </View>
+                                <Text style={styles.mediumText}>{currentJob.location}</Text>
                             </View>
-                            <Text style={styles.mediumText, {marginLeft: 2}}>{props.dataPoint.location}</Text>
-                        </View>
-                        <View>
-                            <Text>Requestor: {props.dataPoint.requestor}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={styles.column}>
-                        <Ionicons
-                            name="md-add"
-                            color="#264653"
-                            size={40}
-                            onPress= {
-                                () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
-                                    var temp = snapshot.child("volunteer").val();
-                                    console.log(temp);
-                                    snapshot.ref.update({
-                                        volunteer: activeUser.username
-                                    });
-                                })
-                            }
-                        />
+                        </TouchableOpacity>
                     </View>
-                </View>
+                </Animatable.View>
             );
         }
-        return <View style={styles.filler}></View>;
-    }
-
-    ItemList (props) {
-        const state = props.state;
-        let jobKeys = Object.keys(state.jobs);
-        let values = Object.values(state.jobs);
-        
-        return (
-            <ScrollView style={styles.scrollView}>
-                <Text style={styles.headingOne}>January</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>February</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>March</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>April</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>May</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>June</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>July</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>August</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>September</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>October</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>November</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>December</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-            </ScrollView>
-        );
+    };
+    
+    renderContent(section, _, isActive) {
+        var currentJob = section["job"];
+        if (currentJob != null)
+        {
+            return (
+                <Animatable.View
+                    duration={400}
+                    style={[styles.content, isActive ? styles.active : styles.inactive]}
+                    transition="backgroundColor"
+                >
+                    <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
+                        {currentJob.description}
+                    </Animatable.Text>
+                    <TouchableOpacity
+                        style={styles.loginBtn}
+                        onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(currentJob.title).on('child_added', function(snapshot) {
+                            var temp = snapshot.child("volunteer").val();
+                            //console.log(temp);
+                            snapshot.ref.update({
+                                volunteer: activeUser.username
+                            });
+                        })
+                    }>
+                        <Text style={{color: "white"}}> Request Opportunity </Text>
+                    </TouchableOpacity>
+                </Animatable.View>
+            );
+        }
     }
 
     render () {
@@ -482,12 +228,8 @@ class JobBoard extends Component {
                             duration={400}
                             onChange={this.setSections}
                         />
-                    </ScrollView>
+                </ScrollView>
                 </View>
-                {/* <this.ItemList 
-                    state={this.state} 
-                    flatListItemSeparator={this.FlatListItemSeparator} 
-                    jobItem={this.JobItem} /> */}
             </SafeAreaView>
         );
     }
