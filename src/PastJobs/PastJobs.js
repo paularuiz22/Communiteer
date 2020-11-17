@@ -130,8 +130,6 @@ class PastJobs extends Component {
     } 
 
     render() {
-        //let jobsKeys = Object.keys(this.state.jobs);
-        const greeting = "welcome to react";
         this.getActiveUser(Object.keys(this.state.allUsers));
       
         return (
