@@ -138,7 +138,7 @@ class AssignedJobs extends Component {
                                     if (startJSONdate > today & currentJob.volunteer == activeUser.username)
                                     {
                                         return (
-                                            <View style={styles.row}>
+                                            <View style={styles.row} key={currentJob.description.toString()}>
                                                 <View style={styles.circle}>
                                                     <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                                                 </View>

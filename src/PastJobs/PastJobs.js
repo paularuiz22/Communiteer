@@ -8,8 +8,6 @@ import { db } from '../../config';
 import { sortBy } from 'lodash';
 import { formatTime } from "../RequestorPages/NewJobPage";
 
-
-
 const today = new Date();
 var activeUser  = {
   username: '',
