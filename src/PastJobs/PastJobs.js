@@ -151,47 +151,47 @@ class PastJobs extends Component {
                                 }
                                 if (startJSONdate < today & currentJob.volunteer == activeUser.username) {
                                     return (
-                                    <View style={styles.container}>
-                                    <View>
-                                        <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
-                                    </View>
-                                    <View style={styles.row} key={currentJob.description.toString()}>
-                                        <View style={styles.circle}>
-                                            <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+                                    <View style={styles.container} key={currentJob.description.toString()}>
+                                        <View>
+                                            <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
                                         </View>
-                                        <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
-                                            <View style={styles.column}>
-                                                <Text style={styles.jobLabelTitle}>{currentJob.title}</Text>
-                                                <View style={styles.row}>
-                                                    <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
-                                                    <View style={styles.typeLabel}>
-                                                        <Text style={styles.smallText}>{currentJob.jobType}</Text>
+                                        <View style={styles.row}>
+                                            <View style={styles.circle}>
+                                                <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+                                            </View>
+                                            <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+                                                <View style={styles.column}>
+                                                    <Text style={styles.jobLabelTitle}>{currentJob.title}</Text>
+                                                    <View style={styles.row}>
+                                                        <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
+                                                        <View style={styles.typeLabel}>
+                                                            <Text style={styles.smallText}>{currentJob.jobType}</Text>
+                                                        </View>
                                                     </View>
-                                                </View>
-                                                <View style={styles.row}>
-                                                    <Text style={styles.mediumText}>{currentJob.location}</Text>
-                                                </View>
-                                                <View style={styles.row}>
-                                                    <Text style={styles.mediumText}>{currentJob.requestor}</Text>
-                                                    { trusted ?  (
-                                                        <Text></Text>
-                                                        ) : (
-                                                            <Entypo
-                                                                name="add-user"
-                                                                size={32}
-                                                                color="#264653"
-                                                                onPress={
-                                                                    () => db.ref('/users').orderByChild("username").equalTo(volunteer).on("child_added", function(snapshot) {
-                                                                        var temp = snapshot.child("trustedUsers").val();
-                                                                        temp.push(requestor);
-                                                                        snapshot.ref.child("trustedUsers").update(temp);
-                                                                })}
-                                                                />
-                                                    )}
+                                                    <View style={styles.row}>
+                                                        <Text style={styles.mediumText}>{currentJob.location}</Text>
+                                                    </View>
+                                                    <View style={styles.row}>
+                                                        <Text style={styles.mediumText}>{currentJob.requestor}</Text>
+                                                        { trusted ?  (
+                                                            <Text></Text>
+                                                            ) : (
+                                                                <Entypo
+                                                                    name="add-user"
+                                                                    size={32}
+                                                                    color="#264653"
+                                                                    onPress={
+                                                                        () => db.ref('/users').orderByChild("username").equalTo(volunteer).on("child_added", function(snapshot) {
+                                                                            var temp = snapshot.child("trustedUsers").val();
+                                                                            temp.push(requestor);
+                                                                            snapshot.ref.child("trustedUsers").update(temp);
+                                                                    })}
+                                                                    />
+                                                        )}
+                                                    </View>
                                                 </View>
                                             </View>
                                         </View>
-                                    </View>
                                     </View>)
                                 }
                                 else {
@@ -238,7 +238,6 @@ const styles = StyleSheet.create({
     },
     headingOne: {
         fontSize: 25,
-        padding: 10
     },
     numberLabel: {
         fontSize: 30,

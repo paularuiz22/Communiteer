@@ -11,6 +11,8 @@ const screen = Dimensions.get("screen");
 
 let today = new Date();
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
     let startJSONdate = new Date(startDateTime);
     let endJSONdate = new Date(endDateTime);
@@ -62,13 +64,24 @@ class UpcomingPosts extends Component {
     static contextType = AuthContext;
 
     componentDidMount() {
-      db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
-          let data = querySnapShot.val() ? querySnapShot.val() : {};
-          let jobItems = {...data};
-          this.setState({
-            jobs: sortBy(jobItems, 'title'),
-          });
-      });
+        db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
+            let data = querySnapShot.val() ? querySnapShot.val() : {};
+            let jobItems = {...data};
+            var jobArray = [];
+            Object.keys(jobItems).map((key) => {
+                if (jobItems[key].title != null)
+                {
+                    jobArray.push(jobItems[key]);
+                }
+            })
+            this.setState({
+                jobs: jobArray.sort(function compare(a, b) {
+                    var dateA = new Date(a.startDateTime);
+                    var dateB = new Date(b.startDateTime);
+                    return dateA - dateB;
+                })
+            });
+        });
     }
 
     render () {
@@ -81,19 +94,59 @@ class UpcomingPosts extends Component {
                   <Icon name="add-box" size={30} style={{color:'white'}}/>
                 </TouchableOpacity>
                 <ScrollView style={styles.scrollView}>
-                <View>
-                  {jobsKeys.length > 0 ? (
-                    jobsKeys.map(key => (
-                      <Job
-                        key={key}
-                        id={key}
-                        job={this.state.jobs[key]}
-                      />
-                    ))
-                  ) : (
+                    {this.state.jobs.length > 0 ? (
+                        this.state.jobs.map((currentJob) => {
+                            if (currentJob.title != null)
+                            {
+                                let startJSONdate = new Date(currentJob.startDateTime);
+                                let endJSONdate = new Date(currentJob.endDateTime);
+                                let startClockTime = formatTime(startJSONdate);
+                                let endClockTime = formatTime(endJSONdate);
+                                if (startJSONdate >= today)
+                                {
+                                    return (
+                                    <View style={styles.container} key={currentJob.description.toString()}>
+                                        <View>
+                                            <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+                                            <View style={styles.row}>
+                                                <View style={styles.circle}>
+                                                    <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
+                                                </View>
+                                                <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+                                                    <View style={styles.column}>
+                                                        <Text style={styles.jobLabelTitle}>{currentJob.title}</Text>
+                                                        <View style={styles.row}>
+                                                            <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
+                                                            <View style={styles.typeLabel}>
+                                                                <Text style={styles.smallText}>{currentJob.jobType}</Text>
+                                                            </View>
+                                                        </View>
+                                                        <View style={styles.row}>
+                                                            <Text style={styles.mediumText}>{currentJob.location}</Text>
+                                                        </View>
+                                                        <View style={styles.row}>
+                                                            <Text style={styles.mediumText}>{currentJob.volunteer}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    );
+                                }
+                                else
+                                {
+                                    return null
+                                }
+                            }
+                            else
+                            {
+                                return null
+                            }
+                        })
+                    ) : (
                         <Text>No upcoming jobs</Text>
-                  )}
-                </View>
+                    )}
                 </ScrollView>
             </SafeAreaView>
         );
@@ -138,8 +191,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   headingOne: {
-    fontSize: 30,
-    padding: 10
+    fontSize: 25,
   },
   numberLabel: {
     fontSize: 30,

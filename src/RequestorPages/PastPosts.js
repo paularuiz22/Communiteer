@@ -134,24 +134,27 @@ export default class PastPosts extends Component {
         return (
             <SafeAreaView style={styles.safeContainer}>
                 <ScrollView style={styles.scrollView}>
-                    <View style={styles.container}>
-                        {this.state.jobs.length > 0 ? (
-                            this.state.jobs.map((currentJob) => {
-                                if (currentJob.title != null)
-                                {
-                                    let startJSONdate = new Date(currentJob.startDateTime);
-                                    let endJSONdate = new Date(currentJob.endDateTime);
-                                    let startClockTime = formatTime(startJSONdate);
-                                    let endClockTime = formatTime(endJSONdate);
-                                    var trusted = false;
-                                    for(var i = 0; i < activeUser.trustedUsers.length; i++) {
-                                        if (activeUser.trustedUsers[i] == currentJob.volunteer) {
-                                            trusted = true;
-                                        }
+                    {this.state.jobs.length > 0 ? (
+                        this.state.jobs.map((currentJob) => {
+                            if (currentJob.title != null)
+                            {
+                                let startJSONdate = new Date(currentJob.startDateTime);
+                                let endJSONdate = new Date(currentJob.endDateTime);
+                                let startClockTime = formatTime(startJSONdate);
+                                let endClockTime = formatTime(endJSONdate);
+                                var trusted = false;
+                                for(var i = 0; i < activeUser.trustedUsers.length; i++) {
+                                    if (activeUser.trustedUsers[i] == currentJob.volunteer) {
+                                        trusted = true;
                                     }
-                                    if (startJSONdate < today & currentJob.requestor == activeUser.username) {
-                                        return (
-                                            <View style={styles.row} key={currentJob.description.toString()}>
+                                }
+                                if (startJSONdate < today & currentJob.requestor == activeUser.username) {
+                                    return (
+                                        <View style={styles.container} key={currentJob.description.toString()}>
+                                            <View>
+                                                <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+                                            </View>
+                                            <View style={styles.row}>
                                                 <View style={styles.circle}>
                                                     <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                                                 </View>
@@ -188,18 +191,18 @@ export default class PastPosts extends Component {
                                                     </View>
                                                 </View>
                                             </View>
-                                        )
-                                    }
+                                        </View>
+                                    )
                                 }
-                                else
-                                {
-                                    return null
-                                }
-                            })
-                        ) : (
-                            <Text>No previous jobs</Text>
-                        )}
-                    </View>
+                            }
+                            else
+                            {
+                                return null
+                            }
+                        })
+                    ) : (
+                       <Text>No previous jobs</Text>
+                    )}
                 </ScrollView>
             </SafeAreaView>
         );
@@ -268,5 +271,8 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       flexWrap: 'wrap',
       padding: 10
+    },
+    headingOne: {
+        fontSize: 25,
     },
 });

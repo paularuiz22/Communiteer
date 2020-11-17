@@ -12,6 +12,8 @@ var activeUser  = {
   trustedUsers: [],
 };
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
   let endJSONdate = new Date(endDateTime);
@@ -126,19 +128,22 @@ class AssignedJobs extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                    <View style={styles.container}>
-                        {this.state.jobs.length > 0 ? (
-                            this.state.jobs.map((currentJob) => {
-                                if (currentJob.title != null) {
-                                    let startJSONdate = new Date(currentJob.startDateTime);
-                                    let endJSONdate = new Date(currentJob.endDateTime);
-                                    let startClockTime = formatTime(startJSONdate);
-                                    let endClockTime = formatTime(endJSONdate);
+                    {this.state.jobs.length > 0 ? (
+                        this.state.jobs.map((currentJob) => {
+                            if (currentJob.title != null) {
+                                let startJSONdate = new Date(currentJob.startDateTime);
+                                let endJSONdate = new Date(currentJob.endDateTime);
+                                let startClockTime = formatTime(startJSONdate);
+                                let endClockTime = formatTime(endJSONdate);
 
-                                    if (startJSONdate > today & currentJob.volunteer == activeUser.username)
-                                    {
-                                        return (
-                                            <View style={styles.row} key={currentJob.description.toString()}>
+                                if (startJSONdate > today & currentJob.volunteer == activeUser.username)
+                                {
+                                    return (
+                                        <View style={styles.container} key={currentJob.description.toString()}>
+                                            <View>
+                                                <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+                                            </View>
+                                            <View style={styles.row}>
                                                 <View style={styles.circle}>
                                                     <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                                                 </View>
@@ -175,22 +180,22 @@ class AssignedJobs extends Component {
                                                     </Entypo>
                                                 </View>
                                             </View>
-                                        );
-                                    }
-                                    else
-                                    {
-                                        return null
-                                    }
+                                        </View>
+                                    );
                                 }
                                 else
                                 {
                                     return null
                                 }
-                            })
-                        ) : (
+                            }
+                            else
+                            {
+                                return null
+                            }
+                        })
+                    ) : (
                         <Text>No assigned, upcoming jobs</Text>
-                        )}
-                    </View>
+                    )}
                 </ScrollView>
             </SafeAreaView>
         );
@@ -212,8 +217,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     headingOne: {
-        fontSize: 30,
-        padding: 10
+        fontSize: 25,
     },
     numberLabel: {
         fontSize: 30,

@@ -254,7 +254,6 @@ const styles = StyleSheet.create({
   },
   headingOne: {
     fontSize: 25,
-    padding: 10,
   },
   numberLabel: {
     fontSize: 30,
