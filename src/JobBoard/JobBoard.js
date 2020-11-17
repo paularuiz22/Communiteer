@@ -40,14 +40,16 @@ class JobBoard extends Component {
             let jobItems = {...data};
             var jobArray = [];
             Object.keys(jobItems).forEach((key) => {
-                jobArray.push({ ["job"]: jobItems[key]});
+                jobArray.push(jobItems[key]);
             });
             this.setState({
                 jobs: jobArray.sort(function compare(a, b) {
-                    var jobA = a["job"];
-                    var jobB = b["job"];
-                    var dateA = new Date(jobA.startDateTime);
-                    var dateB = new Date(jobB.startDateTime);
+                    //var jobA = a["job"];
+                    //var jobB = b["job"];
+                    //var dateA = new Date(jobA.startDateTime);
+                    //var dateB = new Date(jobB.startDateTime);
+                    var dateA = new Date(a.startDateTime);
+                    var dateB = new Date(b.startDateTime);
                     return dateA - dateB;
                 }),
             });
@@ -73,26 +75,27 @@ class JobBoard extends Component {
         }
     }
 
-    sortJobsByDate(jsonObjects, prop, direction) {
-        var objArray = [];
-        var keys = Object.keys(jsonObjects);
-        for (var i = 0; i < keys.length; i++) {
-            var k = keys[i];
+//    sortJobsByDate(jsonObjects, prop, direction) {
+//        var objArray = [];
+//        var keys = Object.keys(jsonObjects);
+//        for (var i = 0; i < keys.length; i++) {
+//            var k = keys[i];
+//
+//            var job = {
+//            };
+//        }
+//        var direct = arguments.length > 2 ? arguments[2] : 1;
+//        if (objArray) {
+//            objArray.sort(function(a,b) {
+//                if(a[prop] && b[prop]) {
+//                    var aDate = new Date(a[prop]);
+//                    var bDatte = new Date(b[prop]);
+//                }
+//                return ( (a < b) ? -1*direction : ((a > b) ? 1*direction : 0) );
+//            });
+//        }
+//    }
 
-            var job = {
-            };
-        }
-        var direct = arguments.length > 2 ? arguments[2] : 1;
-        if (objArray) {
-            objArray.sort(function(a,b) {
-                if(a[prop] && b[prop]) {
-                    var aDate = new Date(a[prop]);
-                    var bDatte = new Date(b[prop]);
-                }
-                return ( (a < b) ? -1*direction : ((a > b) ? 1*direction : 0) );
-            });
-        }
-    }
     toggleExpanded = () => {
         this.setState({ collapsed: !this.state.collapsed });
     };
@@ -104,18 +107,12 @@ class JobBoard extends Component {
     };
     
     renderHeader = (section, _, isActive) => {
-        var currentJob = section["job"];
-        if (currentJob != null)
+        if (section != null)
         {
-            let startDate = new Date(currentJob["startDateTime"]);
-            let endDate = new Date(currentJob["endDateTime"]);
+            let startDate = new Date(section["startDateTime"]);
+            let endDate = new Date(section["endDateTime"]);
             let startTime = formatTime(startDate);
             let endTime = formatTime(endDate);
-
-            //console.log("start date", startDate);
-            //console.log("end date", endDate);
-            //console.log("start time", startTime);
-            //console.log("end time", endTime);
 
             return (
                 <Animatable.View
@@ -129,13 +126,13 @@ class JobBoard extends Component {
                             <Text style={styles.numberLabel}>{startDate.getDate()}</Text>
                         </View>
                         <TouchableOpacity style={styles.jobLabel}>
-                            <Text style={styles.jobLabelTitle}>{currentJob.title}</Text>
+                            <Text style={styles.jobLabelTitle}>{section.title}</Text>
                             <View style={styles.row}>
                                 <Text style={styles.mediumText}>{startTime} - {endTime}</Text>
                                 <View style={styles.typeLabel}>
-                                    <Text style={styles.smallText}>{currentJob.jobType}</Text>
+                                    <Text style={styles.smallText}>{section.jobType}</Text>
                                 </View>
-                                <Text style={styles.mediumText}>{currentJob.location}</Text>
+                                <Text style={styles.mediumText}>{section.location}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -145,8 +142,7 @@ class JobBoard extends Component {
     };
     
     renderContent(section, _, isActive) {
-        var currentJob = section["job"];
-        if (currentJob != null)
+        if (section != null)
         {
             return (
                 <Animatable.View
@@ -155,11 +151,11 @@ class JobBoard extends Component {
                     transition="backgroundColor"
                 >
                     <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
-                        {currentJob.description}
+                        {section.description}
                     </Animatable.Text>
                     <TouchableOpacity
                         style={styles.loginBtn}
-                        onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(currentJob.title).on('child_added', function(snapshot) {
+                        onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(section.title).on('child_added', function(snapshot) {
                             var temp = snapshot.child("volunteer").val();
                             //console.log(temp);
                             snapshot.ref.update({

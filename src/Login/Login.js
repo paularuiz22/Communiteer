@@ -42,7 +42,7 @@ class Login extends Component {
         var usersProcessed = 0;
         var verified = false;
         var userType = '';
-        console.log('logins : ', this);
+        //console.log('logins : ', this);
         userKeys.forEach((key) => {
             usersProcessed++;
             if ((this.state.users[key].username == this.state.username || this.state.users[key].email == this.state.username) && this.state.users[key].password == this.state.password)
