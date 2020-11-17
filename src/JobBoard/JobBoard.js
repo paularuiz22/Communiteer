@@ -120,7 +120,7 @@ class JobBoard extends Component {
                     style={[styles.header, isActive ? styles.active : styles.inactive]}
                     transition="backgroundColor"
                 >
-                    <Text style={styles.headerText}>{monthNames[startDate.getMonth()]}</Text>
+                    <Text style={styles.headingOne}>{monthNames[startDate.getMonth()]}</Text>
                     <View style={styles.row}>
                         <View style={styles.circle}>
                             <Text style={styles.numberLabel}>{startDate.getDate()}</Text>
@@ -253,7 +253,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   headingOne: {
-    fontSize: 30,
+    fontSize: 25,
+    padding: 10,
   },
   numberLabel: {
     fontSize: 30,
