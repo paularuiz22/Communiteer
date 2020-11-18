@@ -31,6 +31,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
   }
 
   if (startJSONdate < today & volunteer == activeUser.username) {
+      console.log(startDateTime);
       return (
           <View style={styles.row}>
               <View style={styles.circle}>
@@ -88,6 +89,7 @@ class PastJobs extends Component {
         this.userRef = db.ref('/users');
         this.state = {
          jobs: sortBy(this.ref, 'date'),
+         sortedJobArray: [],
          allUsers: sortBy(this.userRef, 'username'),
         };
         this.getActiveUser = this.getActiveUser.bind(this);
@@ -98,8 +100,26 @@ class PastJobs extends Component {
         db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
+            let jobArray = [];
+            Object.keys(jobItems).map((key) => {
+                let jobKey = key;
+                let jobStartDateTime = jobItems[key].startDateTime;
+                jobArray.push({ "key": jobKey, "startDateTime": jobStartDateTime })
+            })
+//            jobArray.map(job => {
+//                console.log("here's a job key", job.key);
+//                console.log("here's the job relating to that key", jobItems[job.key]);
+//            })
+
+            jobArray.sort(function compare(a, b) {
+                var dateA = new Date(a.startDateTime);
+                var dateB = new Date(b.startDateTime);
+                return dateA - dateB;
+            })
+
             this.setState({
-            jobs: sortBy(jobItems, 'date'),
+            jobs: jobItems,
+            sortedJobArray: jobArray
             });
         });
         
@@ -136,13 +156,14 @@ class PastJobs extends Component {
               <ScrollView style={styles.scrollView}>
               <View style={styles.container}>
               {jobsKeys.length > 0 ? (
-                jobsKeys.map(key => (
-                  <Job
+                this.state.sortedJobArray.map(job => {
+                  var key = job.key;
+                  return (<Job
                     key={key}
                     id={key}
                     job={this.state.jobs[key]}
-                  />
-                ))
+                  />);
+                })
               ) : (
                     <Text>No previous jobs</Text>
               )}
