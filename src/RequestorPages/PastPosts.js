@@ -6,6 +6,7 @@ import { formatTime } from "./NewJobPage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../../AuthContext";
+import { Header } from 'react-native-elements';
 
 const today = new Date();
 var activeUser  = {
@@ -123,6 +124,10 @@ export default class PastPosts extends Component {
         this.getActiveUser(Object.keys(this.state.allUsers));
         return (
           <SafeAreaView style={styles.safeContainer}>
+              <Header
+                backgroundColor="#2A9D8F"
+                centerComponent={{text: 'Your Old Posts', style: {color: '#fff', fontSize: 25}}}
+              />
             <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
               {jobsKeys.length > 0 ? (

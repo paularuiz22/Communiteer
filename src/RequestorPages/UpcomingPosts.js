@@ -91,7 +91,7 @@ class UpcomingPosts extends Component {
             <SafeAreaView style={styles.safeContainer}>
                 <Header
                     backgroundColor="#2A9D8F"
-                    centerComponent={{text: 'Upcoming Posts', style: {color: '#fff', fontSize: 35}}}
+                    centerComponent={{text: 'Upcoming Posts', style: {color: '#fff', fontSize: 25}}}
                 />
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
                   <Icon name="add-box" size={30} style={{color:'white'}}/>

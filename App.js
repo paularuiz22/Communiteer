@@ -52,23 +52,6 @@ class App extends React.Component {
     );
   }
 }
-
-// function VolunteerNavigator () {
-//   return (
-//     <Tab.Navigator tabBarOptions={{
-//       labelStyle: { fontSize: 20, color: "#FFFFFF", fontWeight: "bold" },
-//       tabStyle: { width: windowWidth / 2 },
-//       style: { backgroundColor: "#2A9D8F" },
-//     }}>
-//       <Tab.Screen name="AssignedJobs" component={AssignedJobs} />
-//       <Tab.Screen name="PastJobs" component={PastJobs} />
-//       <Tab.Screen name="JobBoard" component={JobBoard} />
-//       <Tab.Screen name="Stats" component={Stats}/>
-//       <Tab.Screen name="TrustedRequestor" component={TrustedRequestor} />
-//     </Tab.Navigator>
-//   );
-// }
-
 function VolunteerNavigator() {
   return (
     <Tab.Navigator
