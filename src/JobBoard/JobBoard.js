@@ -299,7 +299,7 @@ class JobBoard extends Component {
             <SafeAreaView style={styles.container}>
                 <Header
                     backgroundColor="#2A9D8F"
-                    centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 35}}}
+                    centerComponent={{text: 'Job Board', style: {color: '#fff', fontSize: 25}}}
                 />
                 <View style={styles.topRow}>
                     <Text style={styles.headingOne}>Job Type</Text>

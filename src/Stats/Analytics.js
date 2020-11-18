@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
-import {Picker} from "@react-native-community/picker";
+import { Dimensions, StyleSheet, ScrollView, Picker, Button, View, SafeAreaView, Text, Alert } from "react-native";
 import { Header } from 'react-native-elements';
 
 import MonthlyHours from "./Charts/MonthlyHours.js";
@@ -66,19 +65,32 @@ class Analytics extends Component {
       <SafeAreaView style={styles.container}>
             <Header
         backgroundColor="#2A9D8F"
-        centerComponent={{text: 'Stats', style: {color: '#fff', fontSize: 35}}}
+        centerComponent={{text: 'Stats', style: {color: '#fff', fontSize: 25}}}
         />
         <View style = {styles.dropdown_container}>
             <View style={styles.row}>
                 <Text style={styles.headingOne}>Graph Type</Text>
-                <Picker
+                {/* <Picker
                   selectedValue={this.state.graph}
                   style={styles.dropdown}
                   onValueChange = {this.handleChangeGraph}>
                   <Picker.Item label="Points Status" value="points"/>
                   <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
                   <Picker.Item label="Types of Jobs" value = "types of jobs"/>
-                </Picker>
+                </Picker> */}
+                    <Picker
+                        selectedValue={this.state.graph}
+                        style={styles.dropdown}
+                        itemStyle={{height: 45}}
+                        onValueChange = {this.handleChangeGraph}>
+                        <Picker.Item label="All Jobs" value="All Jobs"/>
+                        <Picker.Item label="Beautification" value="Beautification"/>
+                        <Picker.Item label="Children" value="Children"/>
+                        <Picker.Item label="House Chores" value="House Chores"/>
+                        <Picker.Item label="Pet Care" value="Pet Care"/>
+                        <Picker.Item label="Shopping" value="Shopping"/>
+                        <Picker.Item label="Tutoring" value="Tutoring"/>
+                    </Picker>
             </View>
         </View>
         <View style = {styles.title_container}>

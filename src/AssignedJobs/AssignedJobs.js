@@ -118,7 +118,7 @@ class AssignedJobs extends Component {
     <SafeAreaView style={styles.container}>
               <Header
             backgroundColor="#2A9D8F"
-            centerComponent={{text: 'Assigned Jobs', style: {color: '#fff', fontSize: 35}}}
+            centerComponent={{text: 'Assigned Jobs', style: {color: '#fff', fontSize: 25}}}
         />
 
         <ScrollView style={styles.scrollView}>

@@ -131,7 +131,7 @@ class PastJobs extends Component {
           <SafeAreaView style={styles.safeContainer}>
             <Header
                 backgroundColor="#2A9D8F"
-                centerComponent={{text: 'Past Jobs', style: {color: '#fff', fontSize: 35}}}
+                centerComponent={{text: 'Past Jobs', style: {color: '#fff', fontSize: 25}}}
                 />
               <ScrollView style={styles.scrollView}>
               <View style={styles.container}>

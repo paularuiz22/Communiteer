@@ -96,7 +96,7 @@ class TrustedRequestors extends Component {
       <SafeAreaView style={styles.container}>
         <Header
         backgroundColor="#2A9D8F"
-        centerComponent={{text: 'Trusted Requesters', style: {color: '#fff', fontSize: 35}}}
+        centerComponent={{text: 'Trusted Requesters', style: {color: '#fff', fontSize: 25}}}
         />
         <ScrollView style={styles.scrollView}> 
         <View>
