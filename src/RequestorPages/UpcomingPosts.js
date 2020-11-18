@@ -11,13 +11,17 @@ import { Header } from 'react-native-elements';
 const screen = Dimensions.get("screen");
 
 let today = new Date();
+var activeUser  = {
+  username: '',
+  trustedUsers: [],
+};
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
     let startJSONdate = new Date(startDateTime);
     let endJSONdate = new Date(endDateTime);
     let startClockTime = formatTime(startJSONdate);
     let endClockTime = formatTime(endJSONdate);
-    if (startJSONdate >= today) {
+    if (startJSONdate >= today && requestor == activeUser.username) {
         return (
             <View style={styles.row}>
                 <View style={styles.circle}>
@@ -66,8 +70,10 @@ class UpcomingPosts extends Component {
     constructor() {
         super();
         this.ref = db.ref('/jobs');
+        this.userRef = db.ref('/users');
         this.state = {
             jobs: sortBy(this.ref, 'title'),
+            allUsers: sortBy(this.userRef, 'username'),
         };
     }
 
@@ -81,10 +87,30 @@ class UpcomingPosts extends Component {
             jobs: sortBy(jobItems, 'title'),
           });
       });
+
+      db.ref('/users').orderByChild('username').on('value', querySnapShot => {
+        let data = querySnapShot.val() ? querySnapShot.val() : {};
+        let userItems = {...data};
+        this.setState({
+            allUsers: sortBy(userItems, 'username'),
+        });
+      }); 
+    }
+
+    getActiveUser(userKeys) {
+      let value = this.context;
+      for (var i = 0; i < userKeys.length; i++) {
+        var curr = this.state.allUsers[userKeys[i]];
+        if (curr.username == value["username"]) {
+          activeUser.username = curr.username;
+          activeUser.trustedUsers = curr.trustedUsers;
+        }
+      }
     }
 
     render () {
         let jobsKeys = Object.keys(this.state.jobs);
+        this.getActiveUser(Object.keys(this.state.allUsers));
         let value = this.context;
         console.log("set username? ", value["username"]);
         return (
