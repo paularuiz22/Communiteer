@@ -128,12 +128,24 @@ class JobBoard extends Component {
                         </View>
                     </TouchableOpacity>
                     <View style={styles.column}>
-                        <Ionicons
+                    <TouchableOpacity 
+                        style={styles.requestBtn} 
+                        onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
+                            var temp = snapshot.child("volunteer").val();
+                            console.log(temp);
+                            snapshot.ref.update({
+                                volunteer: activeUser.username
+                            });
+                        })
+                    }
+                    >
+                        <Text style={{color: "white"}}> Request Opportunity </Text>
+                    </TouchableOpacity>
+                        {/* <Ionicons
                             name="md-add"
                             color="#264653"
                             size={40}
-                            onPress= {
-                                () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
+                            onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
                                     var temp = snapshot.child("volunteer").val();
                                     console.log(temp);
                                     snapshot.ref.update({
@@ -141,7 +153,7 @@ class JobBoard extends Component {
                                     });
                                 })
                             }
-                        />
+                        /> */}
                     </View>
                 </View>
             );
@@ -421,6 +433,16 @@ const styles = StyleSheet.create({
     padding: 10,
     alignContent: 'center',
     textAlignVertical: 'center',
+  },
+  requestBtn:{
+    width:300,
+    backgroundColor:"#264653",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop:30,
+    marginBottom:10
   },
 });
 
