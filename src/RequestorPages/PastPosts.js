@@ -14,6 +14,7 @@ var activeUser  = {
   trustedUsers: [],
 };
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
@@ -29,6 +30,10 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
 
   if (startJSONdate < today & requestor == activeUser.username) {
       return (
+          <View>
+          <View>
+              <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+          </View>
           <View style={styles.row}>
               <View style={styles.circle}>
                   <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
@@ -68,6 +73,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                           )}
                       </View>
               </View>
+          </View>
           </View>
       )
   }
@@ -161,6 +167,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     justifyContent: "center",
+  },
+  headingOne: {
+    fontSize: 30,
+    padding: 10,
   },
     scrollView: {
       marginHorizontal: 20,

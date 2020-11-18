@@ -32,7 +32,6 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
   }
 
   if (startJSONdate < today & volunteer == activeUser.username) {
-      console.log(startDateTime);
       return (
           <View>
           <View>
@@ -202,6 +201,7 @@ const styles = StyleSheet.create({
   },
   blackHeadingOne: {
     fontSize: 30,
+    padding: 10
   },
   numberLabel: {
     fontSize: 30,
