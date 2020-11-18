@@ -76,6 +76,7 @@ class AssignedJobs extends Component {
         this.userRef = db.ref('/users');
         this.state = {
          jobs: sortBy(this.ref, 'date'),
+         sortedJobArray: [],
          allUsers: sortBy(this.userRef, 'username'),
         };
         this.getActiveUser = this.getActiveUser.bind(this);
@@ -85,8 +86,22 @@ class AssignedJobs extends Component {
         db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
+            let jobArray = [];
+            Object.keys(jobItems).map((key) => {
+                let jobKey = key;
+                let jobStartDateTime = jobItems[key].startDateTime;
+                jobArray.push({ "key": jobKey, "startDateTime": jobStartDateTime });
+            })
+
+            jobArray.sort(function compare(a, b) {
+                var dateA = new Date(a.startDateTime);
+                var dateB = new Date(b.startDateTime);
+                return dateA - dateB;
+            })
+
             this.setState({
-            jobs: sortBy(jobItems, 'date'),
+            jobs: jobItems,
+            sortedJobArray: jobArray,
             });
         });
 
@@ -124,13 +139,14 @@ class AssignedJobs extends Component {
         <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
               {jobsKeys.length > 0 ? (
-                jobsKeys.map(key => (
-                  <Job
+                this.state.sortedJobArray.map(job => {
+                  var key = job.key;
+                  return (<Job
                     key={key}
                     id={key}
                     job={this.state.jobs[key]}
-                  />
-                ))
+                  />);
+                })
               ) : (
                     <Text>No assigned, upcoming jobs</Text>
               )}
