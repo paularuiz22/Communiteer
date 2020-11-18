@@ -68,30 +68,17 @@ class Analytics extends Component {
         centerComponent={{text: 'Stats', style: {color: '#fff', fontSize: 25}}}
         />
         <View style = {styles.dropdown_container}>
-            <View style={styles.row}>
-                <Text style={styles.headingOne}>Graph Type</Text>
-                {/* <Picker
-                  selectedValue={this.state.graph}
-                  style={styles.dropdown}
-                  onValueChange = {this.handleChangeGraph}>
-                  <Picker.Item label="Points Status" value="points"/>
-                  <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
-                  <Picker.Item label="Types of Jobs" value = "types of jobs"/>
-                </Picker> */}
-                    <Picker
-                        selectedValue={this.state.graph}
-                        style={styles.dropdown}
-                        itemStyle={{height: 45}}
-                        onValueChange = {this.handleChangeGraph}>
-                        <Picker.Item label="All Jobs" value="All Jobs"/>
-                        <Picker.Item label="Beautification" value="Beautification"/>
-                        <Picker.Item label="Children" value="Children"/>
-                        <Picker.Item label="House Chores" value="House Chores"/>
-                        <Picker.Item label="Pet Care" value="Pet Care"/>
-                        <Picker.Item label="Shopping" value="Shopping"/>
-                        <Picker.Item label="Tutoring" value="Tutoring"/>
-                    </Picker>
-            </View>
+          <Text style={styles.headingOne}>Graph Type</Text>
+          <Picker
+            selectedValue={this.state.graph}
+            style={styles.pickerStyle}
+            itemStyle={{height: 45}}
+            onValueChange={this.handleChangeGraph}
+          >
+            <Picker.Item label="Points Status" value="points"/>
+            <Picker.Item label="Hours per Month" value="hours per month" />
+            <Picker.Item label="Types of Jobs" value = "types of jobs"/>
+          </Picker>
         </View>
         <View style = {styles.title_container}>
           <Text style = {styles.title}>{this.switchTitle()} </Text>
@@ -140,9 +127,9 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 30,
     marginVertical: 20,
     width: screen.width/2,
+    fontSize: 25
   },
   graph_container: {
     flex: 6, 
