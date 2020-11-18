@@ -27,12 +27,13 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                         <Text style={styles.jobLabelTitle}>{title}</Text>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
-                            <View style={styles.typeLabel}>
-                                <Text style={styles.smallText}>{jobType}</Text>
-                            </View>
+
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{location}</Text>
+                        </View>
+                        <View style={styles.typeLabel}>
+                                <Text style={styles.smallText}>{jobType}</Text>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.mediumText}>{volunteer}</Text>
@@ -43,7 +44,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                   <Entypo 
                     name="trash"
                     color="#264653"
-                    size={40}
+                    size={30}
                     style={styles.volunteer} 
                     onPress={() => db.ref('/jobs').orderByChild("title").equalTo(title)
                   .on("child_added", function(snapshot) {
@@ -187,8 +188,8 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 10,
     backgroundColor: "#FF9B21",
-    marginLeft: 10,
-    padding: 5,
+    marginLeft: 5,
+    padding: 3,
   },
   smallText: {
     fontSize: 14,
