@@ -4,6 +4,7 @@ import { Image, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-nat
 import { db } from '../../config';
 import { sortBy } from 'lodash';
 import {AuthContext} from "../../AuthContext.js";
+import { Header } from 'react-native-elements';
 
 class Login extends Component {
     constructor () {
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
       marginHorizontal: 0,
   },
   container: {
+    paddingTop: 50,
     flex: 1,
     backgroundColor: "#2A9D8F",
     alignItems: "center",

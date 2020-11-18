@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
 import {Picker} from "@react-native-community/picker";
+import { Header } from 'react-native-elements';
 
 import MonthlyHours from "./Charts/MonthlyHours.js";
 import Points from "./Charts/Progress.js";
@@ -63,6 +64,10 @@ class Analytics extends Component {
     const { dimensions } = this.state;
     return(
       <SafeAreaView style={styles.container}>
+            <Header
+        backgroundColor="#2A9D8F"
+        centerComponent={{text: 'Stats', style: {color: '#fff', fontSize: 35}}}
+        />
         <View style = {styles.dropdown_container}>
             <View style={styles.row}>
                 <Text style={styles.headingOne}>Graph Type</Text>

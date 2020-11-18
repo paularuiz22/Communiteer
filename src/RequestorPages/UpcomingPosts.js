@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { formatTime } from "./NewJobPage";
 import {AuthContext} from "../../AuthContext.js";
 import { Entypo } from "@expo/vector-icons";
+import { Header } from 'react-native-elements';
 
 const screen = Dimensions.get("screen");
 
@@ -88,6 +89,10 @@ class UpcomingPosts extends Component {
         console.log("set username? ", value["username"]);
         return (
             <SafeAreaView style={styles.safeContainer}>
+                <Header
+                    backgroundColor="#2A9D8F"
+                    centerComponent={{text: 'Upcoming Posts', style: {color: '#fff', fontSize: 35}}}
+                />
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
                   <Icon name="add-box" size={30} style={{color:'white'}}/>
                 </TouchableOpacity>

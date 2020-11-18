@@ -94,6 +94,10 @@ class TrustedRequestors extends Component {
     this.getActiveUser();
     return (
       <SafeAreaView style={styles.container}>
+        <Header
+        backgroundColor="#2A9D8F"
+        centerComponent={{text: 'Trusted Requesters', style: {color: '#fff', fontSize: 35}}}
+        />
         <ScrollView style={styles.scrollView}> 
         <View>
           {userKeys.length > 0 ? (

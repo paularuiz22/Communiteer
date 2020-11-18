@@ -5,6 +5,7 @@ import { sortBy } from 'lodash';
 import userTypes from "../Users/userType"
 import { AuthContext } from "../../AuthContext";
 import { Entypo } from "@expo/vector-icons";
+import { Header } from 'react-native-elements';
 
 const screen = Dimensions.get("screen");
 
@@ -97,6 +98,10 @@ class TrustedVolunteers extends Component {
       this.getActiveUser(userKeys);
         return (
             <SafeAreaView style={styles.safeContainer}>
+                <Header
+                    backgroundColor="#2A9D8F"
+                    centerComponent={{text: 'Trusted Volunteers', style: {color: '#fff', fontSize: 35}}}
+                />
                 <ScrollView style={styles.scrollView}>
                   <View style={styles.container}>
                     {userKeys.length > 0 ? (
