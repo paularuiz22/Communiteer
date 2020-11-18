@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, SafeAreaView, Text, Alert } from "react-native";
-import {Picker} from "@react-native-community/picker";
+import { Dimensions, StyleSheet, ScrollView, Picker, Button, View, SafeAreaView, Text, Alert } from "react-native";
+import { Header } from 'react-native-elements';
 
 import MonthlyHours from "./Charts/MonthlyHours.js";
 import Points from "./Charts/Progress.js";
@@ -63,18 +63,22 @@ class Analytics extends Component {
     const { dimensions } = this.state;
     return(
       <SafeAreaView style={styles.container}>
+            <Header
+        backgroundColor="#2A9D8F"
+        centerComponent={{text: 'Stats', style: {color: '#fff', fontSize: 25}}}
+        />
         <View style = {styles.dropdown_container}>
-            <View style={styles.row}>
-                <Text style={styles.headingOne}>Graph Type</Text>
-                <Picker
-                  selectedValue={this.state.graph}
-                  style={styles.dropdown}
-                  onValueChange = {this.handleChangeGraph}>
-                  <Picker.Item label="Points Status" value="points"/>
-                  <Picker.Item label="Number of Volunteering Hours per Month" value="hours per month" />
-                  <Picker.Item label="Types of Jobs" value = "types of jobs"/>
-                </Picker>
-            </View>
+          <Text style={styles.headingOne}>Graph Type</Text>
+          <Picker
+            selectedValue={this.state.graph}
+            style={styles.pickerStyle}
+            itemStyle={{height: 45}}
+            onValueChange={this.handleChangeGraph}
+          >
+            <Picker.Item label="Points Status" value="points"/>
+            <Picker.Item label="Hours per Month" value="hours per month" />
+            <Picker.Item label="Types of Jobs" value = "types of jobs"/>
+          </Picker>
         </View>
         <View style = {styles.title_container}>
           <Text style = {styles.title}>{this.switchTitle()} </Text>
@@ -123,9 +127,9 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 30,
     marginVertical: 20,
     width: screen.width/2,
+    fontSize: 25
   },
   graph_container: {
     flex: 6, 

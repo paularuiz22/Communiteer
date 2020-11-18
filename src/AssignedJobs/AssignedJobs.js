@@ -5,6 +5,7 @@ import { db } from "../../config";
 import { sortBy } from "lodash";
 import { Entypo } from "@expo/vector-icons";
 import { formatTime } from "../RequestorPages/NewJobPage";
+import { Header } from 'react-native-elements';
 
 const today = new Date();
 var activeUser  = {
@@ -115,6 +116,10 @@ class AssignedJobs extends Component {
         
         return (
     <SafeAreaView style={styles.container}>
+              <Header
+            backgroundColor="#2A9D8F"
+            centerComponent={{text: 'Assigned Jobs', style: {color: '#fff', fontSize: 25}}}
+        />
 
         <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
