@@ -33,7 +33,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
               <View style={styles.circle}>
                   <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
               </View>
-              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10, width: 230}}>
                   <View style={styles.column}>
                       <Text style={styles.jobLabelTitle}>{title}</Text>
                       <View style={styles.row}>
@@ -45,15 +45,19 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       <View style={styles.row}>
                           <Text style={styles.mediumText}>{location}</Text>
                       </View>
+                    </View>
                       <View style={styles.row}>
-                          <Text style={styles.mediumText}>{volunteer}</Text>
+                          <View style={{padding: 10}}>
+                            <Text style={{fontWeight: 'bold', fontSize: 18}}>{volunteer}</Text>
+                          </View>
                           { trusted ?  (
                             <Text></Text>
                           ) : (
                             <Entypo 
                             name="add-user"
-                            size={32}
+                            size={35}
                             color="#264653"
+                            padding={20}
                             onPress={
                               () => db.ref('/users').orderByChild("username").equalTo(requestor).on("child_added", function(snapshot) {
                                 var temp = snapshot.child("trustedUsers").val()
@@ -63,7 +67,6 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                             />  
                           )}
                       </View>
-                  </View>
               </View>
           </View>
       )
@@ -200,6 +203,7 @@ const styles = StyleSheet.create({
     },
     mediumText: {
       fontSize: 17,
+      marginLeft: 5,
     },
     row: {
       flexDirection: 'row',
@@ -207,8 +211,8 @@ const styles = StyleSheet.create({
       padding: 2
     },
     column: {
-      flexDirection: 'column',
+      //flexDirection: 'row',
       flexWrap: 'wrap',
-      padding: 10
+      padding: 5
     },
 });
