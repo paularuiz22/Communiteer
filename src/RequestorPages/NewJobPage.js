@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
-import {Picker} from "@react-native-community/picker";
+import { Dimensions, Picker, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
 import { db } from '../../config';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 //import ToggleSwitch from 'toggle-switch-react-native';
@@ -123,11 +122,16 @@ export default class NewJobPage extends Component {
                         <Picker
                             selectedValue={this.state.jobType}
                             style={styles.picker}
+                            itemStyle={{height: 45}}
                             onValueChange={this.updateJobType}
                         >
-                            {Object.keys(jobTypes).map((key) => {
-                                return (<Picker.Item label={jobTypes[key]} value={key} key={key}/>);
-                            })}
+                        <Picker.Item label="All Jobs" value={jobTypes.OTHER}/>
+                        <Picker.Item label="Outdoor Work" value={jobTypes.OUTDOORS}/>
+                        <Picker.Item label="Organization" value={jobTypes.ORGANIZING}/>
+                        <Picker.Item label="Housework" value={jobTypes.HOUSEWORK}/>
+                        <Picker.Item label="Pet Care" value={jobTypes.PET_CARE}/>
+                        <Picker.Item label="Shopping" value={jobTypes.SHOPPING}/>
+                        <Picker.Item label="Technology" value={jobTypes.TECHNOLOGY}/>
 
                         </Picker>
                     </View>
@@ -283,10 +287,9 @@ const styles = StyleSheet.create({
     justifyContent:"flex-start",
   },
   picker: {
-    height: 150,
-    width: 200,
-    alignItems:"center",
-    justifyContent:"center"
+    height:80,
+    width:"75%",
+    fontSize: 32
   },
   input: {
      height: 40,
