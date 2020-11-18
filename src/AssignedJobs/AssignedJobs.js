@@ -25,7 +25,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
               <View style={styles.circle}>
                   <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
               </View>
-              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10, width: 200}}>
                   <View style={styles.column}>
                       <Text style={styles.jobLabelTitle}>{title}</Text>
                       <View style={styles.row}>
@@ -47,7 +47,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                 <Entypo 
                   name="trash"
                   color="#264653"
-                  size={40}
+                  size={35}
                   style={styles.volunteer} 
                   onPress={
                     () => db.ref('/jobs').orderByChild("title").equalTo(title)
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   numberLabel: {
     fontSize: 30,
-    padding: 10,
+    padding: 8,
     color: '#fff',
     textAlign: 'center',
     justifyContent: 'center',
@@ -177,9 +177,10 @@ const styles = StyleSheet.create({
   },
   jobLabel: {
     width: 270,
-    height: 100,
+    flex: 1,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
+    padding: 10
   },
   jobLabelTitle: {
     fontSize: 24,
@@ -189,8 +190,8 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 10,
     backgroundColor: "#FF9B21",
-    marginLeft: 10,
-    padding: 5,
+    marginLeft: 5,
+    padding: 3,
   },
   smallText: {
     fontSize: 12,
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 5
+    padding: 3
   },
 });
 
