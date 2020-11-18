@@ -36,7 +36,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
               <View style={styles.circle}>
                   <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
               </View>
-              <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+              <View style={{backgroundColor: "#ECECEC", borderRadius: 10, width: 230}}>
                   <View style={styles.column}>
                       <Text style={styles.jobLabelTitle}>{title}</Text>
                       <View style={styles.row}>
@@ -177,25 +177,23 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   numberLabel: {
-    fontSize: 42,
-    padding: 10,
+    fontSize: 30,
+    padding: 8,
     color: '#fff',
     textAlign: 'center'
   },
   circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 100/2,
+    width: 75,
+    height: 75,
+    borderRadius: 75/2,
     backgroundColor: "#264653",
     padding: 10
   },
   jobLabel: {
-    width: "100%",
-    height: 100,
+    width: 270,
     borderRadius: 10,
     backgroundColor: "#EEEEEE",
-    padding: 10,
-    marginTop: 10
+    padding: 10
   },
   jobLabelTitle: {
     fontSize: 24,
@@ -205,25 +203,35 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 10,
     backgroundColor: "#FF9B21",
-    padding: 10
+    marginLeft: 10,
+    padding: 5
   },
   smallText: {
-    fontSize: 12,
+    fontSize: 14,
+    color: "#fff",
+    textAlign: "center",
+    textAlignVertical: "center"
   },
   mediumText: {
     fontSize: 18,
+    marginLeft: 5,
   },
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10
+    padding: 2
   },
   scrollBar: {
     width: '100%',
     height: 50,
     backgroundColor: "#6e6e6e",
     marginTop: 10,
-  }
+  },
+  column: {
+    //flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 5
+  },
 });
 
 export default PastJobs;

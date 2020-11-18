@@ -189,6 +189,8 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 10,
     backgroundColor: "#FF9B21",
+    marginLeft: 10,
+    padding: 5,
   },
   smallText: {
     fontSize: 12,

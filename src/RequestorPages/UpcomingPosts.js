@@ -23,7 +23,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                 <View style={styles.circle}>
                     <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
                 </View>
-                <View style={{backgroundColor: "#ECECEC", borderRadius: 10}}>
+                <View style={{backgroundColor: "#ECECEC", borderRadius: 10, width: 230}}>
                     <View style={styles.column}>
                         <Text style={styles.jobLabelTitle}>{title}</Text>
                         <View style={styles.row}>
@@ -37,15 +37,15 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                                 <Text style={styles.smallText}>{jobType}</Text>
                         </View>
                         <View style={styles.row}>
-                            <Text style={styles.mediumText}>{volunteer}</Text>
+                            <Text style={{fontWeight: 'bold', fontSize: 20}}>{volunteer}</Text>
                         </View>         
                     </View>
                 </View>
-                <View style={styles.column}>
+                <View style={styles.column, {alignContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
                   <Entypo 
                     name="trash"
                     color="#264653"
-                    size={30}
+                    size={35}
                     style={styles.volunteer} 
                     onPress={() => db.ref('/jobs').orderByChild("title").equalTo(title)
                   .on("child_added", function(snapshot) {
@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
   column: {
     flexDirection: 'column',
     flexWrap: 'wrap',
-    padding: 5
+    padding: 5,
+    //alignSelf: 'flex-end'
   },
 });
 export default UpcomingPosts;
