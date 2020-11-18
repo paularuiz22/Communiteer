@@ -13,6 +13,8 @@ var activeUser  = {
   trustedUsers: [],
 };
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
   let endJSONdate = new Date(endDateTime);
@@ -21,6 +23,10 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
 
   if (startJSONdate > today & volunteer == activeUser.username) {
       return (
+          <View>
+          <View>
+              <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+          </View>
           <View style={styles.row}>
               <View style={styles.circle}>
                   <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
@@ -58,6 +64,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                   })}>
                 </Entypo>
               </View>
+          </View>
           </View>
       )
   }
