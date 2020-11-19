@@ -46,15 +46,15 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       <Text style={styles.jobLabelTitle}>{title}</Text>
                       <View style={styles.row}>
                           <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
-                          <View style={styles.typeLabel}>
-                              <Text style={styles.smallText}>{jobType}</Text>
-                          </View>
+                      </View>
+                      <View style={styles.typeLabel}>
+                            <Text style={styles.smallText}>{jobType}</Text>
+                        </View>
+                      <View style={styles.row}>
+                          <Text style={styles.mediumText}>Location: {location}</Text>
                       </View>
                       <View style={styles.row}>
-                          <Text style={styles.mediumText}>{location}</Text>
-                      </View>
-                      <View style={styles.row}>
-                          <Text style={styles.mediumText}>{requestor}</Text>
+                          <Text style={styles.mediumText}>Requestor: {requestor}</Text>
                           { trusted ?  (
                             <Text></Text>
                           ) : (
@@ -110,17 +110,12 @@ class PastJobs extends Component {
                 let jobKey = key;
                 let jobStartDateTime = jobItems[key].startDateTime;
                 jobArray.push({ "key": jobKey, "startDateTime": jobStartDateTime })
-            })
-//            jobArray.map(job => {
-//                console.log("here's a job key", job.key);
-//                console.log("here's the job relating to that key", jobItems[job.key]);
-//            })
-
+            });
             jobArray.sort(function compare(a, b) {
                 var dateA = new Date(a.startDateTime);
                 var dateB = new Date(b.startDateTime);
                 return dateA - dateB;
-            })
+            });
 
             this.setState({
             jobs: jobItems,
@@ -226,7 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   typeLabel: {
-    width: 100,
+    width: 135,
     height: 25,
     borderRadius: 10,
     backgroundColor: "#FF9B21",

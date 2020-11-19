@@ -43,19 +43,21 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       <Text style={styles.jobLabelTitle}>{title}</Text>
                       <View style={styles.row}>
                           <Text style={styles.mediumText}>{startClockTime} - {endClockTime}</Text>
-                          <View style={styles.typeLabel}>
-                              <Text style={styles.smallText}>{jobType}</Text>
-                          </View>
+                      </View>
+                      <View style={styles.typeLabel}>
+                          <Text style={styles.smallText}>{jobType}</Text>
                       </View>
                       <View style={styles.row}>
                           <Text style={styles.mediumText}>{location}</Text>
                       </View>
                     </View>
                       <View style={styles.row}>
-                          <View style={{padding: 10}}>
-                            <Text style={{fontWeight: 'bold', fontSize: 18}}>{volunteer}</Text>
+                        { volunteer == "" ? (<Text></Text>) : ( 
+                          <View style={{padding: 5}}>
+                            <Text style={styles.mediumText}>Volunteer: {volunteer}</Text>
                           </View>
-                          { trusted ?  (
+                        )}
+                          { trusted || volunteer == "" ?  (
                             <Text></Text>
                           ) : (
                             <Entypo 
@@ -148,7 +150,7 @@ export default class PastPosts extends Component {
           <SafeAreaView style={styles.safeContainer}>
               <Header
                 backgroundColor="#2A9D8F"
-                centerComponent={{text: 'Your Old Posts', style: {color: '#fff', fontSize: 25}}}
+                centerComponent={{text: 'Old Job Posts', style: {color: '#fff', fontSize: 23}}}
               />
             <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
       fontSize: 20,
     },
     typeLabel: {
-      width: 100,
+      width: 135,
       height: 25,
       borderRadius: 10,
       backgroundColor: "#FF9B21",

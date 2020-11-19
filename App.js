@@ -6,14 +6,14 @@ import { Dimensions } from "react-native";
 import {AuthContext} from "./AuthContext.js";
 import { Ionicons } from "@expo/vector-icons";
 
-import AssignedJobs from "./src/AssignedJobs/AssignedJobs.js";
-import JobBoard from "./src/JobBoard/JobBoard.js";
-import PastJobs from "./src/PastJobs/PastJobs.js";
-import Stats from "./src/Stats/Stats.js";
+import AssignedJobs from "./src/VolunteerPages/AssignedJobs";
+import JobBoard from "./src/VolunteerPages/JobBoard.js";
+import PastJobs from "./src/VolunteerPages/PastJobs.js";
+import Stats from "./src/VolunteerPages/Stats/Stats.js";
 import Login from "./src/Login/Login.js";
 import HomePage from "./src/RequestorPages/HomePage.js";
 import NewJobPage from "./src/RequestorPages/NewJobPage.js";
-import TrustedRequestor from "./src/TrustedRequesters/TrustedRequesters.js";
+import TrustedRequestor from "./src/VolunteerPages/TrustedRequesters.js";
 import Registration from "./src/Registration/Registration.js";
 
 const Tab = createBottomTabNavigator();

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Dimensions, StyleSheet, ScrollView, View, SafeAreaView, Text } from "react-native";
 import { db } from '../../config';
 import { sortBy } from 'lodash';
-import userTypes from "../Users/userType"
+import userTypes from "../../userType";
 import { AuthContext } from "../../AuthContext";
 import { Entypo } from "@expo/vector-icons";
 import { Header } from 'react-native-elements';

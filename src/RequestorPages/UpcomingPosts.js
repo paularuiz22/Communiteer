@@ -47,7 +47,10 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                                 <Text style={styles.smallText}>{jobType}</Text>
                         </View>
                         <View style={styles.row}>
-                            <Text style={{fontWeight: 'bold', fontSize: 20}}>{volunteer}</Text>
+                            {volunteer == "" ? 
+                            (<Text style={styles.mediumText}>No one has signed up yet.</Text>) : (
+                              <Text style={styles.mediumText}>Volunteer: {volunteer}</Text>
+                            )}
                         </View>         
                     </View>
                 </View>
@@ -137,7 +140,7 @@ class UpcomingPosts extends Component {
             <SafeAreaView style={styles.safeContainer}>
                 <Header
                     backgroundColor="#2A9D8F"
-                    centerComponent={{text: 'Upcoming Posts', style: {color: '#fff', fontSize: 25}}}
+                    centerComponent={{text: 'Upcoming Job Posts', style: {color: '#fff', fontSize: 23}}}
                 />
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NewJobPage")} style={styles.newJobBtn}>
                   <Icon name="add-box" size={30} style={{color:'white'}}/>

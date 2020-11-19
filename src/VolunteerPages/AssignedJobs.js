@@ -41,10 +41,10 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                           </View>
                       </View>
                       <View style={styles.row}>
-                          <Text style={styles.mediumText}>{location}</Text>
+                          <Text style={styles.mediumText}>Location: {location}</Text>
                       </View>
                       <View style={styles.row}>
-                          <Text style={styles.mediumText}>{requestor}</Text>
+                          <Text style={styles.mediumText}>Requestor: {requestor}</Text>
                           
                       </View>
                   </View>

@@ -4,7 +4,7 @@ import { Dimensions, Text, StyleSheet, SafeAreaView, ScrollView, View } from 're
 import { db } from "../../config";
 import { AuthContext } from "../../AuthContext";
 import { sortBy } from "lodash";
-import userTypes from "../Users/userType"
+import userTypes from "../../userType";
 import { Entypo } from "@expo/vector-icons";
 const screen = Dimensions.get("screen");
 

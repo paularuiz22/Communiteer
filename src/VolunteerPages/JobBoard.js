@@ -1,11 +1,10 @@
 import React, {Component} from "react";
 import { Header } from 'react-native-elements';
-import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, Picker, View, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import { db } from "../../config";
 import { sortBy } from "lodash";
 import { formatTime } from "../RequestorPages/NewJobPage";
-import { Ionicons } from "@expo/vector-icons"
 import { AuthContext } from "../../AuthContext";
 import jobTypes from "../../jobTypes";
 
@@ -81,17 +80,11 @@ class JobBoard extends Component {
         var objArray = [];
         var keys = Object.keys(jsonObjects);
         for (var i = 0; i < keys.length; i++) {
-            var k = keys[i];
 
-            var job = {
-            };
         }
-        var direct = arguments.length > 2 ? arguments[2] : 1;
         if (objArray) {
             objArray.sort(function(a,b) {
                 if(a[prop] && b[prop]) {
-                    var aDate = new Date(a[prop]);
-                    var bDatte = new Date(b[prop]);
                 }
                 return ( (a < b) ? -1*direction : ((a > b) ? 1*direction : 0) );
             });
@@ -122,9 +115,6 @@ class JobBoard extends Component {
             trusted = true;
           }
         }
-        {/*if (props.dataPoint.volunteer == "" && monthNames[startJSONdate.getMonth()] == props.month
-            && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
-            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {*/}
         if (props.dataPoint.volunteer == ""
             && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
             && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {
@@ -144,39 +134,25 @@ class JobBoard extends Component {
                             <View style={styles.typeLabel}>
                                 <Text style={styles.smallText}>{props.dataPoint.jobType }</Text>
                             </View>
-                            <Text style={styles.mediumText, {marginLeft: 2}}>{props.dataPoint.location}</Text>
                         </View>
+                        <Text style={styles.mediumText, {marginLeft: 2}}>Location: {props.dataPoint.location}</Text>
                         <View>
                             <Text>Requestor: {props.dataPoint.requestor}</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.column}>
-                    <TouchableOpacity 
-                        style={styles.requestBtn} 
-                        onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
-                            var temp = snapshot.child("volunteer").val();
-                            console.log(temp);
-                            snapshot.ref.update({
-                                volunteer: activeUser.username
-                            });
-                        })
-                    }
-                    >
-                        <Text style={{color: "white"}}> Request Opportunity </Text>
-                    </TouchableOpacity>
-                        {/* <Ionicons
-                            name="md-add"
-                            color="#264653"
-                            size={40}
+                        <TouchableOpacity 
+                            style={styles.requestBtn} 
                             onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
-                                    var temp = snapshot.child("volunteer").val();
-                                    console.log(temp);
-                                    snapshot.ref.update({
-                                        volunteer: activeUser.username
-                                    });
-                                })
-                            }
-                        /> */}
+                                var temp = snapshot.child("volunteer").val();
+                                console.log(temp);
+                                snapshot.ref.update({
+                                    volunteer: activeUser.username
+                                });
+                            })}
+                            >
+                            <Text style={{color: "white"}}> Request Opportunity </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 </View>
@@ -184,149 +160,6 @@ class JobBoard extends Component {
         }
         return <View style={styles.filler}></View>;
     }
-
-//    ItemList (props) {
-//        const state = props.state;
-//        let jobKeys = Object.keys(state.jobs);
-//        let values = Object.values(state.jobs);
-//
-//        return (
-//            <ScrollView style={styles.scrollView}>
-//                <Text style={styles.headingOne}>January</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>February</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>March</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>April</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>May</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>June</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>July</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>August</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>September</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>October</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>November</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//                <Text style={styles.headingOne}>December</Text>
-//                <FlatList
-//                    data={Object.values(state.jobs)}
-//                    width='100%'
-//                    extraData={state.refresh}
-//                    keyExtractor={(item) => item.key}
-//                    ItemSeparatorComponent={props.flatListItemSeparator}
-//                    renderItem={({ item }) =>
-//                        <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-//                    }
-//                />
-//            </ScrollView>
-//        );
-//    }
 
     render () {
         this.getActiveUser(Object.keys(this.state.allUsers));
