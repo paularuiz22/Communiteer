@@ -25,6 +25,7 @@ class JobBoard extends Component {
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
             jobs: sortBy(this.ref, 'title'),
+            sortedJobArray: [],
             allUsers: sortBy(this.userRef, 'username'),
         };
         this.getActiveUser = this.getActiveUser.bind(this);
@@ -36,8 +37,22 @@ class JobBoard extends Component {
         db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
+            let jobArray = [];
+            Object.keys(jobItems).map((key) => {
+                let jobKey = key;
+                let jobStartDateTime = jobItems[key].startDateTime;
+                jobArray.push({ "key": jobKey, "startDateTime": jobStartDateTime})
+            })
+
+            jobArray.sort(function compare(a, b) {
+                var dateA = new Date(a.startDateTime);
+                var dateB = new Date(b.startDateTime);
+                return dateA - dateB;
+            })
+
             this.setState({
               jobs: jobItems,
+              sortedJobArray: jobArray
             });
         });
 
@@ -359,7 +374,8 @@ class JobBoard extends Component {
                 {/*<this.ItemList state={this.state} flatListItemSeparator={this.FlatListItemSeparator} jobItem={this.JobItem} />*/}
                 <ScrollView styles={styles.scrollView}>
                 {keys.length > 0 ? (
-                  keys.map((key) => {
+                  this.state.sortedJobArray.map(job => {
+                    var key = job.key;
                     return (<this.JobItem key={key} dataPoint={this.state.jobs[key]} type={this.state.selectedType} requestor={this.state.selectedRequestor}/>);
                   })
                 ) : (
