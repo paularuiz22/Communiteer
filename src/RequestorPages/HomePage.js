@@ -7,7 +7,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import UpcomingPosts from "./UpcomingPosts.js";
 import PastPosts from "./PastPosts.js";
 import TrustedVolunteers from "./TrustedVolunteers.js";
-import Users from "../Users/users.js";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -47,7 +46,6 @@ function HomePage() {
             )
           }} 
         /> 
-        <Tab.Screen name="Users" component={Users}/>
       </Tab.Navigator>
     </SafeAreaView>
   );

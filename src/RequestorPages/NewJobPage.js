@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Dimensions, Picker, StyleSheet, ScrollView, Button, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Switch } from "react-native";
 import { db } from '../../config';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-//import ToggleSwitch from 'toggle-switch-react-native';
 import jobTypes from "../../jobTypes";
 import { AuthContext } from "../../AuthContext";
 
@@ -45,7 +44,6 @@ export default class NewJobPage extends Component {
     }
 
     saveJob() {
-        // TODO: verify the input fields (that they're not empty, time is formatted correctly, etc) before pushing
         this.ref.push({
             title: this.state.title,
             jobType: this.state.jobType,
