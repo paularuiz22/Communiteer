@@ -25,6 +25,7 @@ class JobBoard extends Component {
             selectedType: "All Jobs",
             selectedRequestor: "All Requestors",
             jobs: sortBy(this.ref, 'title'),
+            sortedJobArray: [],
             allUsers: sortBy(this.userRef, 'username'),
         };
         this.getActiveUser = this.getActiveUser.bind(this);
@@ -36,8 +37,22 @@ class JobBoard extends Component {
         db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
+            let jobArray = [];
+            Object.keys(jobItems).map((key) => {
+                let jobKey = key;
+                let jobStartDateTime = jobItems[key].startDateTime;
+                jobArray.push({ "key": jobKey, "startDateTime": jobStartDateTime})
+            })
+
+            jobArray.sort(function compare(a, b) {
+                var dateA = new Date(a.startDateTime);
+                var dateB = new Date(b.startDateTime);
+                return dateA - dateB;
+            })
+
             this.setState({
               jobs: jobItems,
+              sortedJobArray: jobArray
             });
         });
 
@@ -95,6 +110,7 @@ class JobBoard extends Component {
     }
 
     JobItem (props) {
+
         let startJSONdate = new Date(props.dataPoint.startDateTime);
         let endJSONdate = new Date(props.dataPoint.endDateTime);
         let startClockTime = formatTime(startJSONdate);
@@ -105,11 +121,17 @@ class JobBoard extends Component {
             trusted = true;
           }
         }
-        if (props.dataPoint.volunteer == "" && monthNames[startJSONdate.getMonth()] == props.month
+        {/*if (props.dataPoint.volunteer == "" && monthNames[startJSONdate.getMonth()] == props.month
+            && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
+            && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {*/}
+        if (props.dataPoint.volunteer == ""
             && (props.dataPoint.jobType == props.type || props.type == "All Jobs")
             && (props.dataPoint.requestor == props.requestor || props.requestor == "All Requestors" || (props.requestor == "Only Trusted Requestors" && trusted))) {
-
             return (
+                <View>
+                <View>
+                    <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+                </View>
                 <View style={styles.row}>
                     <View style={styles.circle}>
                         <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
@@ -156,153 +178,154 @@ class JobBoard extends Component {
                         /> */}
                     </View>
                 </View>
+                </View>
             );
         }
         return <View style={styles.filler}></View>;
     }
 
-    ItemList (props) {
-        const state = props.state;
-        let jobKeys = Object.keys(state.jobs);
-        let values = Object.values(state.jobs);
-        
-        return (
-            <ScrollView style={styles.scrollView}>
-                <Text style={styles.headingOne}>January</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>February</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>March</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>April</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>May</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>June</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>July</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>August</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>September</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>October</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>November</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-                <Text style={styles.headingOne}>December</Text>
-                <FlatList
-                    data={Object.values(state.jobs)}
-                    width='100%'
-                    extraData={state.refresh}
-                    keyExtractor={(item) => item.key}
-                    ItemSeparatorComponent={props.flatListItemSeparator}
-                    renderItem={({ item }) =>
-                        <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
-                    }
-                />
-            </ScrollView>
-        );
-    }
+//    ItemList (props) {
+//        const state = props.state;
+//        let jobKeys = Object.keys(state.jobs);
+//        let values = Object.values(state.jobs);
+//
+//        return (
+//            <ScrollView style={styles.scrollView}>
+//                <Text style={styles.headingOne}>January</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="January" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>February</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="February" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>March</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="March" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>April</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="April" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>May</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="May" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>June</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="June" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>July</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="July" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>August</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="August" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>September</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="September" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>October</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="October" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>November</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="November" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//                <Text style={styles.headingOne}>December</Text>
+//                <FlatList
+//                    data={Object.values(state.jobs)}
+//                    width='100%'
+//                    extraData={state.refresh}
+//                    keyExtractor={(item) => item.key}
+//                    ItemSeparatorComponent={props.flatListItemSeparator}
+//                    renderItem={({ item }) =>
+//                        <props.jobItem dataPoint={item} month="December" type={state.selectedType} requestor={state.selectedRequestor} navigation={props.navigation}/>
+//                    }
+//                />
+//            </ScrollView>
+//        );
+//    }
 
     render () {
         this.getActiveUser(Object.keys(this.state.allUsers));
@@ -348,7 +371,17 @@ class JobBoard extends Component {
                         <Picker.Item label="Only Trusted Requestors" value="Only Trusted Requestors" />
                     </Picker>
                 </View>
-                <this.ItemList state={this.state} flatListItemSeparator={this.FlatListItemSeparator} jobItem={this.JobItem} />
+                {/*<this.ItemList state={this.state} flatListItemSeparator={this.FlatListItemSeparator} jobItem={this.JobItem} />*/}
+                <ScrollView styles={styles.scrollView}>
+                {keys.length > 0 ? (
+                  this.state.sortedJobArray.map(job => {
+                    var key = job.key;
+                    return (<this.JobItem key={key} dataPoint={this.state.jobs[key]} type={this.state.selectedType} requestor={this.state.selectedRequestor}/>);
+                  })
+                ) : (
+                    <Text>No jobs available</Text>
+                )}
+                </ScrollView>
             </SafeAreaView>
         );
     }

@@ -16,6 +16,8 @@ var activeUser  = {
   trustedUsers: [],
 };
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
     let startJSONdate = new Date(startDateTime);
     let endJSONdate = new Date(endDateTime);
@@ -23,6 +25,10 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
     let endClockTime = formatTime(endJSONdate);
     if (startJSONdate >= today && requestor == activeUser.username) {
         return (
+            <View>
+            <View>
+                <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+            </View>
             <View style={styles.row}>
                 <View style={styles.circle}>
                     <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
@@ -59,6 +65,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                   </Entypo>
                 </View>
             </View>
+            </View>
         )
     }
     else {
@@ -73,6 +80,7 @@ class UpcomingPosts extends Component {
         this.userRef = db.ref('/users');
         this.state = {
             jobs: sortBy(this.ref, 'title'),
+            sortedJobArray: [],
             allUsers: sortBy(this.userRef, 'username'),
         };
     }
@@ -83,8 +91,20 @@ class UpcomingPosts extends Component {
       db.ref('/jobs').orderByChild("title").on('value', querySnapShot => {
           let data = querySnapShot.val() ? querySnapShot.val() : {};
           let jobItems = {...data};
+          let jobArray = [];
+          Object.keys(jobItems).map((key) => {
+            let jobKey = key;
+            let jobStartDateTime = jobItems[key].startDateTime;
+            jobArray.push({ "key": jobKey, "startDateTime": jobStartDateTime })
+          })
+          jobArray.sort(function compare(a, b) {
+            var dateA = new Date(a.startDateTime);
+            var dateB = new Date(b.startDateTime);
+            return dateA - dateB;
+          })
           this.setState({
-            jobs: sortBy(jobItems, 'title'),
+            jobs: jobItems,
+            sortedJobArray: jobArray
           });
       });
 
@@ -125,13 +145,14 @@ class UpcomingPosts extends Component {
                 <ScrollView style={styles.scrollView}>
                 <View>
                   {jobsKeys.length > 0 ? (
-                    jobsKeys.map(key => (
-                      <Job
+                    this.state.sortedJobArray.map(job => {
+                      var key = job.key;
+                      return (<Job
                         key={key}
                         id={key}
                         job={this.state.jobs[key]}
-                      />
-                    ))
+                      />);
+                    })
                   ) : (
                         <Text>No upcoming jobs</Text>
                   )}

@@ -14,6 +14,7 @@ var activeUser  = {
   trustedUsers: [],
 };
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const Job = ({job: {title, jobType, startDateTime, endDateTime, location, requestor, volunteer}}) => {
   let startJSONdate = new Date(startDateTime);
@@ -29,6 +30,10 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
 
   if (startJSONdate < today & requestor == activeUser.username) {
       return (
+          <View>
+          <View>
+              <Text style={styles.headingOne}>{monthNames[startJSONdate.getMonth()]}</Text>
+          </View>
           <View style={styles.row}>
               <View style={styles.circle}>
                   <Text style={styles.numberLabel}>{startJSONdate.getDate()}</Text>
@@ -69,6 +74,7 @@ const Job = ({job: {title, jobType, startDateTime, endDateTime, location, reques
                       </View>
               </View>
           </View>
+          </View>
       )
   }
   else {
@@ -88,6 +94,7 @@ export default class PastPosts extends Component {
         this.userRef = db.ref('/users');
         this.state = {
          jobs: sortBy(this.ref, 'date'),
+         sortedJobArray: [],
          allUsers: sortBy(this.userRef, 'username'),
         };
         this.getActiveUser = this.getActiveUser.bind(this);
@@ -97,8 +104,20 @@ export default class PastPosts extends Component {
         db.ref('/jobs').orderByChild("date").on('value', querySnapShot => {
             let data = querySnapShot.val() ? querySnapShot.val() : {};
             let jobItems = {...data};
+            let jobArray = [];
+            Object.keys(jobItems).map((key) => {
+                let jobKey = key;
+                let jobStartDateTime = jobItems[key].startDateTime;
+                jobArray.push({ "key": jobKey, "startDateTime": jobStartDateTime})
+            })
+            jobArray.sort(function compare(a, b) {
+                var dateA = new Date(a.startDateTime);
+                var dateB = new Date(b.startDateTime);
+                return dateA - dateB;
+            })
             this.setState({
-            jobs: sortBy(jobItems, 'date'),
+            jobs: jobItems,
+            sortedJobArray: jobArray
             });
         });
 
@@ -134,13 +153,14 @@ export default class PastPosts extends Component {
             <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
               {jobsKeys.length > 0 ? (
-                jobsKeys.map(key => (
-                  <Job
+                this.state.sortedJobArray.map(job => {
+                  var key = job.key;
+                  return(<Job
                     key={key}
                     id={key}
                     job={this.state.jobs[key]}
-                  />
-                ))
+                  />);
+                })
               ) : (
                     <Text>No previous jobs</Text>
               )}
@@ -161,6 +181,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     justifyContent: "center",
+  },
+  headingOne: {
+    fontSize: 30,
+    padding: 10,
   },
     scrollView: {
       marginHorizontal: 20,
