@@ -7,6 +7,7 @@ import { sortBy } from "lodash";
 import { formatTime } from "../RequestorPages/NewJobPage";
 import { Ionicons } from "@expo/vector-icons"
 import { AuthContext } from "../../AuthContext";
+import jobTypes from "../../jobTypes";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 var activeUser  = {
@@ -348,12 +349,14 @@ class JobBoard extends Component {
                         }}
                     >
                         <Picker.Item label="All Jobs" value="All Jobs"/>
-                        <Picker.Item label="Beautification" value="Beautification"/>
-                        <Picker.Item label="Children" value="Children"/>
-                        <Picker.Item label="House Chores" value="House Chores"/>
-                        <Picker.Item label="Pet Care" value="Pet Care"/>
-                        <Picker.Item label="Shopping" value="Shopping"/>
-                        <Picker.Item label="Tutoring" value="Tutoring"/>
+                        <Picker.Item label="Outdoor Work" value={jobTypes.OUTDOORS}/>
+                        <Picker.Item label="Organization" value={jobTypes.ORGANIZING}/>
+                        <Picker.Item label="Housework" value={jobTypes.HOUSEWORK}/>
+                        <Picker.Item label="Pet Care" value={jobTypes.PET_CARE}/>
+                        <Picker.Item label="Shopping" value={jobTypes.SHOPPING}/>
+                        <Picker.Item label="Technology" value={jobTypes.TECHNOLOGY}/>
+                        <Picker.Item label="Other" value={jobTypes.OTHER}/>
+
                     </Picker>
                 </View>
                 <View style={styles.topRow}>
