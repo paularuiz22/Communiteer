@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     },
     inputView:{
         width:"80%",
-        backgroundColor:"#40877E",
+        backgroundColor:"#8fb8b2",
         borderRadius:25,
         height:50,
         marginBottom:20,
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     },
     inputText:{
         height:50,
-        color:"white"
+        color: 'green',
     },
     forgot:{
         color:"white",
@@ -219,9 +219,6 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         marginTop:30,
         marginBottom:10
-    },
-    loginText:{
-        color:"#264653"
     },
     signUpBtn:{
         width:"80%",
