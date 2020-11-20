@@ -143,7 +143,9 @@ class JobBoard extends Component {
                     <View style={styles.column}>
                         <TouchableOpacity 
                             style={styles.requestBtn} 
-                            onPress= { () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title).on('child_added', function(snapshot) {
+                            onPress= { 
+                              () => db.ref('/jobs').orderByChild("title").equalTo(props.dataPoint.title)
+                              .on('child_added', function(snapshot) {
                                 var temp = snapshot.child("volunteer").val();
                                 console.log(temp);
                                 snapshot.ref.update({

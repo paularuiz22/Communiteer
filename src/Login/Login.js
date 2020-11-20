@@ -175,9 +175,9 @@ const styles = StyleSheet.create({
     color: "#2e2e2d"
   },
   footerLink: {
-    color: "#788eec",
+    color: "#ffffff",
     fontWeight: "bold",
-    fontSize: 16
+    fontSize: 18
   }
 });
 export default Login;
